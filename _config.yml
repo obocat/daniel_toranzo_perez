@@ -30,7 +30,7 @@ twitter_username: obocat
 github_username:  obocat
 
 # Build settings
-theme: minima
+theme: jekyll-theme-tactile
 plugins:
   - jekyll-feed
 
