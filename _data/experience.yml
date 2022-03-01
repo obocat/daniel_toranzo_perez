@@ -1,19 +1,22 @@
 # Jobs
-# VP of Global Communications
-- company: Nomasystems
-  position: iOS Engineer
-  duration: May, 2020 &mdash; Present
-  summary: Write about your core competencies in one or two sentences describing your position. If you held the position for a long time, it could be a longer section, including a couple bullet points	<ul class="resume-item-list"><li>A project you are proud of</li><li>Another awesome project</li><li>or a team or department you worked with</li></ul>
 
-# Director of Digital Stratgy
-- company: United Nations Human Rights Council
-  position: Director of Digital Strategy
-  duration:  Jun, 2010 &mdash; Sept, 2013
-  summary: If your stint was shorter, feel free to be brief and just call out the most meaningful points of your role. Be concise, and be meaninful. The person reading just needs enough to want to talk to you more about your experience.
+- company: Nomasystems S.L.
+  position: Ingeniero de software
+  duration: Remoto, Mayo 2021 &mdash; Actualidad
+  summary: Desarrollo de nuevas funcionalidades y mantenimiento de la aplicación Zara Home iOS para el grupo Inditex. Utilizando las metodologías scrum, kanban con Jira y git para el control de versiones.
 
+- company: C.A. U.N.E.D.
+D. Pontevedra
+  position: Departamento de informática, prácticas extracurriculares.
+  duration: Pontevedra, Febrero 2018 &mdash; Marzo 2020
+  summary: <ul class="resume-item-list"><li>Desarrollo de un software generador de documentación, cita previa y firma de  cartas.</li><li>Gestión de bases de datos.</li><li>Configuración y mantenimiento de redes y equipos informáticos.</li></ul>
 
-# Communications Coordinator
-- company: Springfield Women & Children's Center
-  position: Communications Coordinator
-  duration:   Jun, 2008  &mdash; May, 2010
-  summary: Led communication efforts across digital and traditional media channels for marketing and public relations, internal communication strategies, and coordinated support programs for the recipients of the center's services.
+- company: E.N.C.E.
+  position: Desarrollador de software, F.C.T. D.A.W.
+  duration: Pontevedra, Octubre 2015 &mdash; Diciembre 2015
+  summary: <ul class="resume-item-list"><li>Desarrollo de un software de parte diario.</li></ul>
+
+- company: Sinapsis
+  position: Desarrollador de software, F.C.T. D.A.M.
+  duration: Pontevedra, Abril 2014 &mdash; Junio 2014
+  summary: <ul class="resume-item-list"><li>Desarrollo de un panel de administración para páginas web autogeneradas.</li></ul>
