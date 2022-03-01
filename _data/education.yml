@@ -1,13 +1,18 @@
 # Degree
-- degree: Bachelor of Arts, Human Rights
-  uni: Yale University
-  year: 2004 &mdash; 2008
+- degree: Máster en Computación de Altas Prestaciones
+  uni: U.S.C., U.D.C.
+  year: 2020 &mdash; 2021
   awards:
-    - award: Summa Cumme Laude graduate
-  summary: If you had any meaningful roles at college, feel free to write about them here
+    - award: Premio Extraordinario del Máster Universitario en Computación de Altas Prestaciones.
 
-- degree: High School Diploma
-  uni: Springfield High School
-  year: 2004
-  award: Most likely to succeed
-  summary: You can choose to have either a single or multiple awards
+- degree: Grado en Ingeniería en Tecnologías de la Información
+  uni: U.N.E.D.
+  year: 2015 &mdash; 2020
+
+- degree: C.S. Desarrollo de Aplicaciones Web
+  uni: I.E.S. Chan do monte
+  year: 2014 &mdash; 2015
+
+- degree: C.S. Desarrollo de Aplicaciones Multiplataforma                       
+  uni: I.E.S. Chan do monte
+  year: 2012 &mdash; 2014
