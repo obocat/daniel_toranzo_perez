@@ -57,7 +57,7 @@
         </header>
 
         {% for job in site.data.experience %}
-        <div class="resume-item" itemscope itemprop="worksFor" itemtype="http://schema.org/Organization">
+        <div class="resume-item scrollFade" itemscope itemprop="worksFor" itemtype="http://schema.org/Organization">
           <h3 class="resume-item-title" itemprop="name">{{ job.company }}</h3>
           <h4 class="resume-item-details" itemprop="description">{{ job.position }}</h4>
           <h4 class="resume-item-details" itemprop="description">{{ job.duration }}</h4>
@@ -257,7 +257,7 @@
       </footer>
 
     </div>
-
+    <script src="assets/js/scrollfade.js"></script>
   </body>
 
 </html>
