@@ -30,6 +30,19 @@
   }
 }
 
+@media (prefers-color-scheme: dark) {
+  a {
+    color: $text_color_white;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  a {
+    color: $text_color_black;
+  }
+}
+
+
 body{
   @include serif;
   font-size: 16px;
