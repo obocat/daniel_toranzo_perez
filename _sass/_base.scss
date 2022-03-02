@@ -6,8 +6,16 @@
   box-sizing: border-box;
 }
 
-html {
-  background: $white;
+@media (prefers-color-scheme: dark) {
+  html {
+    background: $black;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  html {
+    background: $white;
+  }
 }
 
 body{
