@@ -70,6 +70,8 @@
   }
 
   .executive-summary {
+    text-align: justify;
+    text-justify: inter-word;
     @include media_larger_than_mobile { font-size: 1.125rem; }
   }
 }
@@ -221,6 +223,8 @@
     }
 
     .resume-item-details {
+      text-align: justify;
+      text-justify: inter-word;
       font-size: 12px;
       margin: 0 0 .75rem;
       line-height: .7em;
