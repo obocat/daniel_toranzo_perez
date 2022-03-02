@@ -59,7 +59,8 @@
         {% for job in site.data.experience %}
         <div class="resume-item" itemscope itemprop="worksFor" itemtype="http://schema.org/Organization">
           <h3 class="resume-item-title" itemprop="name">{{ job.company }}</h3>
-          <h4 class="resume-item-details" itemprop="description">{{ job.position }} &bull; {{ job.duration }}</h4>
+          <h4 class="resume-item-details" itemprop="description">{{ job.position }}</h4>
+          <h4 class="resume-item-details" itemprop="description">{{ job.duration }}</h4>
           <p class="resume-item-copy">{{ job.summary }}</p>
         </div><!-- end of resume-item -->
         {% endfor %}
@@ -79,7 +80,8 @@
         {% for education in site.data.education %}
         <div class="resume-item" itemscope itemprop="alumniOf" itemtype="http://schema.org/CollegeOrUniversity">
           <h3 class="resume-item-title" itemprop="name">{{ education.uni }}</h3>
-          <h4 class="resume-item-details group" itemprop="description">{{ education.degree }} &bull; {{ education.year }}</h4>
+          <h4 class="resume-item-details group" itemprop="description">{{ education.degree }}</h4>
+          <h4 class="resume-item-details group" itemprop="description">{{ education.year }}</h4>
           <h5 class="resume-item-details award-title" itemprop="description">{{ education.award }}</h5>
           <p class="resume-item-copy" itemprop="description">
             <ul class="resume-item-list">
@@ -106,7 +108,8 @@
         {% for certification in site.data.certifications %}
         <div class="resume-item" itemscope itemprop="recognizedBy" itemtype="http://schema.org/EducationalOccupationalCredential">
           <h3 class="resume-item-title" itemprop="name">{{ certification.recognizedBy }}</h3>
-          <h4 class="resume-item-details group" itemprop="description">{{ certification.name }} &bull; {{ certification.year }}</h4>
+          <h4 class="resume-item-details group" itemprop="description">{{ certification.name }}</h4>
+          <h4 class="resume-item-details group" itemprop="description">{{ certification.year }}</h4>
           <p class="resume-item-copy" itemprop="description">
           <p class="resume-item-copy">{{ certification.summary }}</p>
         </div>
