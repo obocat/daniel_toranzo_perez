@@ -43,6 +43,7 @@ resume_section_links:           false
 resume_section_associations:    false
 # resume_section_interests:     true
 resume_section_certifications:  true
+show_appstore_banner:           true
 
 # Resume social links
 # uncomment the options you wish to display, and add your own URL
