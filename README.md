@@ -43,7 +43,7 @@ To setup your GH Pages site with a custom domain, [follow the instructions](http
 If you spot a bug, or want to improve the code, or even make the dummy content better, you can do the following:
 
 1. [Open an issue](https://github.com/jglovier/resume-template/issues/new) describing the bug or feature idea in the original repo.
-2. [Open an issue](https://github.com/obocat/daniel_toranzo_perez/issues) describing the bug or feature idea in the original repo.
+2. [Open an issue](https://github.com/obocat/daniel_toranzo_perez/issues) describing the bug or feature idea in this repo.
 3. Fork the project, make changes, and submit a pull request
 
 ## License
