@@ -100,7 +100,7 @@
   .icon-link { display: inline-block;
 
     &:hover .icon path {
-      fill: #333;
+      fill: $accent-color;
       @include transition(all .2s ease);
     }
   }
@@ -120,12 +120,12 @@
   width: 220px;
   font-size: 1.375rem;
   @include sans_light;
-  color: #333;
+  color: $accent-color;
   line-height: 55px;
   @include transition(all .2s ease);
 
   &:hover {
-    background-color: #333;
+    background-color: $accent-color;
     color: #fff;
   }
 
@@ -259,7 +259,7 @@
   }
 
   &--animate {
-    transition: opacity 1.5s ease-in-out;
+    transition: opacity 0.75s ease-in-out;
   }
 }
 
