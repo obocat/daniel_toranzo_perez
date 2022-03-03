@@ -112,7 +112,7 @@
 
 .contact-button {
   @include border-radius(3px);
-  background-color: #efefef;
+  background-color: $gray;
   text-decoration: none;
   text-align: center;
   display: block;
@@ -126,7 +126,7 @@
 
   &:hover {
     background-color: $accent-color;
-    color: #fff;
+    color: $white;
   }
 
   &.not-looking { width: 400px; }
@@ -167,7 +167,7 @@
 
       &:hover {
         border-bottom: none;
-        color: #9c9c9c;
+        color: $gray;
       }
     }
   }
