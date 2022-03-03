@@ -24,7 +24,7 @@ resume_header_contact_info:     "742 Evergreen Terrace, Springfield • 555-7334
 display_header_contact_info:    "false"
 
 resume_header_intro: "<p>Me interesan los temas relacionados con el procesamiento paralelo, arquitecturas heterogéneas y la eficiencia de los algoritmos. Me gusta 
-aprender cosas nuevas, trabajar en equipo y tengo facilidad para adaptarme a las situaciones que se me presenten aplicando el enfoque de la ingeniería.</p>"
+aprender cosas nuevas, trabajar en equipo y tengo facilidad para adpatarme a las situaciones que se me presenten aplicando el enfoque de la ingeniería.</p>"
 
 # use "yes" to display the email contact button,
 # "no" to display an "I'm not looking for work" message,
@@ -48,13 +48,13 @@ show_appstore_banner:           true
 # Resume social links
 # uncomment the options you wish to display, and add your own URL
 resume_social_links:
-resume_github_url:            "https://obocat.github.io/daniel_toranzo_perez/"
+  resume_github_url:            "https://obocat.github.io/daniel_toranzo_perez/"
   # resume_twitter_url:           "http://twitter.com/jglovier"
   # resume_dribbble_url:          "https://dribbble.com/jag"
   # resume_facebook_url:          "insert Facebook URL here"
-resume_linkedin_url:          "https://www.linkedin.com/in/daniel-toranzo-pérez/"
+  resume_linkedin_url:          "https://www.linkedin.com/in/daniel-toranzo-pérez/"
   # resume_instagram_url:         "insert your Instagram URL here"
-resume_website_url:           "https://www.obocat.com"
+  # resume_website_url:           "http://joelglovier.com"
   # resume_medium_url:            "https://medium.com/@jglovier"
 resume_print_social_links:      true
 
