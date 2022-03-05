@@ -6,7 +6,7 @@
 - Dark mode support.
 - AppStore App banner support.
 
-# TO-DO
+## TO-DO
 
 - Sitemap support.
 - Code refactor.
