@@ -9,7 +9,7 @@
 ## TO-DO
 
 - Sitemap support.
-- Add config in order to disable Dark Mode support
+- Add config in order to disable Dark Mode support.
 - Code refactor.
 
 ## Docs
