@@ -3,12 +3,13 @@
 *A simple Jekyll + GitHub Pages powered resume template.*
 - Based on [https://github.com/jglovier/resume-template/issues/new](https://github.com/jglovier/resume-template/issues/new) project.
 - This project features fade-in effect on `divs`.
-- Dark mode support.
+- Dark Mode support.
 - AppStore App banner support.
 
 ## TO-DO
 
 - Sitemap support.
+- Add config in order to disable Dark Mode support
 - Code refactor.
 
 ## Docs
