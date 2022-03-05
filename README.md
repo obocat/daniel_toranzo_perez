@@ -1,9 +1,15 @@
 # Resume template
 
 *A simple Jekyll + GitHub Pages powered resume template.*
-- Based on: [https://github.com/jglovier/resume-template/issues/new](https://github.com/jglovier/resume-template/issues/new)
+- Based on [https://github.com/jglovier/resume-template/issues/new](https://github.com/jglovier/resume-template/issues/new) project.
 - This project features fade-in effect on `divs`.
 - Dark mode support.
+- AppStore App banner support.
+
+# TO-DO
+
+- Sitemap support.
+- Code refactor.
 
 ## Docs
 
@@ -22,9 +28,7 @@ First you'll want to fork the repo to your own account. Then clone it locally an
 
 #### Options/configuration
 
-Most of the basic customization will take place in the `/_config.yml` file. Here is a list of customizations available via `/_config.yml`:
-
-[...write these out...]
+Most of the basic customization will take place in the `/_config.yml` file.
 
 #### Editing content
 
@@ -32,7 +36,7 @@ Most of the content configuration will take place in the `/_layouts/resume.html`
 
 ### Publishing to GitHub Pages for free
 
-[GitHub Pages](https://pages.github.com/) will host this for free with your GitHub account. Just make sure you're using a `gh-pages` branch, and the site will automatically be available at `yourusername.github.io/resume-template` (you can rename the repo to resume for your own use if you want it to be available at `yourusername.github.io/resume`). You can also add a CNAME if you want it to be available at a custom domain...
+[GitHub Pages](https://pages.github.com/) will host this for free with your GitHub account. Just make sure you're using a `gh-pages` branch, and the site will automatically be available at `yourusername.github.io/resume-template` (you can rename the repo to resume for your own use if you want it to be available at `yourusername.github.io/resume`). You can also add a CNAME if you want it to be available at a custom domain.
 
 ### Configuring with your own domain name
 
