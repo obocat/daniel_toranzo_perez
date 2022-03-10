@@ -4,7 +4,7 @@
 // util
 
 .section-header {
-  @include section_border;
+  @include section_border_thin;
   margin-bottom: 1.5rem;
 
   h2 {
@@ -48,7 +48,7 @@
   }
 
   .title-bar {
-    @include section_border;
+    @include section_border_thin;
     margin-top: 2rem;
     padding: .4rem 0;
     @include clearfix;
@@ -262,6 +262,81 @@
 
   &--animate {
     transition: opacity 0.75s ease-in-out;
+  }
+}
+
+/*------*/
+
+/*--- Temporal widget Specific ---*/
+
+.temporal {
+  width: 20px;
+  height: auto;
+  background-color: $white;
+}
+
+.temporal-line {
+  height: 100%;
+  width: 4px;
+  background-color: $accent-color;
+  border-radius: 4px;
+  margin-left: -2px;  
+}
+
+.pulsating-circle {
+  position: absolute;
+  transform: translateX(-50%) translateY(-50%);
+  width: 20px;
+  height: 20px;
+  margin-top: 28px;
+  
+  &:before {
+    content: '';
+    position: relative;
+    display: block;
+    width: 300%;
+    height: 300%;
+    box-sizing: border-box;
+    margin-left: -100%;
+    margin-top: -100%;
+    border-radius: 45px;
+    background-color: $accent-color;
+    animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+  }
+  
+  &:after {
+    content: '';
+    position: absolute;
+    left: 0; 
+    top: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 0 8px rgba(0,0,0,.3);
+    animation: pulse-dot 1.25s cubic-bezier(0.455, 0.03, 0.515, 0.955) -.4s infinite;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(.33);
+  }
+  80%, 100% {
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-dot {
+  0% {
+    transform: scale(.8);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(.8);
   }
 }
 
