@@ -91,8 +91,7 @@
 // layout
 
 @mixin section_border {
-  border-top: 4px solid $gray;
-  border-bottom: 2px solid $gray;
+  border-top: 24px solid #FAFAFA;
   padding: .2rem 0 .4rem;
 }
 

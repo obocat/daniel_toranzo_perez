@@ -4,9 +4,9 @@
 // util
 
 .section-header {
-  @include section_border_thin;
+  @include section_border;
   margin-bottom: 1.5rem;
-
+  padding-top: 1.5rem;
   h2 {
     @include sans;
     font-weight: 900;
@@ -217,7 +217,7 @@
     }
   }
   .section-header {
-    @include section_border_thin;
+    @include section_border;
     margin-bottom: 1rem;
     h2 { font-size: 1.2rem; line-height: 1.5rem; }
   }
