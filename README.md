@@ -1,9 +1,16 @@
 # Resume template
 
 *A simple Jekyll + GitHub Pages powered resume template.*
-- Based on: [https://github.com/jglovier/resume-template/issues/new](https://github.com/jglovier/resume-template/issues/new)
+- Based on [https://github.com/jglovier/resume-template/issues/new](https://github.com/jglovier/resume-template/issues/new) project.
 - This project features fade-in effect on `divs`.
-- Dark mode support.
+- Dark Mode support.
+- AppStore App banner support.
+
+## TO-DO
+
+- Sitemap support.
+- Add config in order to disable Dark Mode support.
+- Code refactor.
 
 ## Docs
 
@@ -22,9 +29,7 @@ First you'll want to fork the repo to your own account. Then clone it locally an
 
 #### Options/configuration
 
-Most of the basic customization will take place in the `/_config.yml` file. Here is a list of customizations available via `/_config.yml`:
-
-[...write these out...]
+Most of the basic customization will take place in the `/_config.yml` file.
 
 #### Editing content
 
@@ -32,7 +37,7 @@ Most of the content configuration will take place in the `/_layouts/resume.html`
 
 ### Publishing to GitHub Pages for free
 
-[GitHub Pages](https://pages.github.com/) will host this for free with your GitHub account. Just make sure you're using a `gh-pages` branch, and the site will automatically be available at `yourusername.github.io/resume-template` (you can rename the repo to resume for your own use if you want it to be available at `yourusername.github.io/resume`). You can also add a CNAME if you want it to be available at a custom domain...
+[GitHub Pages](https://pages.github.com/) will host this for free with your GitHub account. Just make sure you're using a `gh-pages` branch, and the site will automatically be available at `yourusername.github.io/resume-template` (you can rename the repo to resume for your own use if you want it to be available at `yourusername.github.io/resume`). You can also add a CNAME if you want it to be available at a custom domain.
 
 ### Configuring with your own domain name
 
@@ -48,4 +53,4 @@ If you spot a bug, or want to improve the code, or even make the dummy content b
 
 ## License
 
-The code and styles are licensed under the MIT license. [See project license.](LICENSE) Obviously you should not use the content of this demo repo in your own resume. :wink:
+The code and styles are licensed under the MIT license. [See project license.](LICENSE) Obviously you should not use the content of this repo in your own resume. :wink:
