@@ -1,6 +1,8 @@
 # Site settings
 title: "Daniel Toranzo Pérez"
 description: "Daniel Toranzo Pérez curriculum vitae."
+google-verification: "r8LavZ7oFRU_3YLmlH7wSHXuTdIikA0FXh9M_2xaE4E"
+author: "Daniel Toranzo Pérez"
 
 # Build settings
 markdown: kramdown
