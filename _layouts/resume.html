@@ -1,10 +1,21 @@
   <!DOCTYPE html>
   <html>
 
+                <h3 class="resume-item-title" itemprop="name">{{ education.uni }}</h3>
+                <h4 class="resume-item-details group" itemprop="description">{{ education.degree }}</h4>
+                <h4 class="resume-item-details group" itemprop="description">{{ education.year }}</h4>
+                <h5 class="resume-item-details award-title" itemprop="description">{{ education.award }}</h5>
+                <p class="resume-item-copy" itemprop="description">
+                <ul class="resume-item-list">
+                  {% for award in education.awards %}
+                    <li>{{ award.award }}</li>
+                  {% endfor %}
+                </ul>
+                <p class="resume-item-copy">{{ education.summary }}</p>
+
     {% include head.html %}
 
     <body class="theme-{% if site.resume_theme %}{{ site.resume_theme }}{% endif %}">
-
       <div class="wrapper" itemscope itemtype="http://schema.org/Person">
         <header class="page-header">
           <!-- You can turn off the avatar in _config.yml by setting to false -->
@@ -13,12 +24,6 @@
           {% endif %}
           <!-- Your name is defined in the _config.yml file -->
           <h1 class="header-name" itemprop="name">{{ site.resume_name }}</h1>
-          <!-- To display contact info here, change `display_header_contact_info` value in _config.yml to true -->
-          {% if site.display_header_contact_info == 'true' %}
-          <div class="header-contact-info">
-            <p>{{ site.resume_header_contact_info }}</p>
-          </div>
-          {% endif %}
           <div class="title-bar no-print">
             <!-- Your title is also defined in the _config.yml file -->
             <h2 class="header-title" itemprop="jobTitle">{{ site.resume_title }}</h2>
@@ -36,112 +41,57 @@
           {% endif %}
         </header>
 
-        {% if site.resume_section_experience %}
-        <!-- begin Experience -->
+        <!-- begin Sections -->
+        {% assign sections = "" | split: ',' %}
+        {% if site.resume_section_experience == true %}
+          {% assign sections = sections | push: site.data.experience %}
+        {% endif %}
+        {% if site.resume_section_education == true %}
+          {% assign sections = sections | push: site.data.education %}
+        {% endif %}
+        {% if site.resume_section_certifications == true %}
+          {% assign sections = sections | push: site.data.certifications %}
+        {% endif %}  
+        {% for section in sections %}
+        <!-- begin Section -->
         <section class="content-section">
           <header class="section-header">
-            <h2>Experiencia</h2>
+            <h2>
+              {% case section %}
+                {% when site.data.education %}
+                  Educación
+                {% when site.data.experience %}
+                  Experiencia
+                {% when site.data.certifications %}
+                  Certificaciones
+              {% endcase %}
+            </h2>
           </header>
           <div style="display: flex;">
             <div class="temporal">
-              <div class="pulsating-circle">
-              </div>
-              <div class="temporal-line">
-              </div>
+              <div class="pulsating-circle"></div>
+              <div class="temporal-line"></div>
             </div>
             <div style="width: calc(100% - 20px);">
-            {% for job in site.data.experience %}
-              <div class="resume-item scrollFade" itemscope itemprop="worksFor" itemtype="http://schema.org/Organization">
-                <h3 class="resume-item-title" itemprop="name">{{ job.company }}</h3>
-                <h4 class="resume-item-details" itemprop="description">{{ job.position }}</h4>
-                <h4 class="resume-item-details" itemprop="description">{{ job.duration }}</h4>
-                <p class="resume-item-copy">{{ job.summary }}</p>
-              </div><!-- end of resume-item -->
-            {% endfor %}
+              {% for element in section %}
+                <div class="resume-item scrollFade">
+                  <h3 class="resume-item-title">{{ element.recognizedBy }} {{ element.uni }} {{ element.company }}</h3>
+                  <h4 class="resume-item-details group">{{ element.name }} {{ element.degree }} {{ element.position }}</h4>
+                  <h4 class="resume-item-details group">{{ element.year }} {{ element.duration}} </h4>
+                  <ul class="resume-item-list">
+                    {% for award in element.awards %}
+                      <li>{{ award.award }}</li>
+                    {% endfor %}
+                  </ul>
+                  <p class="resume-item-copy">{{ element.summary }}</p>
+                </div>
+              {% endfor %}
             </div>
           </div>
         </section>
-        <!-- end Experience -->
-        {% endif %}
-
-        {% if site.resume_section_education %}
-        <!-- begin Education -->
-        <section class="content-section">
-          <header class="section-header">
-            <h2>Educación</h2>
-          </header>
-            <div style="display: flex;">
-              <div class="temporal">
-                <div class="pulsating-circle">
-                </div>
-                <div class="temporal-line">
-                </div>
-              </div>
-              <div style="width: calc(100% - 20px);">
-              {% for education in site.data.education %}
-              <div class="resume-item scrollFade" itemscope itemprop="alumniOf" itemtype="http://schema.org/CollegeOrUniversity">
-                <h3 class="resume-item-title" itemprop="name">{{ education.uni }}</h3>
-                <h4 class="resume-item-details group" itemprop="description">{{ education.degree }}</h4>
-                <h4 class="resume-item-details group" itemprop="description">{{ education.year }}</h4>
-                <h5 class="resume-item-details award-title" itemprop="description">{{ education.award }}</h5>
-                <p class="resume-item-copy" itemprop="description">
-                <ul class="resume-item-list">
-                  {% for award in education.awards %}
-                    <li>{{ award.award }}</li>
-                  {% endfor %}
-                </ul>
-                <p class="resume-item-copy">{{ education.summary }}</p>
-              </div>
-            {% endfor %}
-              </div>
-            </div>
-        </section>
-        <!-- end Education -->
-        {% endif %}
-
-        {% if site.resume_section_certifications %}
-        <!-- begin Certifications -->
-        <section class="content-section">
-          <header class="section-header">
-            <h2>Certificaciones</h2>
-          </header>
-                    <div style="display: flex;">
-              <div class="temporal">
-                <div class="pulsating-circle">
-                </div>
-                <div class="temporal-line">
-                </div>
-              </div>
-              <div style="width: calc(100% - 20px);">
-          {% for certification in site.data.certifications %}
-          <div class="resume-item scrollFade" itemscope itemprop="recognizedBy" itemtype="http://schema.org/EducationalOccupationalCredential">
-            <h3 class="resume-item-title" itemprop="name">{{ certification.recognizedBy }}</h3>
-            <h4 class="resume-item-details group" itemprop="description">{{ certification.name }}</h4>
-            <h4 class="resume-item-details group" itemprop="description">{{ certification.year }}</h4>
-            <p class="resume-item-copy" itemprop="description">
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-        </section>
-        <!-- end Certifications -->
-        {% endif %}
-
-        {% if site.resume_section_skills %}
-        <!-- begin Skills -->
-        <section class="content-section">
-          <header class="section-header">
-            <h2>Skills</h2>
-          </header>
-          {% for skill in site.data.skills %}
-          <div class="resume-item">
-            <h4 class="resume-item-details">{{ skill.skill }}</h4>
-            <p class="resume-item-copy">{{ skill.description }}</p>
-          </div>
-          {% endfor %}
-        </section>
-        <!-- end Skills -->
-        {% endif %}
+        <!-- end Section -->
+        {% endfor %}
+        <!-- end Sections -->
 
         {% if site.resume_section_links %}
         <!-- begin Links -->
