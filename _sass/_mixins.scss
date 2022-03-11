@@ -51,7 +51,7 @@
 // type utilities
 
 @mixin sans {
-  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: -apple-system, "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 @mixin sans_light {
