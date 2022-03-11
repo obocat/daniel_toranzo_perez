@@ -62,7 +62,18 @@
             <div style="width: calc(100% - 20px);">
               {% for element in section %}
                 <div class="resume-item scrollFade">
-                  <h3 class="resume-item-title">{{ element.recognizedBy }} {{ element.uni }} {{ element.company }}</h3>
+                  {% if element.icon %}
+                    <div style="display: flex;">
+                      <div style="width: 28px; height: 24px; ">
+                        <img style="object-fit: cover; width: 24px; height: 24px" src="images/icons/{{ element.icon }}"/>
+                      </div>
+                      <div style="width: calc(100% - 28px);">
+                        <h3 class="resume-item-title">{{ element.recognizedBy }} {{ element.uni }} {{ element.company }}</h3>
+                      </div>
+                    </div>
+                  {% else %}
+                    <h3 class="resume-item-title">{{ element.recognizedBy }} {{ element.uni }} {{ element.company }}</h3>
+                  {% endif %}
                   <h4 class="resume-item-details group">{{ element.name }} {{ element.degree }} {{ element.position }}</h4>
                   <h4 class="resume-item-details group">{{ element.year }} {{ element.duration}} </h4>
                   <ul class="resume-item-list">

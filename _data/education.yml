@@ -4,15 +4,19 @@
   year: 2020 &mdash; 2021
   awards:
     - award: Premio Extraordinario del Máster Universitario en Computación de Altas Prestaciones.
+  icon: usc.jpg
 
 - degree: Grado en Ingeniería en Tecnologías de la Información
   uni: U.N.E.D.
   year: 2015 &mdash; 2020
+  icon: uned.jpg
 
 - degree: C.S. Desarrollo de Aplicaciones Web
   uni: I.E.S. Chan do monte
   year: 2014 &mdash; 2015
+  icon: chandomonte.png
 
 - degree: C.S. Desarrollo de Aplicaciones Multiplataforma                       
   uni: I.E.S. Chan do monte
   year: 2012 &mdash; 2014
+  icon: chandomonte.png
