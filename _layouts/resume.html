@@ -82,6 +82,9 @@
                     {% endfor %}
                   </ul>
                   <p class="resume-item-copy">{{ element.summary }}</p>
+                  {% if element.tags %}
+                    <p class="resume-item-copy">{{ element.tags }} </p>
+                  {% endif %}
                 </div>
               {% endfor %}
             </div>
@@ -125,7 +128,7 @@
         {% endif %}
 
         <footer class="page-footer">
-          <p class="footer-line">Basado en el proyecto <a href="https://github.com/shrunSprint89/jekyll-blog-template" itemprop="url">jekyll-blog-template</a>. Código fuente de la página en <a href="https://github.com/obocat/daniel_toranzo_perez" itemprop="url">Github</a>.</p>
+          <p class="footer-line">Basado en el proyecto <a href="https://github.com/jglovier/resume-template" itemprop="url">jekyll-blog-template</a>. Código fuente de la página en <a href="https://github.com/obocat/daniel_toranzo_perez" itemprop="url">Github</a>.</p>
         </footer>
         
       </div>

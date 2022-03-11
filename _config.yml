@@ -17,7 +17,6 @@ resume_title:                   "Ingeniero de software"
 
 # used for the contact button in _layouts/resume.html
 resume_contact_email:           "daniel@obocat.com"
-
 display_header_contact_info:    "false"
 
 resume_header_intro: "<p>Me interesan los temas relacionados con el procesamiento paralelo, arquitecturas heterogéneas y la eficiencia de los algoritmos. Me gusta 
@@ -39,7 +38,7 @@ show_appstore_banner:           true
 # Resume social links
 # uncomment the options you wish to display, and add your own URL
 resume_social_links:
-  resume_github_url:            "https://obocat.github.io/daniel_toranzo_perez/"
+  resume_github_url:            "https://github.com/obocat"
   # resume_twitter_url:           "http://twitter.com/jglovier"
   # resume_dribbble_url:          "https://dribbble.com/jag"
   # resume_facebook_url:          "insert Facebook URL here"

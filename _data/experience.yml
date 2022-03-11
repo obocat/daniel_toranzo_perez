@@ -4,20 +4,24 @@
   duration: Remoto, Mayo 2021 &mdash; Actualidad
   summary: Desarrollo de nuevas funcionalidades y mantenimiento de la aplicación Zara Home iOS para el grupo Inditex. Utilizando las metodologías scrum, kanban con Jira y git para el control de versiones.
   icon: nomasystems.jpg
+  tags: Swift, Objective-C.
 
 - company: C.A. U.N.E.D. Pontevedra
   position: Departamento de informática, prácticas extracurriculares.
   duration: Pontevedra, Febrero 2018 &mdash; Marzo 2020
   summary: <ul class="resume-item-list"><li>Desarrollo de un software generador de documentación, cita previa y firma de  cartas.</li><li>Gestión de bases de datos.</li><li>Configuración y mantenimiento de redes y equipos informáticos.</li></ul>
   icon: uned.jpg
+  tags: Java, PHP.
 
 - company: E.N.C.E.
   position: Desarrollador de software, F.C.T. D.A.W.
   duration: Pontevedra, Octubre 2015 &mdash; Diciembre 2015
   summary: <ul class="resume-item-list"><li>Desarrollo de un software de parte diario.</li></ul>
   icon: ence.jpg
+  tags: PHP.
 
 - company: Sinapsis
   position: Desarrollador de software, F.C.T. D.A.M.
   duration: Pontevedra, Abril 2014 &mdash; Junio 2014
   summary: <ul class="resume-item-list"><li>Desarrollo de un panel de administración para páginas web autogeneradas.</li></ul>
+  tags: Java.

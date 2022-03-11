@@ -5,6 +5,7 @@
   awards:
     - award: Premio Extraordinario del Máster Universitario en Computación de Altas Prestaciones.
   icon: usc.jpg
+  tags: CUDA, OpenCL, C / C++, OpenMP, MPI.
 
 - degree: Grado en Ingeniería en Tecnologías de la Información
   uni: U.N.E.D.
