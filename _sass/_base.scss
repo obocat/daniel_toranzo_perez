@@ -11,6 +11,12 @@
   .wrapper {
     background: $black;
   }
+  .fixed-header {
+    background: black;
+  }
+  .fixed-header-content {
+    background: $black;
+  }
   body {
     color: $white;
     background: black;
@@ -19,6 +25,12 @@
 
 @media (prefers-color-scheme: light) {
   .wrapper {
+    background: $white;
+  }
+  .fixed-header {
+    background: $gray;
+  }
+  .fixed-header-content {
     background: $white;
   }
   body {
@@ -49,7 +61,7 @@ a {
   padding: 0 24px;
   margin: 0 auto;
   zoom: 1;
-  border-radius: 15px;
+  border-radius: 0px 0px 15px 15px;
 }
 
 // clearfix (now called group,

@@ -8,11 +8,11 @@
   margin-top: 1.5rem;
   h2 {
     @include sans;
-    font-size: 28px;
+    font-size: 1.5rem;
     line-height: 1.19048;
     font-weight: 600;
     letter-spacing: -.05rem;
-    text-align: center;
+    text-align: left;
     background: linear-gradient(225deg, #ff5ea7 36.04%, #010fcb 88.83%, #ff6530 220.3%);
     color: transparent;
     background-size: cover;
@@ -38,7 +38,18 @@
 
 // page header styles
 
-.page-header { padding: 1.5rem 0;
+.fixed-header {
+  position: sticky;
+  z-index:1;
+  top: 0;
+  max-width: 728px;
+  margin: 0 auto;
+  zoom: 1;
+  
+  .fixed-header-content {
+    padding: 1.5rem 0px;
+    border-radius: 15px 15px 0px 0px;
+  }
 
   .avatar {
     width: 95px;
@@ -51,14 +62,16 @@
 
   .header-name {
     @include sans;
-    font-size: 3rem;
+    font-size: 1.5rem;
     font-weight: 600;
     text-align: center;
-    letter-spacing: -.15rem;
     line-height: 1;
     margin: 1rem 0 0;
   }
+}
 
+.page-header { 
+  padding-bottom: 1.5rem;
   .header-contact-info {
     @include sans;
     text-align: center;
@@ -76,7 +89,7 @@
     .header-title {
       @include sans;
       font-weight: 300;
-      font-size: 1.75rem;
+      font-size: 1.5rem;
       line-height: 2rem;
       letter-spacing: -.05rem;
       text-align: center;
@@ -163,7 +176,7 @@
   .resume-item-title {
     @include sans_bold;
     margin: 0 0 .75rem;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     letter-spacing: -.05rem;
     line-height: 1;
   }
@@ -231,7 +244,7 @@
   .page-header { padding: 1rem 0 .2rem;
     .header-name {
       @include sans_bold;
-      font-size: 2rem;
+      font-size: 1.5rem;
       margin: 0 0 .2rem;
     }
   }
