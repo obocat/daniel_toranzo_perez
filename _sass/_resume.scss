@@ -45,7 +45,7 @@
   max-width: 728px;
   margin: 0 auto;
   zoom: 1;
-  
+
   .fixed-header-content {
     padding: 1.5rem 0px;
     border-radius: 15px 15px 0px 0px;
@@ -71,7 +71,6 @@
 }
 
 .page-header { 
-  padding-bottom: 1.5rem;
   .header-contact-info {
     @include sans;
     text-align: center;
@@ -82,8 +81,6 @@
 
   .title-bar {
     @include section_border_thin;
-    margin-top: 2rem;
-    padding: .4rem 0;
     @include clearfix;
 
     .header-title {
