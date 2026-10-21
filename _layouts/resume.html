@@ -6,6 +6,7 @@ layout: default
 <html>
   {% include head.html %}
   <body>
+    <div class="scroll-progress" aria-hidden="true"><span></span></div>
     <!-- Navigation -->
     <header class="fixed-header">
       <div class="fixed-header-content">
@@ -17,7 +18,7 @@ layout: default
       </div>
     </header>
 
-    <div class="wrapper with-fixed" itemscope itemtype="http://schema.org/Person">
+    <div class="wrapper" itemscope itemtype="http://schema.org/Person">
       <!-- Main Content -->
       <main class="main-content" itemprop="mainContentOfPage">
         {% assign sections = "" | split: ',' %}
@@ -76,10 +77,7 @@ layout: default
       </main>
     </div>
 
-    <footer class="page-footer" style="text-align: center;">
-      <p class="footer-line" style="margin: 0;">Código fuente de la página en <a href="https://github.com/obocat/daniel_toranzo_perez" itemprop="url">Github</a>.</p>
-    </footer>
-
     <script src="js/scrollfade.js"></script>
+    <script src="js/reveal.js"></script>
   </body>
 </html>

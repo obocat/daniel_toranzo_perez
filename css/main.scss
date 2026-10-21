@@ -35,7 +35,7 @@ body {
   color: var(--text-primary);
   background-color: var(--bg-light);
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Contenedor principal */
@@ -44,34 +44,26 @@ body {
   margin: 0 auto;
   padding: 3rem 2rem 2rem;
   background-color: var(--bg-card);
-  min-height: 100vh;
-  transition: margin-top 0.3s ease;
+  min-height: calc(100vh - var(--header-height));
 }
-
-/* Efecto cuando header es fixed */
-.wrapper.with-fixed { margin-top: var(--header-height); }
 
 /* ==========================================
    HEADER / FIXED HEADER
    ========================================== */
 
 .fixed-header {
-  position: fixed;
+  position: sticky;
   top: 0;
-  left: 0;
-  right: 0;
   z-index: 100;
   height: var(--header-height);
   background-color: var(--bg-card);
   border-bottom: 1px solid var(--border-color);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0;
-  transition: all 0.3s ease;
+  transition: box-shadow 0.3s ease;
 }
 
 .fixed-header:hover {
@@ -140,11 +132,16 @@ body {
 
 .header-name {
   font-family: 'Inter', sans-serif;
-  font-size: 1.875rem;
+  font-size: clamp(1rem, 3.6vw, 1.75rem);
   font-weight: 700;
   color: var(--text-primary);
-  margin: 0 0 0.25rem;
+  margin: 0;
   letter-spacing: -0.02em;
+  line-height: 1.2;
+  min-width: 0;
+  flex: 1 1 auto;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 .header-title {
@@ -339,24 +336,33 @@ body {
    ========================================== */
 
 @media (max-width: 640px) {
+  :root {
+    --header-height: 64px;
+  }
+
   .fixed-header {
-    --header-height: 60px;
-    padding: 0;
+    height: auto;
+    min-height: var(--header-height);
+    padding: 0.4rem 0;
+    overflow: hidden;
   }
 
   .fixed-header-content {
-    padding: 0 1.5rem;
-    gap: 0.75rem;
+    padding: 0 1rem;
+    gap: 0.5rem;
+    min-height: 44px;
   }
 
   .avatar {
-    width: 60px;
-    height: 60px;
-    margin-right: 1rem;
+    width: 44px;
+    height: 44px;
+    border-width: 2px;
+    margin-right: 0.65rem;
   }
 
   .header-name {
-    font-size: 1.5rem;
+    font-size: clamp(0.9rem, 4vw, 1.2rem);
+    line-height: 1.15;
   }
 
   .header-title {
@@ -365,24 +371,22 @@ body {
 
   .icon-links {
     margin-left: auto;
-    gap: 0.35rem;
+    gap: 0.3rem;
   }
 
   .icon-link {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
   }
 
   .icon {
-    width: 16px;
-    height: 16px;
+    width: 15px;
+    height: 15px;
   }
 
   .wrapper {
-    padding: 2rem 1.5rem 1.5rem;
+    padding: 2rem 1.25rem 1.5rem;
   }
-
-  .wrapper.with-fixed { margin-top: 60px; }
 }
 
 /* ==========================================
@@ -517,6 +521,153 @@ a:focus, button:focus, .icon-link:focus {
 }
 
 /* ==========================================
+   EFECTOS VISUALES SUTILES
+   ========================================== */
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg-light);
+  overscroll-behavior-y: none;
+}
+
+body {
+  overscroll-behavior-y: none;
+}
+
+/* Halo de color muy tenue detrás del contenido */
+body {
+  background-image:
+    radial-gradient(620px 320px at 10% -8%, rgba(99, 102, 241, 0.10), transparent 70%),
+    radial-gradient(520px 280px at 92% -4%, rgba(236, 72, 153, 0.08), transparent 70%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* Tarjeta principal con sombra suave */
+.wrapper {
+  box-shadow:
+    0 0 0 1px rgba(15, 23, 42, 0.03),
+    0 24px 70px -40px rgba(15, 23, 42, 0.25);
+}
+
+/* Barra de progreso de lectura */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 200;
+  pointer-events: none;
+}
+
+.scroll-progress span {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  background: linear-gradient(
+    90deg,
+    var(--brand-primary),
+    var(--brand-secondary),
+    var(--brand-accent)
+  );
+  transition: transform 0.12s linear;
+}
+
+/* Subrayado degradado bajo el título de cada sección */
+.section-header h2::after {
+  content: '';
+  display: block;
+  width: 46px;
+  height: 3px;
+  margin-top: 0.55rem;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary));
+  opacity: 0.85;
+}
+
+/* Transición de color al pasar el cursor por una entrada */
+.resume-item-title {
+  transition: color 0.25s ease;
+}
+
+.resume-item:hover .resume-item-title {
+  color: var(--brand-primary);
+}
+
+/* Enlaces con subrayado animado */
+.footer-line a {
+  position: relative;
+  text-decoration: none;
+  color: var(--brand-primary);
+}
+
+.footer-line a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.3s ease;
+}
+
+.footer-line a:hover::after {
+  transform: scaleX(1);
+}
+
+/* Aparición suave al hacer scroll (activada por JS) */
+.js-reveal .reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.65s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.65s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.js-reveal .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Selección de texto */
+::selection {
+  background-color: rgba(99, 102, 241, 0.2);
+  color: var(--text-primary);
+}
+
+/* Respeto por quien prefiere menos movimiento */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .js-reveal .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .scroll-progress span {
+    transition: none;
+  }
+
+  .fixed-header,
+  .icon-link,
+  .avatar,
+  .resume-item,
+  .resume-item-title,
+  .footer-line a::after {
+    transition: none;
+  }
+}
+
+/* ==========================================
    MODO OSCURO
    (al final para prevalecer sobre los estilos base)
    ========================================== */
@@ -537,9 +688,9 @@ a:focus, button:focus, .icon-link:focus {
   }
 
   .fixed-header {
-    background-color: rgba(15, 23, 42, 0.92);
+    background-color: var(--bg-card);
     border-bottom-color: #334155;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
   }
 
   .wrapper {
@@ -592,6 +743,26 @@ a:focus, button:focus, .icon-link:focus {
   }
 
   .footer-line a {
+    color: #a5b4fc;
+  }
+
+  .resume-item:hover .resume-item-title {
+    color: #a5b4fc;
+  }
+
+  .wrapper {
+    box-shadow:
+      0 0 0 1px rgba(148, 163, 184, 0.12),
+      0 24px 70px -40px rgba(0, 0, 0, 0.8);
+  }
+
+  body {
+    background-image:
+      radial-gradient(620px 320px at 10% -8%, rgba(99, 102, 241, 0.22), transparent 70%),
+      radial-gradient(520px 280px at 92% -4%, rgba(236, 72, 153, 0.16), transparent 70%);
+  }
+
+  .resume-item:hover .resume-item-title {
     color: #a5b4fc;
   }
 }
