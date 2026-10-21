@@ -101,7 +101,7 @@
      REVELADO AL SCROLL
      ========================================== */
 
-  var revealElements = document.querySelectorAll('.section-header, .resume-item');
+  var revealElements = document.querySelectorAll('.section-header, .resume-item, .project-card, .skill-group');
 
   document.documentElement.classList.add('js-reveal');
 
@@ -209,6 +209,143 @@
       item.addEventListener('mouseleave', reset);
       item.addEventListener('focusin', type);
       item.addEventListener('focusout', reset);
+    });
+  }
+
+  /* ==========================================
+     CERTIFICACIONES PLEGADAS
+     ========================================== */
+
+  var collapsibleSections = document.querySelectorAll('details.section-collapsible');
+
+  Array.prototype.forEach.call(collapsibleSections, function (details) {
+    details.addEventListener('toggle', function () {
+      if (!details.open) return;
+
+      Array.prototype.forEach.call(details.querySelectorAll('.reveal'), function (element) {
+        element.classList.add('is-visible');
+      });
+    });
+  });
+
+  /* Al imprimir, muestra también las certificaciones plegadas. */
+  var printedDetails = [];
+
+  window.addEventListener('beforeprint', function () {
+    printedDetails = [];
+
+    Array.prototype.forEach.call(collapsibleSections, function (details) {
+      printedDetails.push({ element: details, open: details.open });
+      details.open = true;
+    });
+  });
+
+  window.addEventListener('afterprint', function () {
+    printedDetails.forEach(function (state) {
+      state.element.open = state.open;
+    });
+    printedDetails = [];
+  });
+
+  /* ==========================================
+     COPIAR EMAIL
+     ========================================== */
+
+  var copyButton = document.querySelector('.copy-email');
+
+  if (copyButton) {
+    var copyLabelEs = copyButton.querySelector('.lang-es');
+    var copyLabelEn = copyButton.querySelector('.lang-en');
+    var copyTimer = null;
+    var originalLabels = {
+      es: copyLabelEs ? copyLabelEs.textContent : '',
+      en: copyLabelEn ? copyLabelEn.textContent : ''
+    };
+
+    var resetCopyButton = function () {
+      copyButton.classList.remove('is-copied', 'is-error');
+
+      if (copyLabelEs) copyLabelEs.textContent = originalLabels.es;
+      if (copyLabelEn) copyLabelEn.textContent = originalLabels.en;
+    };
+
+    var showCopied = function () {
+      copyButton.classList.remove('is-error');
+      copyButton.classList.add('is-copied');
+
+      if (copyLabelEs) {
+        copyLabelEs.textContent = copyButton.getAttribute('data-copied-es') || 'Copiado';
+      }
+
+      if (copyLabelEn) {
+        copyLabelEn.textContent = copyButton.getAttribute('data-copied-en') || 'Copied';
+      }
+
+      window.clearTimeout(copyTimer);
+      copyTimer = window.setTimeout(resetCopyButton, 2000);
+    };
+
+    var showCopyHelp = function () {
+      copyButton.classList.remove('is-copied');
+      copyButton.classList.add('is-error');
+
+      if (copyLabelEs) {
+        copyLabelEs.textContent = copyButton.getAttribute('data-error-es') || 'Copia manualmente';
+      }
+
+      if (copyLabelEn) {
+        copyLabelEn.textContent = copyButton.getAttribute('data-error-en') || 'Copy manually';
+      }
+
+      var email = document.querySelector('.contact-email');
+
+      if (email) {
+        var range = document.createRange();
+        range.selectNodeContents(email);
+        var selection = window.getSelection();
+
+        if (selection) {
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+      }
+
+      window.clearTimeout(copyTimer);
+      copyTimer = window.setTimeout(resetCopyButton, 4000);
+    };
+
+    var copyToClipboard = function (text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(text);
+      }
+
+      return new Promise(function (resolve, reject) {
+        var field = document.createElement('textarea');
+        field.value = text;
+        field.setAttribute('readonly', '');
+        field.style.position = 'fixed';
+        field.style.top = '-9999px';
+        document.body.appendChild(field);
+        field.select();
+
+        try {
+          if (document.execCommand('copy')) {
+            resolve();
+          } else {
+            reject(new Error('copy failed'));
+          }
+        } catch (error) {
+          reject(error);
+        } finally {
+          document.body.removeChild(field);
+        }
+      });
+    };
+
+    copyButton.addEventListener('click', function () {
+      copyToClipboard(copyButton.getAttribute('data-email') || '')
+        .then(showCopied)
+        .catch(showCopyHelp);
     });
   }
 })();

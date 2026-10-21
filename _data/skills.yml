@@ -1,0 +1,40 @@
+# Skills grouped for quick scanning (ES / EN)
+- group: iOS y UI
+  group_en: iOS & UI
+  items:
+    - Swift
+    - SwiftUI
+    - UIKit
+    - watchOS
+    - WidgetKit
+    - Compositional Layout
+    - Auto Layout
+
+- group: Arquitectura
+  group_en: Architecture
+  items:
+    - Clean Architecture
+    - MVVM
+    - Dynamic DSLs
+    - Modularisation
+    - API design
+
+- group: Concurrencia y calidad
+  group_en: Concurrency & quality
+  items:
+    - Swift Concurrency
+    - async/await
+    - Actors
+    - GCD
+    - XCTest
+    - Clean Code
+
+- group: Herramientas y entrega
+  group_en: Tooling & delivery
+  items:
+    - Git
+    - CI/CD
+    - Swift Package Manager
+    - Homebrew
+    - Jira
+    - Scrum

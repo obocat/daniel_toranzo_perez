@@ -26,6 +26,24 @@
   </p>
   {% endif %}
 
+  {% if include.award %}
+  <p class="resume-item-award">
+    <span class="resume-item-award-mark" aria-hidden="true">✦</span>
+    <span class="resume-item-award-body">
+      <span class="resume-item-award-title">
+        <span class="lang-es">{{ include.award }}</span>
+        <span class="lang-en">{{ include.award_en | default: include.award }}</span>
+      </span>
+      {% if include.award_meta %}
+      <span class="resume-item-award-meta">
+        <span class="lang-es">{{ include.award_meta }}</span>
+        <span class="lang-en">{{ include.award_meta_en | default: include.award_meta }}</span>
+      </span>
+      {% endif %}
+    </span>
+  </p>
+  {% endif %}
+
   {% if include.summary_es or include.summary_en %}
   <p class="resume-item-copy">
     <span class="lang-es">{{ include.summary_es }}</span>

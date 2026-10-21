@@ -4,6 +4,10 @@
   uni: U.S.C., U.D.C.
   uni_en: U.S.C., U.D.C.
   year: 2020 – 2021
+  award: Premio Extraordinario do Máster Universitario en Computación de Altas Prestacións
+  award_en: Extraordinary MSc Award in High Performance Computing
+  award_meta: Universidade de Santiago de Compostela · ene. 2022
+  award_meta_en: University of Santiago de Compostela · Jan 2022
   tags: openmp, cuda, opencl, C / C++, MPI
   icon: usc.jpg
 
@@ -13,7 +17,7 @@
   uni_en: University of A Coruña
   year: 2022 – 2023
   tags: Microsoft Project, Project Management Body of Knowledge (PMBOK), Agile Scrum, Risk Management
-  icon: usc.jpg
+  icon: udc.png
 
 - degree: Grado en Ingeniería en Tecnologías de la Información
   degree_en: BSc in Information Technology Engineering

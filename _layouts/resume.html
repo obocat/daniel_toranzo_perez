@@ -28,6 +28,11 @@
 
     <div class="wrapper" itemscope itemtype="http://schema.org/Person">
       <main class="main-content" itemprop="mainContentOfPage">
+        <div class="print-header" aria-hidden="true">
+          <span class="print-name">{{ site.resume_name }}</span>
+          <span class="print-role">iOS Engineer · {{ site.resume_contact_email }} · www.obocat.com</span>
+        </div>
+
         {% assign index = 0 %}
 
         {% if site.data.profile %}
@@ -77,6 +82,77 @@
         </section>
         {% endif %}
 
+        {% if site.resume_section_projects == true and site.data.projects %}
+        {% assign index = index | plus: 1 %}
+        <!-- Proyectos -->
+        <section class="section section-projects">
+          <header class="section-header">
+            <span class="section-index">0{{ index }}</span>
+            <h2><span class="lang-es">Proyectos</span><span class="lang-en">Projects</span></h2>
+          </header>
+          <div class="section-content">
+            <div class="project-grid">
+              {% for project in site.data.projects %}
+              {% assign primary_link = project.links | first %}
+              <article class="project-card{% if project.featured %} project-card-featured{% endif %}">
+                <a class="project-media" href="{{ primary_link.url }}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+                  <img src="{{ project.image }}" alt="" width="1200" height="750" loading="lazy">
+                </a>
+                <div class="project-body">
+                  <h3 class="project-title">{{ project.name }}</h3>
+                  <p class="project-tagline lang-es">{{ project.tagline }}</p>
+                  <p class="project-tagline lang-en">{{ project.tagline_en }}</p>
+                  <p class="project-description lang-es">{{ project.description }}</p>
+                  <p class="project-description lang-en">{{ project.description_en }}</p>
+                  <p class="project-tags">
+                    <span class="lang-es">{{ project.tags }}</span>
+                    <span class="lang-en">{{ project.tags_en | default: project.tags }}</span>
+                  </p>
+                  <div class="project-links">
+                    {% for link in project.links %}
+                    <a class="project-link" href="{{ link.url }}" target="_blank" rel="noopener">
+                      <span class="lang-es">{{ link.label }}</span>
+                      <span class="lang-en">{{ link.label_en | default: link.label }}</span>
+                      {% include icons/icon-external.html %}
+                    </a>
+                    {% endfor %}
+                  </div>
+                </div>
+              </article>
+              {% endfor %}
+            </div>
+          </div>
+        </section>
+        {% endif %}
+
+        {% if site.resume_section_skills == true and site.data.skills %}
+        {% assign index = index | plus: 1 %}
+        <!-- Aptitudes -->
+        <section class="section section-skills">
+          <header class="section-header">
+            <span class="section-index">0{{ index }}</span>
+            <h2><span class="lang-es">Aptitudes</span><span class="lang-en">Skills</span></h2>
+          </header>
+          <div class="section-content">
+            <div class="skills-grid">
+              {% for group in site.data.skills %}
+              <div class="skill-group">
+                <h3 class="skill-group-title">
+                  <span class="lang-es">{{ group.group }}</span>
+                  <span class="lang-en">{{ group.group_en | default: group.group }}</span>
+                </h3>
+                <ul class="skill-list">
+                  {% for item in group.items %}
+                  <li class="skill-chip">{{ item }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </section>
+        {% endif %}
+
         {% if site.resume_section_education == true %}
         {% assign index = index | plus: 1 %}
         <!-- Educación -->
@@ -94,6 +170,10 @@
               subtitle=element.uni
               subtitle_en=element.uni_en
               meta=element.year
+              award=element.award
+              award_en=element.award_en
+              award_meta=element.award_meta
+              award_meta_en=element.award_meta_en
               tags_es=element.tags
               %}
             {% endfor %}
@@ -101,14 +181,18 @@
         </section>
         {% endif %}
 
-        {% if site.resume_section_certifications == true %}
+        {% if site.resume_section_certifications == true and site.data.certifications %}
         {% assign index = index | plus: 1 %}
-        <!-- Certificaciones -->
-        <section class="section">
-          <header class="section-header">
+        <!-- Certificaciones (plegadas para no restar protagonismo) -->
+        <details class="section section-collapsible">
+          <summary class="section-header">
             <span class="section-index">0{{ index }}</span>
             <h2><span class="lang-es">Certificaciones</span><span class="lang-en">Certifications</span></h2>
-          </header>
+            <span class="section-count">{{ site.data.certifications.size }}</span>
+            <span class="section-toggle" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </span>
+          </summary>
           <div class="section-content">
             {% for element in site.data.certifications %}
             {% include resume-item.html
@@ -117,6 +201,50 @@
               subtitle=element.recognizedBy
               meta=element.year %}
             {% endfor %}
+          </div>
+        </details>
+        {% endif %}
+
+        {% if site.resume_section_contact == true %}
+        {% assign index = index | plus: 1 %}
+        <!-- Contacto -->
+        <section class="section section-contact">
+          <header class="section-header">
+            <span class="section-index">0{{ index }}</span>
+            <h2><span class="lang-es">Contacto</span><span class="lang-en">Contact</span></h2>
+          </header>
+          <div class="section-content">
+            <div class="contact-card">
+              <p class="contact-kicker"><span class="lang-es">Contacto directo</span><span class="lang-en">Direct contact</span></p>
+              <p class="contact-lead lang-es">¿Tienes un reto de iOS en mente? Cuéntamelo.</p>
+              <p class="contact-lead lang-en">Have an iOS challenge in mind? Tell me about it.</p>
+              <a class="contact-email" href="mailto:{{ site.resume_contact_email }}">{{ site.resume_contact_email }}</a>
+              <div class="contact-actions">
+                <a class="contact-button contact-button-primary" href="mailto:{{ site.resume_contact_email }}">
+                  <span class="lang-es">Hablemos</span>
+                  <span class="lang-en">Let&rsquo;s talk</span>
+                </a>
+                <button
+                  type="button"
+                  class="contact-button contact-button-ghost copy-email"
+                  data-email="{{ site.resume_contact_email }}"
+                  data-copied-es="Copiado"
+                  data-copied-en="Copied"
+                  data-error-es="Copia manualmente"
+                  data-error-en="Copy manually">
+                  <span class="copy-label lang-es">Copiar email</span>
+                  <span class="copy-label lang-en">Copy email</span>
+                </button>
+              </div>
+              <div class="contact-socials">
+                {% if site.resume_social_links.resume_github_url %}
+                <a href="{{ site.resume_social_links.resume_github_url }}" target="_blank" rel="noopener">GitHub {% include icons/icon-external.html %}</a>
+                {% endif %}
+                {% if site.resume_social_links.resume_linkedin_url %}
+                <a href="{{ site.resume_social_links.resume_linkedin_url }}" target="_blank" rel="noopener">LinkedIn {% include icons/icon-external.html %}</a>
+                {% endif %}
+              </div>
+            </div>
           </div>
         </section>
         {% endif %}

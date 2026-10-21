@@ -1,5 +1,7 @@
 # Site settings
 title: "Daniel Toranzo Pérez"
+url: "https://www.obocat.com"
+baseurl: ""
 description: "Daniel Toranzo Pérez — iOS Engineer with 5+ years at Inditex (Zara, Zara Home). Swift, SwiftUI, Objective-C, Compositional Layout and Clean Code."
 google-verification: "r8LavZ7oFRU_3YLmlH7wSHXuTdIikA0FXh9M_2xaE4E"
 author: "Daniel Toranzo Pérez"
@@ -31,8 +33,11 @@ resume_looking_for_work:        "yes"
 # Decide which sections to use
 # comment out to hide
 resume_section_experience:      true
+resume_section_projects:        true
+resume_section_skills:          true
 resume_section_education:       true
 resume_section_certifications:  true
+resume_section_contact:         true
 show_appstore_banner:           true
 
 # Resume social links

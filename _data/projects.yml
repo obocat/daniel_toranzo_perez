@@ -1,0 +1,40 @@
+# Personal projects (ES / EN)
+- name: GasolinerasBaratas.org
+  tagline: Comparador de precios de carburantes en España
+  tagline_en: Fuel price comparison across Spain
+  description: 'Aplicación web que consulta los precios oficiales de carburantes y muestra las gasolineras más baratas por provincia, con una interfaz responsive y datos actualizados.'
+  description_en: 'Web app that reads official fuel prices and surfaces the cheapest stations by province, with a responsive interface and up-to-date data.'
+  image: images/projects/gasolineras.png
+  featured: true
+  tags: Next.js · API · Datos oficiales
+  tags_en: Next.js · API · Official data
+  links:
+    - label: Ver web
+      label_en: Live site
+      url: https://www.gasolinerasbaratas.org/
+
+- name: xcode-xlsx
+  tagline: Localización de iOS directa desde la hoja de cálculo
+  tagline_en: iOS localisation, straight from the spreadsheet
+  description: 'Herramienta de línea de comandos en Swift que convierte un archivo .xlsx en recursos .strings para Xcode. Instalable con Homebrew y construida con Swift Package Manager.'
+  description_en: 'Swift command-line tool that turns an .xlsx file into Xcode .strings resources. Installable via Homebrew and built with Swift Package Manager.'
+  image: images/projects/xcode-xlsx.png
+  tags: Swift · SPM · Homebrew · i18n
+  tags_en: Swift · SPM · Homebrew · i18n
+  links:
+    - label: GitHub
+      url: https://github.com/obocat/xcode-xlsx
+    - label: Homebrew
+      url: https://github.com/obocat/homebrew-formulae
+
+- name: QuickVideoEditor
+  tagline: Composición de vídeo por línea de comandos
+  tagline_en: Command-line video composition
+  description: 'CLI en Swift que lee un proyecto JSON con pistas de audio y vídeo y genera el vídeo final con AVFoundation, sin abrir un editor.'
+  description_en: 'Swift CLI that reads a JSON project with audio and video tracks and renders the final video with AVFoundation, without opening an editor.'
+  image: images/projects/quickvideoeditor.png
+  tags: Swift · AVFoundation · CLI
+  tags_en: Swift · AVFoundation · CLI
+  links:
+    - label: GitHub
+      url: https://github.com/obocat/quickvideoeditor
