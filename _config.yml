@@ -13,7 +13,7 @@ sass:
 # Resume settings
 resume_avatar:                  "true"
 resume_name:                    "Daniel Toranzo Pérez"
-resume_title:                   "Ingeniero de software"
+resume_title:
 
 # used for the contact button in _layouts/resume.html
 resume_contact_email:           "daniel@obocat.com"
@@ -50,6 +50,7 @@ resume_print_social_links:      true
 
 # Design settings
 resume_theme:                   default
+# Available themes: default, modern, minimal, compact
 
 # Note: when editing locally, remember to restart
 # your Jekyll server when you edit this file. Changes

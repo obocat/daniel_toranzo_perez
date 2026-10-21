@@ -82,6 +82,8 @@
   .title-bar {
     @include section_border_thin;
     @include clearfix;
+    background: $gray;
+    border-radius: 15px 15px 0 0;
 
     .header-title {
       @include sans;
@@ -104,64 +106,6 @@
     text-justify: inter-word;
     @include media_larger_than_mobile { font-size: 1.125rem; }
   }
-}
-
-.icon-links {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  position: relative;
-  top: 4px;
-  text-align: center;
-  padding-top: .4rem;
-
-  @include media_larger_than_mobile {
-    float: right;
-    padding-top: 0;
-  }
-
-  .icon-link-item {
-    display: inline-block;
-    margin-left: 5px;
-  }
-
-  .icon-link { display: inline-block;
-
-    &:hover .icon path {
-      fill: $accent-color;
-      @include transition(all .2s ease);
-    }
-  }
-
-  .icon {
-    height: 28px;
-  }
-}
-
-.contact-button {
-  @include border-radius(30px);
-  border: 2px solid #1d1d1f;
-  text-decoration: none;
-  text-align: center;
-  display: block;
-  width: 133px;
-  height: 44px;
-  margin-top: 1.5rem;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 8px 16px;
-  font-size: 17px;
-  @include sans_light;
-  color: #272729;
-  background-color: #fff;
-  @include transition(all .2s ease);
-
-  &:hover {
-    background-color: #272729;
-    color: #fff;
-  }
-
-  &.not-looking { width: 400px; }
 }
 
 // resume content styles
@@ -367,5 +311,3 @@
     transform: scale(.8);
   }
 }
-
-/*------*/
