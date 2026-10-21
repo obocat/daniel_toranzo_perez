@@ -1,5 +1,4 @@
 ---
-layout: default
 ---
 
 <!DOCTYPE html>
@@ -48,7 +47,7 @@ layout: default
           </header>
           <div class="section-content">
             {% for element in section %}
-            <div class="resume-item">
+            <div class="resume-item" data-comment="// {{ element.position | default: element.year }}">
               {% if element.icon %}
               <div style="display: inline-block; margin-right: 0.5rem; vertical-align: middle;">
                 <img style="object-fit: cover; width: 24px; height: 24px; vertical-align: middle;" src="images/icons/{{ element.icon }}"/>

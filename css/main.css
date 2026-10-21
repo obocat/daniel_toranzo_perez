@@ -137,8 +137,9 @@ body {
   line-height: 1.2;
   min-width: 0;
   flex: 1 1 auto;
-  white-space: normal;
-  overflow-wrap: break-word;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  overflow: visible;
 }
 
 .header-title {
@@ -347,7 +348,7 @@ body {
   }
 
   .header-name {
-    font-size: clamp(0.9rem, 4vw, 1.2rem);
+    font-size: clamp(0.75rem, calc(8vw - 10px), 1.4rem);
     line-height: 1.15;
   }
 
@@ -585,6 +586,68 @@ body {
   color: var(--brand-primary);
 }
 
+/* Comentario de código que se escribe al pasar el cursor */
+.resume-item {
+  position: relative;
+}
+
+.code-comment {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .code-comment {
+    position: absolute;
+    top: -0.15rem;
+    right: 0;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.1rem 0.5rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+    font-size: 0.72rem;
+    line-height: 1.7;
+    color: var(--text-muted);
+    background-color: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+
+  .resume-item:hover .code-comment,
+  .resume-item:focus-within .code-comment {
+    opacity: 1;
+    transform: none;
+  }
+
+  .code-comment-prefix {
+    margin-right: 0.3em;
+    color: var(--brand-primary);
+  }
+
+  .code-comment-caret {
+    display: inline-block;
+    width: 1px;
+    height: 1em;
+    margin-left: 1px;
+    background-color: currentColor;
+    animation: caretBlink 1.05s steps(1) infinite;
+  }
+}
+@keyframes caretBlink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
 /* Enlaces con subrayado animado */
 .footer-line a {
   position: relative;
