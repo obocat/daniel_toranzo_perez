@@ -1,31 +1,43 @@
 # Education
 - degree: Máster en Computación de Altas Prestaciones
+  degree_en: MSc in High Performance Computing
   uni: U.S.C., U.D.C.
+  uni_en: U.S.C., U.D.C.
   year: 2020 – 2021
   tags: openmp, cuda, opencl, C / C++, MPI
   icon: usc.jpg
 
 - degree: Máster en Dirección Integrada de Proyectos, Project Management
+  degree_en: MSc in Integrated Project Management
   uni: Universidade da Coruña
+  uni_en: University of A Coruña
   year: 2022 – 2023
   tags: Microsoft Project, Project Management Body of Knowledge (PMBOK), Agile Scrum, Risk Management
   icon: usc.jpg
 
 - degree: Grado en Ingeniería en Tecnologías de la Información
+  degree_en: BSc in Information Technology Engineering
   uni: Universidad Nacional de Educación a Distancia - U.N.E.D.
+  uni_en: National University of Distance Education (UNED)
   year: 2015 – 2020
   icon: uned.jpg
 
 - degree: C.S. Desarrollo de Aplicaciones Web
+  degree_en: Higher Technician in Web Application Development
   uni: IES Chan do Monte
+  uni_en: IES Chan do Monte
   year: 2014 – 2015
   icon: chandomonte.png
 
-- degree: C.S. Desarrollo de Aplicaciones Multiplataforma                       
+- degree: C.S. Desarrollo de Aplicaciones Multiplataforma
+  degree_en: Higher Technician in Cross-platform Application Development
   uni: IES Chan do Monte
+  uni_en: IES Chan do Monte
   year: 2012 – 2014
   icon: chandomonte.png
 
 - degree: Inglés B1 (MCER)
+  degree_en: English B1 (CEFR)
   uni: Universidade de Vigo
+  uni_en: University of Vigo
   year: 2009

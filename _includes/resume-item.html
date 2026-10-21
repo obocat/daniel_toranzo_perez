@@ -1,0 +1,42 @@
+{% assign comment_es = include.comment_es %}
+{% assign comment_en = include.comment_en | default: comment_es %}
+{% assign tags_en = include.tags_en | default: include.tags_es %}
+{% assign meta_en = include.meta_en | default: include.meta %}
+
+<div class="resume-item"{% if comment_es or comment_en %} data-comment-es="// {{ comment_es }}" data-comment-en="// {{ comment_en }}"{% endif %}>
+  {% if include.icon %}
+  <span class="resume-item-icon">
+    <img src="images/icons/{{ include.icon }}" alt="{{ include.title }}" loading="lazy" />
+  </span>
+  {% endif %}
+
+  <h3 class="resume-item-title">
+    {% if include.title_en %}<span class="lang-es">{{ include.title }}</span><span class="lang-en">{{ include.title_en }}</span>{% else %}{{ include.title }}{% endif %}
+  </h3>
+
+  {% if include.subtitle %}
+  <p class="resume-item-subtitle">
+    {% if include.subtitle_en %}<span class="lang-es">{{ include.subtitle }}</span><span class="lang-en">{{ include.subtitle_en }}</span>{% else %}{{ include.subtitle }}{% endif %}
+  </p>
+  {% endif %}
+
+  {% if include.meta %}
+  <p class="resume-item-meta">
+    {% if include.meta_en %}<span class="lang-es">{{ include.meta }}</span><span class="lang-en">{{ meta_en }}</span>{% else %}{{ include.meta }}{% endif %}
+  </p>
+  {% endif %}
+
+  {% if include.summary_es or include.summary_en %}
+  <p class="resume-item-copy">
+    <span class="lang-es">{{ include.summary_es }}</span>
+    <span class="lang-en">{{ include.summary_en }}</span>
+  </p>
+  {% endif %}
+
+  {% if include.tags_es %}
+  <p class="resume-item-tags">
+    <span class="lang-es">{{ include.tags_es }}</span>
+    <span class="lang-en">{{ tags_en }}</span>
+  </p>
+  {% endif %}
+</div>

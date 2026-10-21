@@ -1,7 +1,11 @@
 # Experience
 - company: Nomasystems S.L.
   position: iOS Engineer
+  position_en: iOS Engineer
   duration: Remoto, Mayo 2021 &mdash; Actualidad
-  summary: 'Desarrollo de nuevas funcionalidades y mantenimiento de diferentes aplicaciones iOS del Grupo Inditex, incluyendo <strong>Zara Home</strong>. Trabajo con metodologías ágiles (Scrum y Kanban), utilizando Jira para la gestión de tareas y Git para el control de versiones.<br><br>Liderazgo técnico en el diseño e implementación de arquitecturas basadas en <strong>Compositional Layout</strong> y <strong>DSLs dinámicos</strong> para la construcción de layouts de parrillas en Zara. Puesta en marcha desde cero de la <strong>aplicación de distribución</strong>, incorporando soporte para <strong>widgets en Apple Watch</strong>. Desarrollo de aplicaciones para el entorno de tienda y de experiencias multimarca, incluyendo soluciones como <strong>Stock/Shopper</strong> y <strong>Compo/Tryon</strong>.'
+  duration_en: Remote, May 2021 &mdash; Present
+  summary: 'Desarrollo y evolución de aplicaciones iOS para el Grupo Inditex &mdash; <strong>Zara Home</strong>, <strong>Stock/Shopper</strong> y <strong>Compo/Tryon</strong> &mdash; con Swift, Objective-C y SwiftUI, en equipos ágiles (Scrum y Kanban) con Jira y Git.<br><br>Liderazgo técnico de la arquitectura de <strong>Compositional Layout</strong> y <strong>DSLs dinámicos</strong> para los layouts de parrilla de <strong>Zara</strong>, aportando consistencia visual y acelerando la creación de nuevas pantallas. Puesta en marcha desde cero de la <strong>aplicación de distribución</strong>, con <strong>widgets para Apple Watch</strong>, y desarrollo de experiencias multimarca para el entorno de tienda.'
+  summary_en: 'Building and evolving iOS apps for the Inditex Group &mdash; <strong>Zara Home</strong>, <strong>Stock/Shopper</strong> and <strong>Compo/Tryon</strong> &mdash; with Swift, Objective-C and SwiftUI, in agile teams (Scrum and Kanban) using Jira and Git.<br><br>Technical lead for the <strong>Compositional Layout</strong> and <strong>dynamic DSL</strong> architecture behind <strong>Zara</strong>&rsquo;s grid layouts, bringing visual consistency and speeding up new screen development. Shipped the <strong>distribution app</strong> from scratch with <strong>Apple Watch widgets</strong>, and built multi-brand in-store experiences.'
   icon: nomasystems.jpg
   tags: Swift, Objective-C, SwiftUI, UIKit, Clean Code
+  tags_en: Swift, Objective-C, SwiftUI, UIKit, Clean Code

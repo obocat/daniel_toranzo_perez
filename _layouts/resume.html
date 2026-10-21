@@ -2,81 +2,127 @@
 ---
 
 <!DOCTYPE html>
-<html>
+<html lang="es" data-lang="es">
   {% include head.html %}
   <body>
-    <div class="scroll-progress" aria-hidden="true"><span></span></div>
-    <!-- Navigation -->
+    <!-- Header -->
     <header class="fixed-header">
       <div class="fixed-header-content">
         {% if site.resume_avatar == 'true' %}
-        <img src="images/avatar.jpg" alt="my photo" class="avatar no-print" itemprop="image">
+        <img src="images/avatar.jpg" alt="{{ site.resume_name }}" class="avatar no-print" itemprop="image">
         {% endif %}
-        <h1 class="header-name" itemprop="name">{{ site.resume_name }}</h1>
+
+        <h1 class="header-name" itemprop="name">
+          <span class="header-name-text">{{ site.resume_name }}</span>
+        </h1>
+
         {% include icon-links.html %}
+
+        <div class="lang-switch no-print" role="group" aria-label="Idioma / Language">
+          <button type="button" class="lang-btn" data-lang-btn="es" aria-pressed="true" aria-label="Español" title="Español">ES</button>
+          <button type="button" class="lang-btn" data-lang-btn="en" aria-pressed="false" aria-label="English" title="English">EN</button>
+          <span class="lang-switch-thumb" aria-hidden="true"></span>
+        </div>
       </div>
     </header>
 
     <div class="wrapper" itemscope itemtype="http://schema.org/Person">
-      <!-- Main Content -->
       <main class="main-content" itemprop="mainContentOfPage">
-        {% assign sections = "" | split: ',' %}
-        {% if site.resume_section_experience == true %}
-          {% assign sections = sections | push: site.data.experience %}
-        {% endif %}
-        {% if site.resume_section_education == true %}
-          {% assign sections = sections | push: site.data.education %}
-        {% endif %}
-        {% if site.resume_section_certifications == true %}
-          {% assign sections = sections | push: site.data.certifications %}
-        {% endif %}  
-        {% for section in sections %}
-        <!-- begin Section -->
-        <section class="section">
+        {% assign index = 0 %}
+
+        {% if site.data.profile %}
+        {% assign index = index | plus: 1 %}
+        <!-- Perfil -->
+        <section class="section section-profile">
           <header class="section-header">
-            <h2>
-              {% case section %}
-                {% when site.data.education %}
-                  Educación
-                {% when site.data.experience %}
-                  Experiencia
-                {% when site.data.certifications %}
-                  Certificaciones
-              {% endcase %}
-            </h2>
+            <span class="section-index">0{{ index }}</span>
+            <h2><span class="lang-es">Perfil</span><span class="lang-en">Profile</span></h2>
           </header>
           <div class="section-content">
-            {% for element in section %}
-            <div class="resume-item" data-comment="// {{ element.position | default: element.year }}">
-              {% if element.icon %}
-              <div style="display: inline-block; margin-right: 0.5rem; vertical-align: middle;">
-                <img style="object-fit: cover; width: 24px; height: 24px; vertical-align: middle;" src="images/icons/{{ element.icon }}"/>
-              </div>
-              {% endif %}
-              <h3 class="resume-item-title" style="display: inline-block; vertical-align: middle; font-size: 1.25rem; margin: 0;">{{ element.recognizedBy }} {{ element.uni }} {{ element.company }}</h3>
-              <h4 class="resume-item-details">{{ element.name }} {{ element.degree }} {{ element.position }}</h4>
-              <h4 class="resume-item-details">{{ element.year }} {{ element.duration}} </h4>
-              <ul class="resume-item-list">
-                {% for award in element.awards %}
-                <li>{{ award.award }}</li>
-                {% endfor %}
-              </ul>
-              {% if element.summary %}
-              <p class="resume-item-copy">{{ element.summary }}</p>
-              {% endif %}
-              {% if element.tags %}
-              <p class="resume-item-tags">{{ element.tags }} </p>
-              {% endif %}
-            </div>
+            <p class="profile-summary lang-es">{{ site.data.profile.summary }}</p>
+            <p class="profile-summary lang-en">{{ site.data.profile.summary_en }}</p>
+            <p class="profile-meta">
+              <span class="lang-es">{{ site.data.profile.location }}</span>
+              <span class="lang-en">{{ site.data.profile.location_en }}</span>
+            </p>
+          </div>
+        </section>
+        {% endif %}
+
+        {% if site.resume_section_experience == true %}
+        {% assign index = index | plus: 1 %}
+        <!-- Experiencia -->
+        <section class="section">
+          <header class="section-header">
+            <span class="section-index">0{{ index }}</span>
+            <h2><span class="lang-es">Experiencia</span><span class="lang-en">Experience</span></h2>
+          </header>
+          <div class="section-content">
+            {% for element in site.data.experience %}
+            {% include resume-item.html
+              icon=element.icon
+              title=element.company
+              subtitle=element.position
+              subtitle_en=element.position_en
+              meta=element.duration
+              meta_en=element.duration_en
+              summary_es=element.summary
+              summary_en=element.summary_en
+              tags_es=element.tags
+              tags_en=element.tags_en
+              comment_es=element.position
+              comment_en=element.position_en %}
             {% endfor %}
           </div>
         </section>
-        <!-- end Section -->
-        {% endfor %}
+        {% endif %}
+
+        {% if site.resume_section_education == true %}
+        {% assign index = index | plus: 1 %}
+        <!-- Educación -->
+        <section class="section">
+          <header class="section-header">
+            <span class="section-index">0{{ index }}</span>
+            <h2><span class="lang-es">Educación</span><span class="lang-en">Education</span></h2>
+          </header>
+          <div class="section-content">
+            {% for element in site.data.education %}
+            {% include resume-item.html
+              icon=element.icon
+              title=element.degree
+              title_en=element.degree_en
+              subtitle=element.uni
+              subtitle_en=element.uni_en
+              meta=element.year
+              tags_es=element.tags
+              %}
+            {% endfor %}
+          </div>
+        </section>
+        {% endif %}
+
+        {% if site.resume_section_certifications == true %}
+        {% assign index = index | plus: 1 %}
+        <!-- Certificaciones -->
+        <section class="section">
+          <header class="section-header">
+            <span class="section-index">0{{ index }}</span>
+            <h2><span class="lang-es">Certificaciones</span><span class="lang-en">Certifications</span></h2>
+          </header>
+          <div class="section-content">
+            {% for element in site.data.certifications %}
+            {% include resume-item.html
+              icon=element.icon
+              title=element.name
+              subtitle=element.recognizedBy
+              meta=element.year %}
+            {% endfor %}
+          </div>
+        </section>
+        {% endif %}
       </main>
     </div>
 
-    <script src="js/scrollfade.js"></script>
-    <script src="js/reveal.js"></script>
+    <script src="js/reveal.js?v={{ site.time | date: '%s' }}"></script>
   </body>
 </html>

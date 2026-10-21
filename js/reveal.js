@@ -1,20 +1,116 @@
-// Efectos visuales sutiles: revelado al hacer scroll + progreso de lectura
+// Efectos e interacción del CV: idioma, revelado, header, foco y comentarios
 
 (function () {
   'use strict';
 
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var elements = document.querySelectorAll('.section-header, .resume-item');
+  var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-  // La clase en <html> evita ocultar contenido si el JS no llega a ejecutarse.
+  /* ==========================================
+     IDIOMA ES / EN
+     ========================================== */
+
+  var langButtons = document.querySelectorAll('.lang-btn');
+  var wrapper = document.querySelector('.wrapper');
+
+  function getLang() {
+    return document.documentElement.getAttribute('data-lang') === 'en' ? 'en' : 'es';
+  }
+
+  function syncLangUI(lang) {
+    Array.prototype.forEach.call(langButtons, function (button) {
+      button.setAttribute(
+        'aria-pressed',
+        button.getAttribute('data-lang-btn') === lang ? 'true' : 'false'
+      );
+    });
+  }
+
+  function setLang(lang, animate) {
+    document.documentElement.lang = lang;
+    document.documentElement.setAttribute('data-lang', lang);
+
+    try {
+      window.localStorage.setItem('cv-lang', lang);
+    } catch (error) {}
+
+    syncLangUI(lang);
+
+    if (animate && wrapper && !reduceMotion) {
+      wrapper.style.transition = 'opacity 0.18s ease';
+      wrapper.style.opacity = '0';
+      window.requestAnimationFrame(function () {
+        wrapper.style.opacity = '1';
+      });
+    }
+  }
+
+  if (langButtons.length) {
+    Array.prototype.forEach.call(langButtons, function (button) {
+      button.addEventListener('click', function () {
+        setLang(button.getAttribute('data-lang-btn'), true);
+      });
+    });
+
+    setLang(getLang(), false);
+  }
+
+  /* ==========================================
+     AJUSTE DEL NOMBRE EN EL HEADER
+     ========================================== */
+
+  function fitHeaderName() {
+    var name = document.querySelector('.header-name');
+    if (!name) return;
+
+    name.style.fontSize = '';
+
+    var size = parseFloat(window.getComputedStyle(name).fontSize);
+    var guard = 0;
+
+    while (name.scrollWidth > name.clientWidth && size > 9.5 && guard < 90) {
+      size -= 0.25;
+      name.style.fontSize = size + 'px';
+      guard += 1;
+    }
+  }
+
+  fitHeaderName();
+  window.addEventListener('resize', fitHeaderName);
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(fitHeaderName);
+  }
+
+  /* ==========================================
+     HEADER AL HACER SCROLL
+     ========================================== */
+
+  var header = document.querySelector('.fixed-header');
+
+  if (header) {
+    var updateHeader = function () {
+      header.classList.toggle('is-scrolled', window.scrollY > 8);
+    };
+
+    window.addEventListener('scroll', updateHeader, { passive: true });
+    updateHeader();
+  }
+
+  /* ==========================================
+     REVELADO AL SCROLL
+     ========================================== */
+
+  var revealElements = document.querySelectorAll('.section-header, .resume-item');
+
   document.documentElement.classList.add('js-reveal');
 
-  Array.prototype.forEach.call(elements, function (element) {
+  Array.prototype.forEach.call(revealElements, function (element) {
     element.classList.add('reveal');
   });
 
   if (reduceMotion || !('IntersectionObserver' in window)) {
-    Array.prototype.forEach.call(elements, function (element) {
+    Array.prototype.forEach.call(revealElements, function (element) {
       element.classList.add('is-visible');
     });
   } else {
@@ -29,20 +125,30 @@
       { threshold: 0.1, rootMargin: '0px 0px -30px 0px' }
     );
 
-    Array.prototype.forEach.call(elements, function (element, index) {
+    Array.prototype.forEach.call(revealElements, function (element, index) {
       element.style.transitionDelay = (index % 3) * 70 + 'ms';
       observer.observe(element);
     });
   }
 
-  // Comentarios de código animados al pasar el cursor
-  var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  var commentItems = document.querySelectorAll('.resume-item[data-comment]');
+  /* ==========================================
+     FOCO DE LUZ + COMENTARIOS DE CÓDIGO
+     ========================================== */
+
+  var items = document.querySelectorAll('.resume-item');
 
   if (canHover) {
-    Array.prototype.forEach.call(commentItems, function (item) {
-      var text = (item.getAttribute('data-comment') || '').replace(/^\/\/\s*/, '');
-      if (!text) return;
+    Array.prototype.forEach.call(items, function (item) {
+      item.addEventListener('pointermove', function (event) {
+        var rect = item.getBoundingClientRect();
+        item.style.setProperty('--spot-x', event.clientX - rect.left + 'px');
+        item.style.setProperty('--spot-y', event.clientY - rect.top + 'px');
+      });
+
+      var textEs = (item.getAttribute('data-comment-es') || '').replace(/^\/\/\s*/, '');
+      var textEn = (item.getAttribute('data-comment-en') || '').replace(/^\/\/\s*/, '') || textEs;
+
+      if (!textEs && !textEn) return;
 
       var comment = document.createElement('span');
       comment.className = 'code-comment no-print';
@@ -75,6 +181,8 @@
       var type = function () {
         window.clearTimeout(timer);
 
+        var text = getLang() === 'en' ? textEn : textEs;
+
         if (reduceMotion) {
           body.textContent = text;
           return;
@@ -102,57 +210,5 @@
       item.addEventListener('focusin', type);
       item.addEventListener('focusout', reset);
     });
-  }
-
-  // Ajuste del nombre del header para que quepa siempre en una línea
-  function fitHeaderName() {
-    var name = document.querySelector('.header-name');
-    if (!name) return;
-
-    name.style.fontSize = '';
-
-    var size = parseFloat(window.getComputedStyle(name).fontSize);
-    var guard = 0;
-
-    while (name.scrollWidth > name.clientWidth && size > 10 && guard < 80) {
-      size -= 0.5;
-      name.style.fontSize = size + 'px';
-      guard += 1;
-    }
-  }
-
-  fitHeaderName();
-  window.addEventListener('resize', fitHeaderName);
-
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(fitHeaderName);
-  }
-
-  // Barra de progreso de lectura
-  var bar = document.querySelector('.scroll-progress span');
-
-  if (bar) {
-    var ticking = false;
-
-    var updateProgress = function () {
-      var doc = document.documentElement;
-      var max = doc.scrollHeight - window.innerHeight;
-      var progress = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
-      bar.style.transform = 'scaleX(' + progress + ')';
-      ticking = false;
-    };
-
-    window.addEventListener(
-      'scroll',
-      function () {
-        if (ticking) return;
-        ticking = true;
-        window.requestAnimationFrame(updateProgress);
-      },
-      { passive: true }
-    );
-
-    window.addEventListener('resize', updateProgress);
-    updateProgress();
   }
 })();

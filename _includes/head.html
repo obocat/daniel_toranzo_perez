@@ -2,19 +2,59 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="HandheldFriendly" content="true"/>
-  <!-- Google search engine-->
   <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
   <meta name="google-site-verification" content="{{ site.google-verification }}"/>
   <meta name="author" content="{{ site.author }}">
   <meta name="robots" content="all">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
+  <script>
+    (function () {
+      try {
+        var stored = window.localStorage.getItem('cv-lang');
+        var browser = (navigator.language || 'es').toLowerCase();
+        var lang = stored || (browser.indexOf('es') === 0 ? 'es' : 'en');
+        document.documentElement.lang = lang;
+        document.documentElement.setAttribute('data-lang', lang);
+      } catch (e) {}
+    })();
+  </script>
   <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
-  <!-- Google font typography settings - defined in _config.yml -->
-  {% if site.resume_theme == 'default' %}
-  <link href='https://fonts.googleapis.com/css?family=Lora:400,700|Open+Sans:400,300,800,700' rel='stylesheet' type='text/css'>
-  {% endif %}
-  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <meta property="og:title" content="{{ page.title | default: site.title }}">
+  <meta property="og:description" content="{{ site.description }}">
+  <meta property="og:type" content="profile">
+  <meta property="og:url" content="https://www.obocat.com/">
+  <meta property="og:image" content="https://www.obocat.com/images/avatar.jpg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{{ page.title | default: site.title }}">
+  <meta name="twitter:description" content="{{ site.description }}">
+  <meta name="twitter:image" content="https://www.obocat.com/images/avatar.jpg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Daniel Toranzo Pérez",
+    "jobTitle": "iOS Engineer",
+    "url": "https://www.obocat.com/",
+    "image": "https://www.obocat.com/images/avatar.jpg",
+    "worksFor": { "@type": "Organization", "name": "Nomasystems S.L." },
+    "alumniOf": [
+      { "@type": "CollegeOrUniversity", "name": "Universidade da Coruña" },
+      { "@type": "CollegeOrUniversity", "name": "Universidad Nacional de Educación a Distancia (UNED)" },
+      { "@type": "CollegeOrUniversity", "name": "University of Vigo" }
+    ],
+    "knowsAbout": ["Swift", "SwiftUI", "Objective-C", "UIKit", "Compositional Layout", "Clean Code", "Agile"],
+    "knowsLanguage": [
+      { "@type": "Language", "name": "Spanish" },
+      { "@type": "Language", "name": "English", "description": "B1 (CEFR)" }
+    ],
+    "sameAs": [
+      "https://github.com/obocat",
+      "https://www.linkedin.com/in/daniel-toranzo-pérez/",
+      "https://danieltoranzo.com"
+    ]
+  }
+  </script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-N1RRT5HSH8"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
