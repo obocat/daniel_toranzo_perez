@@ -132,19 +132,13 @@
   }
 
   /* ==========================================
-     FOCO DE LUZ + COMENTARIOS DE CÓDIGO
+     COMENTARIOS DE CÓDIGO
      ========================================== */
 
   var items = document.querySelectorAll('.resume-item');
 
   if (canHover) {
     Array.prototype.forEach.call(items, function (item) {
-      item.addEventListener('pointermove', function (event) {
-        var rect = item.getBoundingClientRect();
-        item.style.setProperty('--spot-x', event.clientX - rect.left + 'px');
-        item.style.setProperty('--spot-y', event.clientY - rect.top + 'px');
-      });
-
       var textEs = (item.getAttribute('data-comment-es') || '').replace(/^\/\/\s*/, '');
       var textEn = (item.getAttribute('data-comment-en') || '').replace(/^\/\/\s*/, '') || textEs;
 

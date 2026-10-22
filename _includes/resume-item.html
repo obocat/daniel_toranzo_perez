@@ -6,7 +6,7 @@
 <div class="resume-item"{% if comment_es or comment_en %} data-comment-es="// {{ comment_es }}" data-comment-en="// {{ comment_en }}"{% endif %}>
   {% if include.icon %}
   <span class="resume-item-icon">
-    <img src="images/icons/{{ include.icon }}" alt="{{ include.title }}" loading="lazy" />
+    <img src="images/icons/{{ include.icon }}" alt="{{ include.title }}" />
   </span>
   {% endif %}
 
@@ -23,6 +23,19 @@
   {% if include.meta %}
   <p class="resume-item-meta">
     {% if include.meta_en %}<span class="lang-es">{{ include.meta }}</span><span class="lang-en">{{ meta_en }}</span>{% else %}{{ include.meta }}{% endif %}
+  </p>
+  {% endif %}
+
+  {% if include.thesis %}
+  <p class="resume-item-thesis">
+    <span class="resume-item-thesis-label">
+      <span class="lang-es">{{ include.thesis_label | default: 'TFM' }}</span>
+      <span class="lang-en">{{ include.thesis_label_en | default: 'Thesis' }}</span>
+    </span>
+    <span class="resume-item-thesis-text">
+      <span class="lang-es">{{ include.thesis }}</span>
+      <span class="lang-en">{{ include.thesis_en | default: include.thesis }}</span>
+    </span>
   </p>
   {% endif %}
 

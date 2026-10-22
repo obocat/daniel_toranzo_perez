@@ -4,6 +4,10 @@
   uni: U.S.C., U.D.C.
   uni_en: U.S.C., U.D.C.
   year: 2020 – 2021
+  thesis: Adaptación de la librería BPLG a GPUs con tecnología Tensor Core de NVIDIA
+  thesis_en: Porting the BPLG library to NVIDIA Tensor Core GPUs
+  thesis_label: TFM
+  thesis_label_en: Master's thesis
   award: Premio Extraordinario do Máster Universitario en Computación de Altas Prestacións
   award_en: Extraordinary MSc Award in High Performance Computing
   award_meta: Universidade de Santiago de Compostela · ene. 2022
@@ -16,6 +20,10 @@
   uni: Universidade da Coruña
   uni_en: University of A Coruña
   year: 2022 – 2023
+  thesis: Diseño y desarrollo de una aplicación e-commerce utilizando la metodología DIP
+  thesis_en: Design and development of an e-commerce application using the DIP methodology
+  thesis_label: TFM
+  thesis_label_en: Master's thesis
   tags: Microsoft Project, Project Management Body of Knowledge (PMBOK), Agile Scrum, Risk Management
   icon: udc.png
 
@@ -24,6 +32,10 @@
   uni: Universidad Nacional de Educación a Distancia - U.N.E.D.
   uni_en: National University of Distance Education (UNED)
   year: 2015 – 2020
+  thesis: Desarrollo de Software de Gestión de Comercio
+  thesis_en: Development of commerce management software
+  thesis_label: PFG
+  thesis_label_en: Final Degree Project
   icon: uned.jpg
 
 - degree: C.S. Desarrollo de Aplicaciones Web

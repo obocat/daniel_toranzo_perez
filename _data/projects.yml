@@ -6,8 +6,8 @@
   description_en: 'Web app that reads official fuel prices and surfaces the cheapest stations by province, with a responsive interface and up-to-date data.'
   image: images/projects/gasolineras.png
   featured: true
-  tags: Next.js · API · Datos oficiales
-  tags_en: Next.js · API · Official data
+  tags: Next.js
+  tags_en: Next.js
   links:
     - label: Ver web
       label_en: Live site

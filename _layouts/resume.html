@@ -33,16 +33,17 @@
           <span class="print-role">iOS Engineer · {{ site.resume_contact_email }} · www.obocat.com</span>
         </div>
 
-        {% assign index = 0 %}
-
         {% if site.data.profile %}
-        {% assign index = index | plus: 1 %}
         <!-- Perfil -->
         <section class="section section-profile">
+          {% if site.data.profile.show_title != false %}
           <header class="section-header">
-            <span class="section-index">0{{ index }}</span>
-            <h2><span class="lang-es">Perfil</span><span class="lang-en">Profile</span></h2>
+            <h2>
+              <span class="lang-es">{{ site.data.profile.title | default: 'Perfil' }}</span>
+              <span class="lang-en">{{ site.data.profile.title_en | default: 'Profile' }}</span>
+            </h2>
           </header>
+          {% endif %}
           <div class="section-content">
             <p class="profile-summary lang-es">{{ site.data.profile.summary }}</p>
             <p class="profile-summary lang-en">{{ site.data.profile.summary_en }}</p>
@@ -55,11 +56,9 @@
         {% endif %}
 
         {% if site.resume_section_experience == true %}
-        {% assign index = index | plus: 1 %}
         <!-- Experiencia -->
-        <section class="section">
+        <section class="section section-experience">
           <header class="section-header">
-            <span class="section-index">0{{ index }}</span>
             <h2><span class="lang-es">Experiencia</span><span class="lang-en">Experience</span></h2>
           </header>
           <div class="section-content">
@@ -83,11 +82,9 @@
         {% endif %}
 
         {% if site.resume_section_projects == true and site.data.projects %}
-        {% assign index = index | plus: 1 %}
         <!-- Proyectos -->
         <section class="section section-projects">
           <header class="section-header">
-            <span class="section-index">0{{ index }}</span>
             <h2><span class="lang-es">Proyectos</span><span class="lang-en">Projects</span></h2>
           </header>
           <div class="section-content">
@@ -96,7 +93,7 @@
               {% assign primary_link = project.links | first %}
               <article class="project-card{% if project.featured %} project-card-featured{% endif %}">
                 <a class="project-media" href="{{ primary_link.url }}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
-                  <img src="{{ project.image }}" alt="" width="1200" height="750" loading="lazy">
+                  <img src="{{ project.image }}?v={{ site.time | date: '%s' }}" alt="" width="1200" height="750" loading="lazy">
                 </a>
                 <div class="project-body">
                   <h3 class="project-title">{{ project.name }}</h3>
@@ -126,11 +123,9 @@
         {% endif %}
 
         {% if site.resume_section_skills == true and site.data.skills %}
-        {% assign index = index | plus: 1 %}
         <!-- Aptitudes -->
         <section class="section section-skills">
           <header class="section-header">
-            <span class="section-index">0{{ index }}</span>
             <h2><span class="lang-es">Aptitudes</span><span class="lang-en">Skills</span></h2>
           </header>
           <div class="section-content">
@@ -154,11 +149,9 @@
         {% endif %}
 
         {% if site.resume_section_education == true %}
-        {% assign index = index | plus: 1 %}
         <!-- Educación -->
-        <section class="section">
+        <section class="section section-education">
           <header class="section-header">
-            <span class="section-index">0{{ index }}</span>
             <h2><span class="lang-es">Educación</span><span class="lang-en">Education</span></h2>
           </header>
           <div class="section-content">
@@ -170,6 +163,10 @@
               subtitle=element.uni
               subtitle_en=element.uni_en
               meta=element.year
+              thesis=element.thesis
+              thesis_en=element.thesis_en
+              thesis_label=element.thesis_label
+              thesis_label_en=element.thesis_label_en
               award=element.award
               award_en=element.award_en
               award_meta=element.award_meta
@@ -182,11 +179,9 @@
         {% endif %}
 
         {% if site.resume_section_certifications == true and site.data.certifications %}
-        {% assign index = index | plus: 1 %}
         <!-- Certificaciones (plegadas para no restar protagonismo) -->
         <details class="section section-collapsible">
           <summary class="section-header">
-            <span class="section-index">0{{ index }}</span>
             <h2><span class="lang-es">Certificaciones</span><span class="lang-en">Certifications</span></h2>
             <span class="section-count">{{ site.data.certifications.size }}</span>
             <span class="section-toggle" aria-hidden="true">
@@ -206,16 +201,13 @@
         {% endif %}
 
         {% if site.resume_section_contact == true %}
-        {% assign index = index | plus: 1 %}
         <!-- Contacto -->
         <section class="section section-contact">
           <header class="section-header">
-            <span class="section-index">0{{ index }}</span>
             <h2><span class="lang-es">Contacto</span><span class="lang-en">Contact</span></h2>
           </header>
           <div class="section-content">
             <div class="contact-card">
-              <p class="contact-kicker"><span class="lang-es">Contacto directo</span><span class="lang-en">Direct contact</span></p>
               <p class="contact-lead lang-es">¿Tienes un reto de iOS en mente? Cuéntamelo.</p>
               <p class="contact-lead lang-en">Have an iOS challenge in mind? Tell me about it.</p>
               <a class="contact-email" href="mailto:{{ site.resume_contact_email }}">{{ site.resume_contact_email }}</a>
