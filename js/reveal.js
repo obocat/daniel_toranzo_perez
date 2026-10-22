@@ -35,6 +35,7 @@
     } catch (error) {}
 
     syncLangUI(lang);
+    document.dispatchEvent(new Event('cv:langchange'));
 
     if (animate && wrapper && !reduceMotion) {
       wrapper.style.transition = 'opacity 0.18s ease';
@@ -98,37 +99,92 @@
   }
 
   /* ==========================================
-     REVELADO AL SCROLL
+     PERFIL FIJADO: DESENFOQUE Y FUNDIDO AL HACER SCROLL
      ========================================== */
 
-  var revealElements = document.querySelectorAll('.section-header, .resume-item, .project-card, .skill-group');
+  var profile = document.querySelector('.section-profile');
+  var profileContent = profile ? profile.querySelector('.section-content') : null;
+  var scrollHint = profile ? profile.querySelector('.scroll-hint') : null;
+  var profileFadeDistance = 220;
+  var profileTicking = false;
 
-  document.documentElement.classList.add('js-reveal');
+  var measureProfile = function () {
+    if (!profile || !profileContent) return;
 
-  Array.prototype.forEach.call(revealElements, function (element) {
-    element.classList.add('reveal');
-  });
+    var nextSection = document.querySelector('.section-experience');
+    var nextPadding = nextSection
+      ? parseFloat(window.getComputedStyle(nextSection).paddingTop) || 0
+      : 48;
 
-  if (reduceMotion || !('IntersectionObserver' in window)) {
-    Array.prototype.forEach.call(revealElements, function (element) {
-      element.classList.add('is-visible');
-    });
-  } else {
-    var observer = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
-        });
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -30px 0px' }
+    profileFadeDistance = Math.max(
+      (profile.offsetHeight - profileContent.offsetHeight) / 2 + nextPadding + 8,
+      120
     );
+  };
 
-    Array.prototype.forEach.call(revealElements, function (element, index) {
-      element.style.transitionDelay = (index % 3) * 70 + 'ms';
-      observer.observe(element);
+  var updateProfile = function () {
+    if (!profile || !profileContent) return;
+
+    var progress = Math.min(Math.max(window.scrollY / profileFadeDistance, 0), 1);
+
+    profile.style.opacity = (1 - progress).toFixed(3);
+
+    if (scrollHint) {
+      var hintFadeStart = 60;
+      var hintFadeEnd = 160;
+      var hintOpacity = 1 - Math.min(
+        Math.max((window.scrollY - hintFadeStart) / (hintFadeEnd - hintFadeStart), 0),
+        1
+      );
+
+      if (window.scrollY > 0) {
+        scrollHint.classList.add('is-scrolling');
+      }
+
+      scrollHint.classList.toggle('is-minus', window.scrollY > 14);
+      scrollHint.style.opacity = hintOpacity.toFixed(3);
+    }
+
+    if (reduceMotion) {
+      profileContent.style.filter = '';
+      return;
+    }
+
+    var blur = progress * 18;
+
+    profileContent.style.filter = blur > 0.15 ? 'blur(' + blur.toFixed(1) + 'px)' : '';
+  };
+
+  var requestProfileUpdate = function () {
+    if (profileTicking) return;
+    profileTicking = true;
+
+    window.requestAnimationFrame(function () {
+      updateProfile();
+      profileTicking = false;
     });
+  };
+
+  if (profileContent) {
+    measureProfile();
+    window.addEventListener('scroll', requestProfileUpdate, { passive: true });
+    window.addEventListener('resize', function () {
+      measureProfile();
+      requestProfileUpdate();
+    });
+    window.addEventListener('load', function () {
+      measureProfile();
+      updateProfile();
+    });
+    window.addEventListener('pageshow', function () {
+      measureProfile();
+      updateProfile();
+    });
+    document.addEventListener('cv:langchange', function () {
+      measureProfile();
+      requestProfileUpdate();
+    });
+    updateProfile();
   }
 
   /* ==========================================
@@ -211,16 +267,6 @@
      ========================================== */
 
   var collapsibleSections = document.querySelectorAll('details.section-collapsible');
-
-  Array.prototype.forEach.call(collapsibleSections, function (details) {
-    details.addEventListener('toggle', function () {
-      if (!details.open) return;
-
-      Array.prototype.forEach.call(details.querySelectorAll('.reveal'), function (element) {
-        element.classList.add('is-visible');
-      });
-    });
-  });
 
   /* Al imprimir, muestra también las certificaciones plegadas. */
   var printedDetails = [];
