@@ -6,25 +6,7 @@
   {% include head.html %}
   <body>
     <!-- Header -->
-    <header class="fixed-header">
-      <div class="fixed-header-content">
-        {% if site.resume_avatar == 'true' %}
-        <img src="images/avatar.jpg" alt="{{ site.resume_name }}" class="avatar no-print" itemprop="image">
-        {% endif %}
-
-        <h1 class="header-name" itemprop="name">
-          <span class="header-name-text">{{ site.resume_name }}</span>
-        </h1>
-
-        {% include icon-links.html %}
-
-        <div class="lang-switch no-print" role="group" aria-label="Idioma / Language">
-          <button type="button" class="lang-btn" data-lang-btn="es" aria-pressed="true" aria-label="Español" title="Español">ES</button>
-          <button type="button" class="lang-btn" data-lang-btn="en" aria-pressed="false" aria-label="English" title="English">EN</button>
-          <span class="lang-switch-thumb" aria-hidden="true"></span>
-        </div>
-      </div>
-    </header>
+    {% include header.html %}
 
     <div class="wrapper" itemscope itemtype="http://schema.org/Person">
       <main class="main-content" itemprop="mainContentOfPage">
@@ -204,6 +186,27 @@
             {% endfor %}
           </div>
         </details>
+        {% endif %}
+
+        {% if site.resume_section_blog == true and site.posts.size > 0 %}
+        <!-- Blog -->
+        <section class="section section-blog">
+          <header class="section-header">
+            <h2><span class="lang-es">Blog</span><span class="lang-en">Blog</span></h2>
+          </header>
+          <div class="section-content">
+            <div class="blog-list">
+              {% for post in site.posts limit: 3 %}
+              {% include blog-card.html post=post %}
+              {% endfor %}
+            </div>
+            <a class="blog-more" href="{{ '/blog/' | relative_url }}">
+              <span class="lang-es">Ver todos los artículos</span>
+              <span class="lang-en">Read all articles</span>
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>
         {% endif %}
 
         {% if site.resume_section_contact == true %}

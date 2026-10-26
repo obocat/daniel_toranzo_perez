@@ -1,0 +1,53 @@
+---
+---
+<!DOCTYPE html>
+<html lang="es" data-lang="es">
+  {% include head.html %}
+  <body class="blog-page blog-index-page">
+    {% include header.html %}
+
+    <div class="wrapper">
+      <main class="blog-main">
+        <header class="blog-hero">
+          <h1>Blog</h1>
+          <p class="blog-intro lang-es">Notas sobre desarrollo iOS, arquitectura, rendimiento y las decisiones que hay detrás de los productos en los que trabajo.</p>
+          <p class="blog-intro lang-en">Notes on iOS development, architecture, performance and the decisions behind the products I work on.</p>
+        </header>
+
+        {% if site.posts.size > 0 %}
+        {% assign posts_by_year = site.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
+        <div class="blog-index">
+          {% for year in posts_by_year %}
+          <section class="blog-year">
+            <div class="blog-year-header">
+              <h2 class="blog-year-title">{{ year.name }}</h2>
+              <span class="blog-year-count">{{ year.items.size }}</span>
+            </div>
+            <div class="blog-list">
+              {% for post in year.items %}
+              {% include blog-card.html post=post show_excerpt=true %}
+              {% endfor %}
+            </div>
+          </section>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p class="blog-empty">
+          <span class="lang-es">Todavía no hay artículos publicados. Vuelve pronto.</span>
+          <span class="lang-en">No articles published yet. Check back soon.</span>
+        </p>
+        {% endif %}
+
+        <footer class="blog-footer">
+          <a class="blog-more" href="{{ '/' | relative_url }}">
+            <span aria-hidden="true">←</span>
+            <span class="lang-es">Volver al CV</span>
+            <span class="lang-en">Back to CV</span>
+          </a>
+        </footer>
+      </main>
+    </div>
+
+    <script src="{{ '/js/reveal.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+  </body>
+</html>

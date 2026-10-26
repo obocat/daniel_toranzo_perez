@@ -388,4 +388,36 @@
         .catch(showCopyHelp);
     });
   }
+
+  /* ==========================================
+     FECHAS DEL BLOG
+     ========================================== */
+
+  var dateNodes = document.querySelectorAll('time[data-date]');
+
+  var updateBlogDates = function (lang) {
+    if (!dateNodes.length || !window.Intl || !window.Intl.DateTimeFormat) return;
+
+    var formatter = new window.Intl.DateTimeFormat(lang === 'en' ? 'en-GB' : 'es-ES', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    });
+
+    Array.prototype.forEach.call(dateNodes, function (node) {
+      var value = node.getAttribute('data-date');
+      var date = new Date(value + 'T00:00:00');
+
+      if (!isNaN(date.getTime())) {
+        node.textContent = formatter.format(date);
+      }
+    });
+  };
+
+  if (dateNodes.length) {
+    updateBlogDates(getLang());
+    document.addEventListener('cv:langchange', function () {
+      updateBlogDates(getLang());
+    });
+  }
 })();

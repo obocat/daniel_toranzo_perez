@@ -1,0 +1,112 @@
+---
+---
+<!DOCTYPE html>
+<html lang="es" data-lang="es">
+  {% include head.html %}
+  <body class="blog-page post-page">
+    {% include header.html %}
+
+    <div class="wrapper">
+      <main class="blog-main post-main">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+          <header class="post-header">
+            <a class="blog-back" href="{{ '/blog/' | relative_url }}">
+              <span aria-hidden="true">←</span>
+              <span class="lang-es">Todos los artículos</span>
+              <span class="lang-en">All articles</span>
+            </a>
+
+            {% assign post_minutes = page.reading_time | default: 0 %}
+            {% if post_minutes == 0 %}
+              {% assign post_words = content | strip_html | number_of_words %}
+              {% assign post_minutes = post_words | plus: 199 | divided_by: 200 %}
+              {% if post_minutes < 1 %}{% assign post_minutes = 1 %}{% endif %}
+            {% endif %}
+
+            <p class="post-meta">
+              <time datetime="{{ page.date | date_to_xmlschema }}" data-date="{{ page.date | date: '%Y-%m-%d' }}">{{ page.date | date: '%d.%m.%Y' }}</time>
+              <span class="post-meta-sep" aria-hidden="true">·</span>
+              <span class="lang-es">{{ post_minutes }} min de lectura</span>
+              <span class="lang-en">{{ post_minutes }} min read</span>
+            </p>
+
+            <h1 class="post-title" itemprop="headline">
+              <span class="lang-es">{{ page.title }}</span>
+              <span class="lang-en">{{ page.title_en | default: page.title }}</span>
+            </h1>
+
+            {% assign post_excerpt_es = page.description | default: page.excerpt %}
+            {% assign post_excerpt_es = post_excerpt_es | strip_html | strip_newlines %}
+            {% assign post_excerpt_en = page.description_en | default: post_excerpt_es %}
+            {% assign post_excerpt_en = post_excerpt_en | strip_html | strip_newlines %}
+            {% if post_excerpt_es %}
+            <p class="post-excerpt">
+              <span class="lang-es">{{ post_excerpt_es }}</span>
+              <span class="lang-en">{{ post_excerpt_en }}</span>
+            </p>
+            {% endif %}
+
+            {% if page.tags.size > 0 %}
+            <ul class="post-tags">
+              {% for tag in page.tags %}
+              <li class="blog-tag">{{ tag }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+          </header>
+
+          <div class="post-content" itemprop="articleBody">
+            {{ content }}
+          </div>
+
+          <p class="post-published">
+            <span class="lang-es">Publicado el</span>
+            <span class="lang-en">Published on</span>
+            <time datetime="{{ page.date | date_to_xmlschema }}" data-date="{{ page.date | date: '%Y-%m-%d' }}">{{ page.date | date: '%d.%m.%Y' }}</time>
+          </p>
+
+          <footer class="post-footer">
+            {% if page.previous or page.next %}
+            <nav class="post-nav" aria-label="{{ 'Más artículos' }}">
+              {% if page.previous %}
+              <a class="post-nav-link" href="{{ page.previous.url | relative_url }}" rel="prev">
+                <span class="post-nav-label">
+                  <span aria-hidden="true">←</span>
+                  <span class="lang-es">Anterior</span>
+                  <span class="lang-en">Previous</span>
+                </span>
+                <span class="post-nav-title">
+                  <span class="lang-es">{{ page.previous.title }}</span>
+                  <span class="lang-en">{{ page.previous.title_en | default: page.previous.title }}</span>
+                </span>
+              </a>
+              {% endif %}
+              {% if page.next %}
+              <a class="post-nav-link post-nav-next" href="{{ page.next.url | relative_url }}" rel="next">
+                <span class="post-nav-label">
+                  <span class="lang-es">Siguiente</span>
+                  <span class="lang-en">Next</span>
+                  <span aria-hidden="true">→</span>
+                </span>
+                <span class="post-nav-title">
+                  <span class="lang-es">{{ page.next.title }}</span>
+                  <span class="lang-en">{{ page.next.title_en | default: page.next.title }}</span>
+                </span>
+              </a>
+              {% endif %}
+            </nav>
+            {% endif %}
+
+            <a class="blog-more" href="{{ '/blog/' | relative_url }}">
+              <span aria-hidden="true">←</span>
+              <span class="lang-es">Volver al blog</span>
+              <span class="lang-en">Back to the blog</span>
+            </a>
+          </footer>
+        </article>
+      </main>
+    </div>
+
+    <script src="{{ '/js/reveal.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+  </body>
+</html>

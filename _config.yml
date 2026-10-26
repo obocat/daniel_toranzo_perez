@@ -8,6 +8,7 @@ author: "Daniel Toranzo Pérez"
 
 # Build settings
 markdown: kramdown
+permalink: /blog/:year/:month/:day/:title/
 sass:
   sass_dir: _sass
   style: compressed
@@ -37,6 +38,7 @@ resume_section_projects:        true
 resume_section_skills:          true
 resume_section_education:       true
 resume_section_certifications:  true
+resume_section_blog:            true
 resume_section_contact:         true
 show_appstore_banner:           true
 
@@ -44,13 +46,13 @@ show_appstore_banner:           true
 # uncomment the options you wish to display, and add your own URL
 resume_social_links:
   resume_github_url:            "https://github.com/obocat"
-  # resume_twitter_url:           "http://twitter.com/jglovier"
-  # resume_dribbble_url:          "https://dribbble.com/jag"
-  # resume_facebook_url:          "insert Facebook URL here"
-  resume_linkedin_url:          "https://www.linkedin.com/in/daniel-toranzo-pérez/"
-  # resume_instagram_url:         "insert your Instagram URL here"
-  # resume_website_url:           "http://joelglovier.com"
-  # resume_medium_url:            "https://medium.com/@jglovier"
+  # resume_twitter_url:           "https://twitter.com/yourhandle"
+  # resume_dribbble_url:          "https://dribbble.com/yourhandle"
+  # resume_facebook_url:          "https://facebook.com/yourhandle"
+  resume_linkedin_url:          "https://www.linkedin.com/in/daniel-toranzo-perez/"
+  # resume_instagram_url:         "https://instagram.com/yourhandle"
+  # resume_website_url:           "https://example.com"
+  # resume_medium_url:            "https://medium.com/@yourhandle"
 resume_print_social_links:      true
 
 # Design settings

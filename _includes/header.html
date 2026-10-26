@@ -1,0 +1,27 @@
+<header class="fixed-header">
+  <div class="fixed-header-content">
+    {% if site.resume_avatar == 'true' %}
+    <a class="avatar-link no-print" href="{{ '/' | relative_url }}" aria-label="{{ site.resume_name }}">
+      <img src="{{ '/images/avatar.jpg' | relative_url }}" alt="{{ site.resume_name }}" class="avatar no-print" itemprop="image">
+    </a>
+    {% endif %}
+
+    <h1 class="header-name" itemprop="name">
+      <span class="header-name-text">{{ site.resume_name }}</span>
+    </h1>
+
+    <div class="header-actions">
+      {% include icon-links.html %}
+
+      <a class="icon-link header-blog-link no-print{% if page.url contains '/blog' %} is-active{% endif %}" href="{{ '/blog/' | relative_url }}" aria-label="Blog" title="Blog">
+        {% include icons/icon-blog.html %}
+      </a>
+    </div>
+
+    <div class="lang-switch no-print" role="group" aria-label="Idioma / Language">
+      <button type="button" class="lang-btn" data-lang-btn="es" aria-pressed="true" aria-label="Español" title="Español">ES</button>
+      <button type="button" class="lang-btn" data-lang-btn="en" aria-pressed="false" aria-label="English" title="English">EN</button>
+      <span class="lang-switch-thumb" aria-hidden="true"></span>
+    </div>
+  </div>
+</header>

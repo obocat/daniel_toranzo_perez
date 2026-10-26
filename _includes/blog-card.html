@@ -1,0 +1,42 @@
+{% assign post = include.post %}
+{% assign post_minutes = post.reading_time | default: 0 %}
+{% if post_minutes == 0 %}
+  {% assign post_words = post.content | strip_html | number_of_words %}
+  {% assign post_minutes = post_words | plus: 199 | divided_by: 200 %}
+  {% if post_minutes < 1 %}{% assign post_minutes = 1 %}{% endif %}
+{% endif %}
+{% assign post_excerpt_es = post.description | default: post.excerpt %}
+{% assign post_excerpt_es = post_excerpt_es | strip_html | strip_newlines | truncate: 200 %}
+{% assign post_excerpt_en = post.description_en | default: post_excerpt_es %}
+{% assign post_excerpt_en = post_excerpt_en | strip_html | strip_newlines | truncate: 200 %}
+
+<article class="blog-card">
+  <a class="blog-card-link" href="{{ post.url | relative_url }}">
+    <p class="blog-card-meta">
+      <time datetime="{{ post.date | date_to_xmlschema }}" data-date="{{ post.date | date: '%Y-%m-%d' }}">{{ post.date | date: '%d.%m.%Y' }}</time>
+      <span class="blog-card-sep" aria-hidden="true">·</span>
+      <span class="lang-es">{{ post_minutes }} min de lectura</span>
+      <span class="lang-en">{{ post_minutes }} min read</span>
+    </p>
+
+    <h3 class="blog-card-title">
+      <span class="lang-es">{{ post.title }}</span>
+      <span class="lang-en">{{ post.title_en | default: post.title }}</span>
+    </h3>
+
+    {% if include.show_excerpt and post_excerpt_es %}
+    <p class="blog-card-excerpt">
+      <span class="lang-es">{{ post_excerpt_es }}</span>
+      <span class="lang-en">{{ post_excerpt_en }}</span>
+    </p>
+    {% endif %}
+
+    {% if post.tags.size > 0 %}
+    <ul class="blog-card-tags">
+      {% for tag in post.tags %}
+      <li class="blog-tag">{{ tag }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </a>
+</article>

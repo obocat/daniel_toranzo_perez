@@ -1,8 +1,10 @@
+{% assign meta_description = page.description | default: page.excerpt | default: site.description %}
+{% assign meta_description = meta_description | strip_html | strip_newlines | strip | truncate: 160 %}
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="HandheldFriendly" content="true"/>
-  <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+  <meta name="description" content="{{ meta_description }}">
   <meta name="google-site-verification" content="{{ site.google-verification }}"/>
   <meta name="author" content="{{ site.author }}">
   <meta name="robots" content="all">
@@ -23,17 +25,24 @@
   </script>
   <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
   <meta property="og:title" content="{{ page.title | default: site.title }}">
-  <meta property="og:description" content="{{ site.description }}">
-  <meta property="og:type" content="profile">
-  <meta property="og:url" content="https://www.obocat.com{{ page.url | replace:'index.html','' }}">
-  <meta property="og:image" content="https://www.obocat.com/images/og-card.png?v=2">
+  <meta property="og:description" content="{{ meta_description }}">
+  <meta property="og:type" content="{% if page.layout == 'blog' %}article{% elsif page.layout == 'blog-index' %}website{% else %}profile{% endif %}">
+  <meta property="og:url" content="{{ site.url }}{{ page.url | replace:'index.html','' }}">
+  {% if page.layout == 'blog' %}
+  <meta property="article:published_time" content="{{ page.date | date_to_xmlschema }}">
+  <meta property="article:author" content="{{ site.author }}">
+  {% for tag in page.tags %}
+  <meta property="article:tag" content="{{ tag }}">
+  {% endfor %}
+  {% endif %}
+  <meta property="og:image" content="{{ site.url }}/images/og-card.png?v=2">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Daniel Toranzo Pérez — iOS Engineer. Swift, SwiftUI, UIKit, Objective-C.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{{ page.title | default: site.title }}">
-  <meta name="twitter:description" content="{{ site.description }}">
-  <meta name="twitter:image" content="https://www.obocat.com/images/og-card.png?v=2">
+  <meta name="twitter:description" content="{{ meta_description }}">
+  <meta name="twitter:image" content="{{ site.url }}/images/og-card.png?v=2">
   <meta name="twitter:image:alt" content="Daniel Toranzo Pérez — iOS Engineer. Swift, SwiftUI, UIKit, Objective-C.">
   <script type="application/ld+json">
   {
@@ -58,11 +67,33 @@
     ],
     "sameAs": [
       "https://github.com/obocat",
-      "https://www.linkedin.com/in/daniel-toranzo-pérez/",
+      "https://www.linkedin.com/in/daniel-toranzo-perez/",
       "https://danieltoranzo.com"
     ]
   }
   </script>
+  {% if page.layout == 'blog' %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": {{ page.title | jsonify }},
+    "description": {{ meta_description | jsonify }},
+    "datePublished": "{{ page.date | date_to_xmlschema }}",
+    "dateModified": "{{ page.last_modified_at | default: page.date | date_to_xmlschema }}",
+    "author": {
+      "@type": "Person",
+      "name": {{ site.author | jsonify }},
+      "url": "{{ site.url }}/"
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "{{ site.url }}{{ page.url }}"
+    },
+    "image": "{{ site.url }}/images/og-card.png?v=2"
+  }
+  </script>
+  {% endif %}
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-N1RRT5HSH8"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -74,7 +105,7 @@
   {% if site.show_appstore_banner %}
   <meta name="apple-itunes-app" content="app-id=474175190">
   {% endif %}
-  <link rel="stylesheet" href="css/main.css?v={{ site.time | date: '%s' }}">
-  <link rel="canonical" href="https://www.obocat.com{{ page.url | replace:'index.html','' }}">
-  <link rel="icon" type="image/x-icon" href="favicon.png" />
+  <link rel="stylesheet" href="{{ '/css/main.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+  <link rel="canonical" href="{{ site.url }}{{ page.url | replace:'index.html','' }}">
+  <link rel="icon" type="image/x-icon" href="{{ '/favicon.png' | relative_url }}" />
 </head>
