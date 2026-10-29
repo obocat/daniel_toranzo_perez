@@ -193,14 +193,6 @@ final class PreviewView: UIView {
 
 Ese callback es el que recrea el coordinador con la capa ya instalada. En un Duo, además, la app puede moverse entre pantallas, así que este tipo de transición no es un caso raro: es parte del funcionamiento normal.
 
-## Si usas las cámaras físicas, hay otra pieza
-
-El Duo tiene una cámara frontal exterior y otra interior. Si usas la cámara frontal virtual, el sistema se encarga de cambiar entre ambas al abrir y cerrar el dispositivo. Si accedes a las cámaras físicas por separado, necesitas además `AVCaptureDeviceDirectionCoordinator`, que te dice qué cámara mira hacia la misma dirección que tu vista.
-
-Ese coordinador es de AVKit, trabaja en el main actor y entrega `AVCaptureDeviceDescriptor`, no objetos `AVCaptureDevice`. La idea es no tocar AVFoundation desde el change handler: se pasa el descriptor al actor que posee la sesión y allí se resuelve y se reconfigura la entrada.
-
-No era nuestro problema principal, pero encaja con la misma lección: en un plegable, la posición de la cámara ya no basta para saber hacia dónde apunta.
-
 ## Lo que el simulador no te cuenta
 
 El simulador sirve para validar layouts, tamaños, barras y poses. Para la cámara hace falta un dispositivo físico. Nuestra lista de pruebas fue algo así:
@@ -411,14 +403,6 @@ final class PreviewView: UIView {
 ```
 
 That callback recreates the coordinator with the layer already installed. On a Duo, the app can also move between displays, so this kind of transition is not an edge case: it's part of normal operation.
-
-## If you use the physical cameras, there is another piece
-
-Duo has an outer front camera and an inner front camera. If you use the virtual front camera, the system switches between them when the device opens and closes. If you access the physical cameras individually, you also need `AVCaptureDeviceDirectionCoordinator`, which tells you which camera faces the same direction as your view.
-
-That coordinator is part of AVKit, runs on the main actor, and delivers `AVCaptureDeviceDescriptor`, not `AVCaptureDevice` objects. The idea is not to touch AVFoundation from the change handler: pass the descriptor to the actor that owns the session, resolve it there, and reconfigure the input.
-
-It wasn't our main problem, but it fits the same lesson: on a foldable, the camera's position is no longer enough to know where it is pointing.
 
 ## What the simulator doesn't tell you
 
