@@ -44,11 +44,13 @@ vanilla JavaScript provides the language switch and UI interactions.
 │   ├── blog-index.html      # /blog/ listing
 │   └── blog.html            # Individual article
 ├── _posts/                  # Blog articles
+├── .github/workflows/       # Pull request checks
 ├── blog/index.html          # Blog entry point
 ├── css/
 │   ├── main.scss            # Source styles
 │   └── main.css             # Compiled styles served by the site
 ├── js/reveal.js             # Language switch and UI behaviour
+├── script/                  # Content validation
 ├── images/                  # Avatar, project images, social card
 ├── index.html               # CV page
 └── CNAME                    # Custom domain
@@ -119,6 +121,19 @@ The selected language is stored in `localStorage` under `cv-lang`. Dates are
 rendered with `<time data-date="YYYY-MM-DD">` and formatted by JavaScript using
 `Intl.DateTimeFormat`, so blog dates follow the selected language.
 
+### Content validation
+
+Run the bilingual content check locally before opening a pull request:
+
+```bash
+ruby script/check_bilingual_content.rb
+```
+
+The script verifies that required `_en` fields exist in `_data/*.yml` and that
+every post has bilingual front matter plus non-empty `lang-es` and `lang-en`
+blocks. GitHub Actions runs the same check automatically on pull requests via
+`.github/workflows/validate-bilingual-content.yml`.
+
 ## Writing a blog post
 
 Create a file in `_posts/` named `YYYY-MM-DD-slug.markdown`:
@@ -157,9 +172,10 @@ Content in English.
 
 Notes:
 
-- `title_en`, `description_en`, and `reading_time` are optional.
-- If `reading_time` is omitted, it is calculated from the post content. For
-  bilingual posts, set it manually so both languages are not counted at once.
+- `title_en` and `description_en` are required by the content check.
+- `reading_time` is optional. If omitted, it is calculated from the post
+  content. For bilingual posts, set it manually so both languages are not
+  counted at once.
 - Post URLs use `/blog/:year/:month/:day/:title/`.
 - The latest three posts are shown on the CV home page. Set
   `resume_section_blog: false` in `_config.yml` to hide that section.
