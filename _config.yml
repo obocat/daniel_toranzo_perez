@@ -9,6 +9,8 @@ author: "Daniel Toranzo Pérez"
 # Build settings
 markdown: kramdown
 permalink: /blog/:year/:month/:day/:title/
+plugins:
+  - jekyll-sitemap
 sass:
   sass_dir: _sass
   style: compressed

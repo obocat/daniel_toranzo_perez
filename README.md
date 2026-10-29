@@ -182,7 +182,9 @@ For local verification before publishing:
 bundle exec jekyll build
 ```
 
-The generated site is written to `_site/`.
+The generated site is written to `_site/`. The build also produces
+`_site/sitemap.xml` through the `jekyll-sitemap` plugin, listing the home page,
+the blog archive, and every published post.
 
 ## Contributing
 
