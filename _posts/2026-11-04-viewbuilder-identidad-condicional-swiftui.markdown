@@ -20,10 +20,10 @@ extension View {
     @ViewBuilder
     func applyIf<Content: View>(
         _ condition: Bool,
-        modifier: (Self) -> Content
+        transform: (Self) -> Content
     ) -> some View {
         if condition {
-            modifier(self)
+            transform(self)
         } else {
             self
         }
@@ -71,7 +71,7 @@ Cuando `condition` cambia, SwiftUI no está cambiando el parámetro de un mismo 
 
 Eso también afecta al estado. SwiftUI asocia `@State`, `@StateObject`, `@FocusState` y `@GestureState` al ciclo de vida y a la identidad de la vista. Si la vista cambia de rama, su almacenamiento puede desaparecer y volver a inicializarse.
 
-Un ejemplo:
+Con el helper definido arriba, el ejemplo se puede probar directamente en un `#Preview`:
 
 ```swift
 struct Stateful: View {
@@ -79,6 +79,8 @@ struct Stateful: View {
 
     var body: some View {
         TextField("Name", text: $text)
+            .textFieldStyle(.roundedBorder)
+            .padding()
     }
 }
 
@@ -91,6 +93,37 @@ struct Sample: View {
                 $0.background(Color.red)
             }
     }
+}
+
+struct SamplePreview: View {
+    @State private var isEnabled = false
+
+    var body: some View {
+        VStack(spacing: 24) {
+            Sample(isEnabled: isEnabled)
+
+            Button {
+                isEnabled.toggle()
+            } label: {
+                Text(isEnabled ? "Disable applyIf" : "Enable applyIf")
+                    .fontWeight(.semibold)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundStyle(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+
+            Text("isEnabled: \(isEnabled.description)")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .padding()
+    }
+}
+
+#Preview {
+    SamplePreview()
 }
 ```
 
@@ -193,10 +226,10 @@ extension View {
     @ViewBuilder
     func applyIf<Content: View>(
         _ condition: Bool,
-        modifier: (Self) -> Content
+        transform: (Self) -> Content
     ) -> some View {
         if condition {
-            modifier(self)
+            transform(self)
         } else {
             self
         }
@@ -244,7 +277,7 @@ When `condition` changes, SwiftUI is not changing the parameter of a single modi
 
 This also affects state. SwiftUI associates `@State`, `@StateObject`, `@FocusState`, and `@GestureState` with the view's lifetime and identity. If the view changes branches, its storage may disappear and be initialized again.
 
-An example:
+With the helper defined above, the example can be tested directly in a `#Preview`:
 
 ```swift
 struct Stateful: View {
@@ -252,6 +285,8 @@ struct Stateful: View {
 
     var body: some View {
         TextField("Name", text: $text)
+            .textFieldStyle(.roundedBorder)
+            .padding()
     }
 }
 
@@ -264,6 +299,37 @@ struct Sample: View {
                 $0.background(Color.red)
             }
     }
+}
+
+struct SamplePreview: View {
+    @State private var isEnabled = false
+
+    var body: some View {
+        VStack(spacing: 24) {
+            Sample(isEnabled: isEnabled)
+
+            Button {
+                isEnabled.toggle()
+            } label: {
+                Text(isEnabled ? "Disable applyIf" : "Enable applyIf")
+                    .fontWeight(.semibold)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundStyle(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+
+            Text("isEnabled: \(isEnabled.description)")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .padding()
+    }
+}
+
+#Preview {
+    SamplePreview()
 }
 ```
 
