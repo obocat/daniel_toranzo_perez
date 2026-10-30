@@ -46,6 +46,8 @@ La advertencia es la misma que con el resto del flujo: estas herramientas ahorra
 
 ## Color: cuatro modos, no uno
 
+Para que los ejemplos se puedan probar sin crear un asset, uso símbolos del sistema. Los modificadores son los mismos; solo cambia cómo se carga la imagen. Cuando tengas el tuyo, sustituye `Image(systemName: "sparkles")` por `Image("tu.simbolo")`.
+
 Los símbolos del sistema pueden renderizarse en cuatro modos. Los personalizados también, siempre que sus capas estén anotadas:
 
 - **Monochrome:** un solo color para todas las capas.
@@ -56,7 +58,7 @@ Los símbolos del sistema pueden renderizarse en cuatro modos. Los personalizado
 En SwiftUI se elige con `symbolRenderingMode`:
 
 ```swift
-Image("custom.orbit")
+Image(systemName: "sparkles")
     .font(.system(size: 72))
     .symbolRenderingMode(.palette)
     .foregroundStyle(.blue, .cyan)
@@ -83,12 +85,12 @@ struct CustomSymbolDemo: View {
 
     var body: some View {
         VStack(spacing: 32) {
-            Image("custom.orbit")
+            Image(systemName: "sparkles")
                 .font(.system(size: 88))
                 .symbolRenderingMode(.hierarchical)
                 .symbolEffect(.bounce, value: bounceTrigger)
                 .symbolEffect(.pulse, isActive: isPulsing)
-                .accessibilityLabel("Orbit")
+                .accessibilityLabel("Highlight")
 
             HStack(spacing: 16) {
                 Button("Bounce") {
@@ -120,9 +122,9 @@ struct BatterySymbol: View {
     let level: Double
 
     var body: some View {
-        Image("custom.battery")
+        Image(systemName: "battery.75")
             .symbolRenderingMode(.palette)
-            .foregroundStyle(.green, .yellow, .red)
+            .foregroundStyle(.green, .yellow)
             .symbolEffect(.variableColor.iterative, value: level)
     }
 }
@@ -143,14 +145,14 @@ Y hay una limitación práctica: las anotaciones dependen de que el número y el
 Un icono animado sigue siendo un icono. Si transmite información, necesita una etiqueta accesible:
 
 ```swift
-Image("custom.orbit")
-    .accessibilityLabel("Orbit")
+Image(systemName: "sparkles")
+    .accessibilityLabel("Highlight")
 ```
 
 Si es decorativo, ocúltalo:
 
 ```swift
-Image("custom.orbit")
+Image(systemName: "sparkles")
     .accessibilityHidden(true)
 ```
 
@@ -159,7 +161,7 @@ Y no todo el mundo quiere movimiento. Respeta `accessibilityReduceMotion` y evit
 ```swift
 @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-Image("custom.orbit")
+Image(systemName: "sparkles")
     .symbolEffect(.pulse, isActive: isPulsing && !reduceMotion)
 ```
 
@@ -230,6 +232,8 @@ The warning is the same as with the rest of the workflow: these tools save you t
 
 ## Color: four modes, not one
 
+So the examples can be tried without creating an asset, I use system symbols. The modifiers are the same; only how you load the image changes. When you have yours, replace `Image(systemName: "sparkles")` with `Image("your.symbol")`.
+
 System symbols can render in four modes. Custom symbols can too, as long as their layers are annotated:
 
 - **Monochrome:** one color for all layers.
@@ -240,7 +244,7 @@ System symbols can render in four modes. Custom symbols can too, as long as thei
 In SwiftUI you choose the mode with `symbolRenderingMode`:
 
 ```swift
-Image("custom.orbit")
+Image(systemName: "sparkles")
     .font(.system(size: 72))
     .symbolRenderingMode(.palette)
     .foregroundStyle(.blue, .cyan)
@@ -267,12 +271,12 @@ struct CustomSymbolDemo: View {
 
     var body: some View {
         VStack(spacing: 32) {
-            Image("custom.orbit")
+            Image(systemName: "sparkles")
                 .font(.system(size: 88))
                 .symbolRenderingMode(.hierarchical)
                 .symbolEffect(.bounce, value: bounceTrigger)
                 .symbolEffect(.pulse, isActive: isPulsing)
-                .accessibilityLabel("Orbit")
+                .accessibilityLabel("Highlight")
 
             HStack(spacing: 16) {
                 Button("Bounce") {
@@ -304,9 +308,9 @@ struct BatterySymbol: View {
     let level: Double
 
     var body: some View {
-        Image("custom.battery")
+        Image(systemName: "battery.75")
             .symbolRenderingMode(.palette)
-            .foregroundStyle(.green, .yellow, .red)
+            .foregroundStyle(.green, .yellow)
             .symbolEffect(.variableColor.iterative, value: level)
     }
 }
@@ -327,14 +331,14 @@ There is also a practical limitation: annotations depend on the number and order
 An animated icon is still an icon. If it conveys information, it needs an accessible label:
 
 ```swift
-Image("custom.orbit")
-    .accessibilityLabel("Orbit")
+Image(systemName: "sparkles")
+    .accessibilityLabel("Highlight")
 ```
 
 If it is decorative, hide it:
 
 ```swift
-Image("custom.orbit")
+Image(systemName: "sparkles")
     .accessibilityHidden(true)
 ```
 
@@ -343,7 +347,7 @@ And not everyone wants motion. Respect `accessibilityReduceMotion` and avoid ind
 ```swift
 @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-Image("custom.orbit")
+Image(systemName: "sparkles")
     .symbolEffect(.pulse, isActive: isPulsing && !reduceMotion)
 ```
 
