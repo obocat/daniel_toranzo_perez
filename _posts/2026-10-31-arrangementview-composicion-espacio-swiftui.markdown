@@ -1,7 +1,7 @@
 ---
 title: "ArrangementView: composición y distribución del espacio en SwiftUI"
 title_en: "ArrangementView: composition and space distribution in SwiftUI"
-date: 2026-10-30 00:00:00
+date: 2026-10-31 00:00:00
 description: "Cómo ArrangementView lleva la gestión del espacio en SwiftUI de la prioridad entre vistas a la composición entre secciones."
 description_en: "How ArrangementView takes SwiftUI space management from view-level priority to section-level composition."
 lang: es
