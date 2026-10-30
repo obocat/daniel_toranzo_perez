@@ -123,8 +123,8 @@ Esa distinción ayuda a pensar la interfaz desde una perspectiva más estructura
 ## Referencias
 
 - [ArrangementView](https://developer.apple.com/documentation/swiftui/arrangementview)
-- [splitArrangementFixedLayoutSize(horizontal:vertical:)](https://developer.apple.com/documentation/swiftui/view/splitarrangementfixedlayoutsize(horizontal:vertical:))
-- [arrangementViewStyle(_:)](https://developer.apple.com/documentation/swiftui/view/arrangementviewstyle(_:))
+- [splitArrangementFixedLayoutSize(horizontal:vertical:)](https://developer.apple.com/documentation/swiftui/view/splitarrangementfixedlayoutsize%28horizontal%3Avertical%3A%29)
+- [arrangementViewStyle(_:)](https://developer.apple.com/documentation/swiftui/view/arrangementviewstyle%28%5F%3A%29)
 - [ArrangementView: Think Before You Arrange](https://fatbobman.com/en/posts/arrangementview-think-before-you-arrange)
 - [Adaptar una app al iPhone Duo](/blog/2026/10/29/iphone-duo-layout-camara/)
 
@@ -242,8 +242,8 @@ That distinction helps us think about interfaces from a more structural perspect
 ## References
 
 - [ArrangementView](https://developer.apple.com/documentation/swiftui/arrangementview)
-- [splitArrangementFixedLayoutSize(horizontal:vertical:)](https://developer.apple.com/documentation/swiftui/view/splitarrangementfixedlayoutsize(horizontal:vertical:))
-- [arrangementViewStyle(_:)](https://developer.apple.com/documentation/swiftui/view/arrangementviewstyle(_:))
+- [splitArrangementFixedLayoutSize(horizontal:vertical:)](https://developer.apple.com/documentation/swiftui/view/splitarrangementfixedlayoutsize%28horizontal%3Avertical%3A%29)
+- [arrangementViewStyle(_:)](https://developer.apple.com/documentation/swiftui/view/arrangementviewstyle%28%5F%3A%29)
 - [ArrangementView: Think Before You Arrange](https://fatbobman.com/en/posts/arrangementview-think-before-you-arrange)
 - [Adapting an app to iPhone Duo](/blog/2026/10/29/iphone-duo-layout-camara/)
 
