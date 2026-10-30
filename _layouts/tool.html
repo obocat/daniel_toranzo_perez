@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es" data-lang="es">
+  {% include head.html %}
+  <body class="tools-page tool-detail-page">
+    {% include header.html %}
+
+    <div class="wrapper">
+      <main class="tool-main">
+        <header class="tools-hero">
+          <a class="blog-back" href="{{ '/tools/' | relative_url }}">
+            <span aria-hidden="true">←</span>
+            <span class="lang-es">Herramientas</span>
+            <span class="lang-en">Tools</span>
+          </a>
+
+          <h1>
+            <span class="lang-es">{{ page.heading | default: page.title }}</span>
+            <span class="lang-en">{{ page.heading_en | default: page.title_en | default: page.heading | default: page.title }}</span>
+          </h1>
+        </header>
+
+        <div class="tool-card">
+          {{ content }}
+        </div>
+      </main>
+    </div>
+
+    <script src="{{ '/js/reveal.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+    <script src="{{ '/js/tools.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+    {% if page.script %}
+    <script src="{{ page.script | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+    {% endif %}
+  </body>
+</html>

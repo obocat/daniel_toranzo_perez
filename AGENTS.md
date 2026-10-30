@@ -204,6 +204,8 @@ After the PR check finishes, comment on the issue with:
 
 - Add a page under its own directory, for example `tools/index.html`, with a
   `layout` and an explicit `permalink`.
+- Tool detail pages live under `tools/<slug>/index.html` and use
+  `layout: tool`. Shared tool markup goes in `_includes/tools/`.
 - Put shared markup in `_layouts/`; put page-specific behavior in `js/`.
 - Use existing CSS variables (`--bg`, `--text`, `--accent`, `--border`, etc.)
   instead of hard-coded light/dark colors.

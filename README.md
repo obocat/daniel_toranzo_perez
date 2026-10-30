@@ -19,8 +19,8 @@ vanilla JavaScript provides the language switch and UI interactions.
   certifications, contact, and social links.
 - Blog with a yearly archive, tags, reading time, previous/next navigation, and
   per-post SEO metadata.
-- Browser-only iOS developer tools: Info.plist permission text generator,
-  DateFormatter tester, and color converter.
+- Browser-only iOS developer tools: APNs payload validator, JSON-to-Codable
+  converter, DateFormatter tester, and color converter, each on its own page.
 - Print-friendly CV layout.
 - Responsive Apple-inspired design.
 - Custom domain configured through `CNAME`.
@@ -45,18 +45,26 @@ vanilla JavaScript provides the language switch and UI interactions.
 │   ├── resume.html          # Main CV page
 │   ├── blog-index.html      # /blog/ listing
 │   ├── blog.html            # Individual article
-│   └── tools.html           # /tools/ developer utilities
+│   ├── tools.html           # /tools/ listing
+│   └── tool.html            # Individual developer tool
 ├── _posts/                  # Blog articles
 ├── .github/workflows/       # Pull request checks
 ├── AGENTS.md                # Content and maintenance workflow for agents
 ├── blog/index.html          # Blog entry point
-├── tools/index.html         # Developer tools entry point
+├── tools/
+│   ├── index.html           # Developer tools listing
+│   ├── apns/                # APNs payload builder and validator
+│   ├── json-codable/        # JSON-to-Codable converter
+│   ├── dateformatter/       # DateFormatter tester
+│   └── colors/              # Color converter
 ├── css/
 │   ├── main.scss            # Source styles
 │   └── main.css             # Compiled styles served by the site
 ├── js/
 │   ├── reveal.js            # Language switch and UI behaviour
-│   └── tools.js             # Developer tools behaviour
+│   ├── tools.js             # Shared developer tools behaviour
+│   ├── tool-apns.js         # APNs payload validation
+│   └── tool-json-codable.js # JSON-to-Codable conversion
 ├── script/                  # Content validation
 ├── images/                  # Avatar, project images, social card
 ├── index.html               # CV page
@@ -193,20 +201,23 @@ For the complete issue, branch, validation, and pull-request workflow, see
 
 ## Developer tools
 
-The `/tools/` page contains browser-only utilities for iOS development:
+The `/tools/` page lists browser-only utilities for iOS development. Each tool
+has its own page:
 
-- **Info.plist permission text generator:** select permissions and copy the
-  corresponding `NS…UsageDescription` keys with sample copy. Notifications are
-  documented as a runtime permission because they do not use an Info.plist
-  usage description.
-- **DateFormatter tester:** enter a Unicode date pattern and preview the
-  result, with warnings for common mistakes such as `YYYY` vs `yyyy` and `DD`
-  vs `dd`.
-- **Color converter:** convert HEX values to `UIColor`, SwiftUI `Color`, and
-  Display P3 components.
+- **APNs payload builder and validator** (`/tools/apns/`): format a payload,
+  validate its JSON, and check its UTF-8 size against the 4096-byte limit.
+- **JSON-to-Codable converter** (`/tools/json-codable/`): turn a JSON object
+  into Swift `Codable` structs, including nested types and `CodingKeys` when
+  property names differ.
+- **DateFormatter tester** (`/tools/dateformatter/`): enter a Unicode date
+  pattern and preview the result, with warnings for common mistakes such as
+  `YYYY` vs `yyyy` and `DD` vs `dd`.
+- **Color converter** (`/tools/colors/`): convert HEX values to `UIColor`,
+  SwiftUI `Color`, and Display P3 components.
 
 The tools use plain HTML, CSS, and JavaScript. No data leaves the browser. The
-page is linked from the header and is included in `_site/sitemap.xml`.
+listing is linked from the header, and the listing plus every tool page are
+included in `_site/sitemap.xml`.
 
 ## Deployment
 
@@ -227,7 +238,7 @@ bundle exec jekyll build
 
 The generated site is written to `_site/`. The build also produces
 `_site/sitemap.xml` through the `jekyll-sitemap` plugin, listing the home page,
-the blog archive, the developer tools page, and every published post.
+the blog archive, the developer tools pages, and every published post.
 
 ## Contributing
 

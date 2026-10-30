@@ -1,0 +1,40 @@
+<div class="tool-controls">
+  <label class="tool-field" for="date-format">
+    <span class="tool-field-label"><span class="lang-es">Formato</span><span class="lang-en">Format</span></span>
+    <input class="tool-input" id="date-format" type="text" value="yyyy-MM-dd" spellcheck="false" autocomplete="off" autocapitalize="off">
+  </label>
+  <label class="tool-field" for="date-value">
+    <span class="tool-field-label"><span class="lang-es">Fecha</span><span class="lang-en">Date</span></span>
+    <input class="tool-input" id="date-value" type="date" value="{{ site.time | date: '%Y-%m-%d' }}">
+  </label>
+</div>
+
+<div class="tool-presets" role="group" aria-label="Formatos de ejemplo / Example formats">
+  <button type="button" class="tool-preset" data-format="yyyy-MM-dd">yyyy-MM-dd</button>
+  <button type="button" class="tool-preset" data-format="dd/MM/yyyy">dd/MM/yyyy</button>
+  <button type="button" class="tool-preset" data-format="d MMM yyyy">d MMM yyyy</button>
+  <button type="button" class="tool-preset" data-format="EEEE, d MMMM">EEEE, d MMMM</button>
+  <button type="button" class="tool-preset" data-format="HH:mm">HH:mm</button>
+  <button type="button" class="tool-preset" data-format="yyyy-MM-dd'T'HH:mm:ssZZZZZ">yyyy-MM-dd'T'HH:mm:ssZZZZZ</button>
+  <button type="button" class="tool-preset" data-format="YYYY-'W'ww">YYYY-'W'ww</button>
+</div>
+
+<div class="tool-date-layout">
+  <div class="tool-panel">
+    <span class="tool-panel-label"><span class="lang-es">Resultado</span><span class="lang-en">Result</span></span>
+    <output class="tool-result" id="date-result" for="date-format date-value" aria-live="polite">—</output>
+    <div class="tool-result-actions">
+      <button type="button" class="tool-copy" data-copy-target="date-result" data-copied-es="Copiado" data-copied-en="Copied" data-error-es="Copia manualmente" data-error-en="Copy manually">
+        <span class="tool-copy-label lang-es">Copiar</span>
+        <span class="tool-copy-label lang-en">Copy</span>
+      </button>
+    </div>
+  </div>
+  <div class="tool-panel">
+    <span class="tool-panel-label"><span class="lang-es">Avisos</span><span class="lang-en">Warnings</span></span>
+    <ul class="tool-warnings" id="date-warnings" aria-live="polite"></ul>
+  </div>
+</div>
+
+<p class="tool-note lang-es">Este probador implementa los patrones Unicode más comunes en el navegador. Para casos límite, confirma el resultado en Xcode con <code>DateFormatter</code>.</p>
+<p class="tool-note lang-en">This tester implements the most common Unicode patterns in the browser. For edge cases, confirm the result in Xcode with <code>DateFormatter</code>.</p>

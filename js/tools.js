@@ -1,4 +1,4 @@
-// Herramientas para desarrolladores iOS: permisos, DateFormatter y color.
+// Herramientas compartidas: DateFormatter y color.
 
 (function () {
   'use strict';
@@ -91,7 +91,9 @@
 
         if (!target) return;
 
-        copyText(target.textContent).then(function () {
+        var text = target.matches('input, textarea') ? target.value : target.textContent;
+
+        copyText(text).then(function () {
           setCopyState(button, true);
         }).catch(function () {
           setCopyState(button, false);
@@ -99,62 +101,6 @@
       });
     });
   }
-
-  /* ==========================================
-     PERMISOS DE INFO.PLIST
-     ========================================== */
-
-  var permissionInputs = $all('.permission-checkbox');
-  var permissionOutput = $('#permission-output');
-
-  function escapeXml(value) {
-    return value
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
-  }
-
-  function updatePermissionOptionState(input) {
-    var option = input.closest('.permission-option');
-    if (option) option.classList.toggle('is-checked', input.checked);
-  }
-
-  function updatePermissions() {
-    if (!permissionOutput) return;
-
-    var lang = currentLang();
-    var lines = [];
-
-    permissionInputs.forEach(function (input) {
-      updatePermissionOptionState(input);
-
-      if (!input.checked) return;
-
-      var key = input.getAttribute('data-key');
-      var text = input.getAttribute('data-text-' + lang) || input.getAttribute('data-text-es') || '';
-
-      if (key) {
-        lines.push('<key>' + key + '</key>');
-        lines.push('<string>' + escapeXml(text) + '</string>');
-      } else {
-        lines.push('<!-- ' + escapeXml(text) + ' -->');
-      }
-
-      lines.push('');
-    });
-
-    if (!lines.length) {
-      lines.push(lang === 'en'
-        ? '<!-- Select at least one permission. -->'
-        : '<!-- Selecciona al menos un permiso. -->');
-    }
-
-    permissionOutput.textContent = lines.join('\n').replace(/\n+$/, '');
-  }
-
-  permissionInputs.forEach(function (input) {
-    input.addEventListener('change', updatePermissions);
-  });
 
   /* ==========================================
      DATEFORMATTER
@@ -724,13 +670,11 @@
      ========================================== */
 
   document.addEventListener('cv:langchange', function () {
-    updatePermissions();
     updateDateTool();
     updateColor();
   });
 
   initCopyButtons();
-  updatePermissions();
   updateDateTool();
   updateColor();
 })();

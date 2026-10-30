@@ -1,0 +1,47 @@
+<div class="tool-field">
+  <label class="tool-field-label" for="apns-payload">
+    <span class="lang-es">Payload</span>
+    <span class="lang-en">Payload</span>
+  </label>
+  <textarea class="tool-input tool-textarea" id="apns-payload" rows="10" spellcheck="false" autocomplete="off" autocapitalize="off">{
+  "aps": {
+    "alert": {
+      "title": "Hello",
+      "body": "You have a new message."
+    },
+    "sound": "default",
+    "badge": 1
+  },
+  "route": "inbox"
+}</textarea>
+</div>
+
+<div class="tool-actions">
+  <button type="button" class="tool-button" id="apns-format">
+    <span class="lang-es">Formatear</span>
+    <span class="lang-en">Format</span>
+  </button>
+  <button type="button" class="tool-copy" data-copy-target="apns-payload" data-copied-es="Copiado" data-copied-en="Copied" data-error-es="Copia manualmente" data-error-en="Copy manually">
+    <span class="tool-copy-label lang-es">Copiar</span>
+    <span class="tool-copy-label lang-en">Copy</span>
+  </button>
+</div>
+
+<div class="payload-meter">
+  <div class="payload-meter-head">
+    <span class="tool-field-label">
+      <span class="lang-es">Tamaño</span>
+      <span class="lang-en">Size</span>
+    </span>
+    <span class="payload-size" id="apns-size" aria-live="polite">—</span>
+  </div>
+  <div class="payload-meter-track" id="apns-meter" role="progressbar" aria-label="Tamaño del payload / Payload size" aria-valuemin="0" aria-valuemax="4096" aria-valuenow="0">
+    <div class="payload-meter-fill" id="apns-meter-fill"></div>
+  </div>
+</div>
+
+<p class="tool-error" id="apns-error" role="alert" hidden></p>
+<ul class="tool-warnings" id="apns-warnings"></ul>
+
+<p class="tool-note lang-es">El límite es 4096 bytes (4 KB) para notificaciones estándar. Las notificaciones VoIP usan otro límite.</p>
+<p class="tool-note lang-en">The limit is 4096 bytes (4 KB) for standard notifications. VoIP notifications use a different limit.</p>
