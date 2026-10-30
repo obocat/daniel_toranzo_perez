@@ -19,6 +19,8 @@ vanilla JavaScript provides the language switch and UI interactions.
   certifications, contact, and social links.
 - Blog with a yearly archive, tags, reading time, previous/next navigation, and
   per-post SEO metadata.
+- Browser-only iOS developer tools: Info.plist permission text generator,
+  DateFormatter tester, and color converter.
 - Print-friendly CV layout.
 - Responsive Apple-inspired design.
 - Custom domain configured through `CNAME`.
@@ -42,14 +44,19 @@ vanilla JavaScript provides the language switch and UI interactions.
 ├── _layouts/
 │   ├── resume.html          # Main CV page
 │   ├── blog-index.html      # /blog/ listing
-│   └── blog.html            # Individual article
+│   ├── blog.html            # Individual article
+│   └── tools.html           # /tools/ developer utilities
 ├── _posts/                  # Blog articles
 ├── .github/workflows/       # Pull request checks
+├── AGENTS.md                # Content and maintenance workflow for agents
 ├── blog/index.html          # Blog entry point
+├── tools/index.html         # Developer tools entry point
 ├── css/
 │   ├── main.scss            # Source styles
 │   └── main.css             # Compiled styles served by the site
-├── js/reveal.js             # Language switch and UI behaviour
+├── js/
+│   ├── reveal.js            # Language switch and UI behaviour
+│   └── tools.js             # Developer tools behaviour
 ├── script/                  # Content validation
 ├── images/                  # Avatar, project images, social card
 ├── index.html               # CV page
@@ -181,6 +188,26 @@ Notes:
   `resume_section_blog: false` in `_config.yml` to hide that section.
 - The blog archive is available at `/blog/` and is grouped by year.
 
+For the complete issue, branch, validation, and pull-request workflow, see
+[`AGENTS.md`](AGENTS.md).
+
+## Developer tools
+
+The `/tools/` page contains browser-only utilities for iOS development:
+
+- **Info.plist permission text generator:** select permissions and copy the
+  corresponding `NS…UsageDescription` keys with sample copy. Notifications are
+  documented as a runtime permission because they do not use an Info.plist
+  usage description.
+- **DateFormatter tester:** enter a Unicode date pattern and preview the
+  result, with warnings for common mistakes such as `YYYY` vs `yyyy` and `DD`
+  vs `dd`.
+- **Color converter:** convert HEX values to `UIColor`, SwiftUI `Color`, and
+  Display P3 components.
+
+The tools use plain HTML, CSS, and JavaScript. No data leaves the browser. The
+page is linked from the header and is included in `_site/sitemap.xml`.
+
 ## Deployment
 
 The site is designed for GitHub Pages:
@@ -200,7 +227,7 @@ bundle exec jekyll build
 
 The generated site is written to `_site/`. The build also produces
 `_site/sitemap.xml` through the `jekyll-sitemap` plugin, listing the home page,
-the blog archive, and every published post.
+the blog archive, the developer tools page, and every published post.
 
 ## Contributing
 

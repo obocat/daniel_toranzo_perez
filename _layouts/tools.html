@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es" data-lang="es">
+  {% include head.html %}
+  <body class="tools-page">
+    {% include header.html %}
+
+    <div class="wrapper">
+      <main class="tools-main">
+        <header class="tools-hero">
+          <p class="tools-eyebrow">
+            <span class="lang-es">Para iOS</span>
+            <span class="lang-en">For iOS</span>
+          </p>
+          <h1>
+            <span class="lang-es">Herramientas para desarrolladores iOS</span>
+            <span class="lang-en">iOS developer tools</span>
+          </h1>
+          <p class="tools-intro lang-es">Tres utilidades pequeñas para resolver dudas del día a día sin salir del navegador. Todo se calcula en local: no se envía nada a ningún servidor.</p>
+          <p class="tools-intro lang-en">Three small utilities for everyday questions, right in the browser. Everything runs locally: nothing is sent to a server.</p>
+
+          <nav class="tools-nav" aria-label="Herramientas / Tools">
+            <a href="#permissions">
+              <span class="lang-es">Permisos</span>
+              <span class="lang-en">Permissions</span>
+            </a>
+            <a href="#dateformatter">
+              <span class="lang-es">DateFormatter</span>
+              <span class="lang-en">DateFormatter</span>
+            </a>
+            <a href="#colors">
+              <span class="lang-es">Colores</span>
+              <span class="lang-en">Colors</span>
+            </a>
+          </nav>
+
+          <noscript>
+            <p class="tools-noscript">
+              <span class="lang-es">Estas herramientas necesitan JavaScript para calcular los resultados en tu navegador.</span>
+              <span class="lang-en">These tools need JavaScript to calculate results in your browser.</span>
+            </p>
+          </noscript>
+        </header>
+
+        <section class="tool-card" id="permissions" aria-labelledby="permissions-title">
+          <header class="tool-card-header">
+            <span class="tool-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 1.8 4.5 4.6v6.1c0 5 3.2 9.5 7.5 11.5 4.3-2 7.5-6.5 7.5-11.5V4.6L12 1.8Zm-1.1 14.4-3.2-3.2 1.5-1.5 1.7 1.7 4.4-4.4 1.5 1.5-5.9 5.9Z"/>
+              </svg>
+            </span>
+            <div>
+              <p class="tool-kicker">Info.plist</p>
+              <h2 class="tool-title" id="permissions-title">
+                <span class="lang-es">Generador de textos de permisos</span>
+                <span class="lang-en">Permission text generator</span>
+              </h2>
+              <p class="tool-description lang-es">Selecciona los permisos que usa tu app y copia las claves <code>NS…UsageDescription</code> con un texto de ejemplo. Las notificaciones no usan una clave de Info.plist: se piden en tiempo de ejecución.</p>
+              <p class="tool-description lang-en">Select the permissions your app uses and copy the <code>NS…UsageDescription</code> keys with sample text. Notifications do not use an Info.plist key: they are requested at runtime.</p>
+            </div>
+          </header>
+
+          <div class="tool-layout">
+            <div class="tool-panel">
+              <span class="tool-panel-label">
+                <span class="lang-es">Permisos disponibles</span>
+                <span class="lang-en">Available permissions</span>
+              </span>
+
+              <div class="permission-options" role="group" aria-label="Permisos / Permissions">
+                <label class="permission-option">
+                  <input class="permission-checkbox" type="checkbox" checked data-key="NSCameraUsageDescription" data-text-es="Para hacer fotos y vídeos que puedas adjuntar a tus publicaciones." data-text-en="To take photos and videos that you can attach to your posts.">
+                  <span class="permission-option-copy">
+                    <span class="permission-option-title"><span class="lang-es">Cámara</span><span class="lang-en">Camera</span></span>
+                    <code>NSCameraUsageDescription</code>
+                  </span>
+                </label>
+
+                <label class="permission-option">
+                  <input class="permission-checkbox" type="checkbox" checked data-key="NSPhotoLibraryUsageDescription" data-text-es="Para elegir fotos de tu biblioteca y adjuntarlas a tus publicaciones." data-text-en="To choose photos from your library and attach them to your posts.">
+                  <span class="permission-option-copy">
+                    <span class="permission-option-title"><span class="lang-es">Fototeca (lectura)</span><span class="lang-en">Photo library (read)</span></span>
+                    <code>NSPhotoLibraryUsageDescription</code>
+                  </span>
+                </label>
+
+                <label class="permission-option">
+                  <input class="permission-checkbox" type="checkbox" data-key="NSPhotoLibraryAddUsageDescription" data-text-es="Para guardar en tu biblioteca las fotos que creas en la app." data-text-en="To save photos you create in the app to your library.">
+                  <span class="permission-option-copy">
+                    <span class="permission-option-title"><span class="lang-es">Fototeca (escritura)</span><span class="lang-en">Photo library (write)</span></span>
+                    <code>NSPhotoLibraryAddUsageDescription</code>
+                  </span>
+                </label>
+
+                <label class="permission-option">
+                  <input class="permission-checkbox" type="checkbox" checked data-key="NSLocationWhenInUseUsageDescription" data-text-es="Para mostrar tu ubicación y encontrar contenido cercano mientras usas la app." data-text-en="To show your location and find nearby content while you use the app.">
+                  <span class="permission-option-copy">
+                    <span class="permission-option-title"><span class="lang-es">Ubicación al usar</span><span class="lang-en">Location when in use</span></span>
+                    <code>NSLocationWhenInUseUsageDescription</code>
+                  </span>
+                </label>
+
+                <label class="permission-option">
+                  <input class="permission-checkbox" type="checkbox" data-key="NSLocationAlwaysAndWhenInUseUsageDescription" data-text-es="Para mantener tu ubicación actualizada y enviarte recordatorios relevantes mientras la app está en segundo plano." data-text-en="To keep your location updated and send relevant reminders while the app is in the background.">
+                  <span class="permission-option-copy">
+                    <span class="permission-option-title"><span class="lang-es">Ubicación siempre</span><span class="lang-en">Location always</span></span>
+                    <code>NSLocationAlwaysAndWhenInUseUsageDescription</code>
+                  </span>
+                </label>
+
+                <label class="permission-option">
+                  <input class="permission-checkbox" type="checkbox" data-key="NSMicrophoneUsageDescription" data-text-es="Para grabar audio y adjuntarlo a tus mensajes." data-text-en="To record audio and attach it to your messages.">
+                  <span class="permission-option-copy">
+                    <span class="permission-option-title"><span class="lang-es">Micrófono</span><span class="lang-en">Microphone</span></span>
+                    <code>NSMicrophoneUsageDescription</code>
+                  </span>
+                </label>
+
+                <label class="permission-option">
+                  <input class="permission-checkbox" type="checkbox" checked data-key="" data-text-es="Las notificaciones no usan una clave Info.plist. Pide autorización en tiempo de ejecución con UNUserNotificationCenter." data-text-en="Notifications do not use an Info.plist key. Request authorization at runtime with UNUserNotificationCenter.">
+                  <span class="permission-option-copy">
+                    <span class="permission-option-title"><span class="lang-es">Notificaciones</span><span class="lang-en">Notifications</span></span>
+                    <code>Runtime permission</code>
+                  </span>
+                </label>
+
+                <label class="permission-option">
+                  <input class="permission-checkbox" type="checkbox" data-key="NSContactsUsageDescription" data-text-es="Para encontrar a tus contactos y conectarte con ellos dentro de la app." data-text-en="To find your contacts and connect with them inside the app.">
+                  <span class="permission-option-copy">
+                    <span class="permission-option-title"><span class="lang-es">Contactos</span><span class="lang-en">Contacts</span></span>
+                    <code>NSContactsUsageDescription</code>
+                  </span>
+                </label>
+
+                <label class="permission-option">
+                  <input class="permission-checkbox" type="checkbox" data-key="NSCalendarsFullAccessUsageDescription" data-text-es="Para leer y añadir eventos a tu calendario cuando tú lo pidas." data-text-en="To read and add events to your calendar when you ask.">
+                  <span class="permission-option-copy">
+                    <span class="permission-option-title"><span class="lang-es">Calendario (iOS 17+)</span><span class="lang-en">Calendar (iOS 17+)</span></span>
+                    <code>NSCalendarsFullAccessUsageDescription</code>
+                  </span>
+                </label>
+
+                <label class="permission-option">
+                  <input class="permission-checkbox" type="checkbox" data-key="NSRemindersFullAccessUsageDescription" data-text-es="Para leer y añadir recordatorios cuando tú lo pidas." data-text-en="To read and add reminders when you ask.">
+                  <span class="permission-option-copy">
+                    <span class="permission-option-title"><span class="lang-es">Recordatorios (iOS 17+)</span><span class="lang-en">Reminders (iOS 17+)</span></span>
+                    <code>NSRemindersFullAccessUsageDescription</code>
+                  </span>
+                </label>
+
+                <label class="permission-option">
+                  <input class="permission-checkbox" type="checkbox" data-key="NSMotionUsageDescription" data-text-es="Para contar tus pasos y adaptar la experiencia a tu actividad." data-text-en="To count your steps and adapt the experience to your activity.">
+                  <span class="permission-option-copy">
+                    <span class="permission-option-title"><span class="lang-es">Movimiento y actividad</span><span class="lang-en">Motion and activity</span></span>
+                    <code>NSMotionUsageDescription</code>
+                  </span>
+                </label>
+
+                <label class="permission-option">
+                  <input class="permission-checkbox" type="checkbox" data-key="NSBluetoothAlwaysUsageDescription" data-text-es="Para conectarte a dispositivos Bluetooth cercanos que elijas." data-text-en="To connect to nearby Bluetooth devices that you choose.">
+                  <span class="permission-option-copy">
+                    <span class="permission-option-title"><span class="lang-es">Bluetooth</span><span class="lang-en">Bluetooth</span></span>
+                    <code>NSBluetoothAlwaysUsageDescription</code>
+                  </span>
+                </label>
+
+                <label class="permission-option">
+                  <input class="permission-checkbox" type="checkbox" data-key="NSLocalNetworkUsageDescription" data-text-es="Para encontrar y conectarte a dispositivos de tu red local." data-text-en="To find and connect to devices on your local network.">
+                  <span class="permission-option-copy">
+                    <span class="permission-option-title"><span class="lang-es">Red local</span><span class="lang-en">Local network</span></span>
+                    <code>NSLocalNetworkUsageDescription</code>
+                  </span>
+                </label>
+
+                <label class="permission-option">
+                  <input class="permission-checkbox" type="checkbox" data-key="NSFaceIDUsageDescription" data-text-es="Para iniciar sesión de forma segura con Face ID." data-text-en="To sign in securely with Face ID.">
+                  <span class="permission-option-copy">
+                    <span class="permission-option-title"><span class="lang-es">Face ID</span><span class="lang-en">Face ID</span></span>
+                    <code>NSFaceIDUsageDescription</code>
+                  </span>
+                </label>
+
+                <label class="permission-option">
+                  <input class="permission-checkbox" type="checkbox" data-key="NSUserTrackingUsageDescription" data-text-es="Para mostrarte anuncios personalizados y medir su rendimiento." data-text-en="To show you personalised ads and measure their performance.">
+                  <span class="permission-option-copy">
+                    <span class="permission-option-title"><span class="lang-es">Seguimiento</span><span class="lang-en">Tracking</span></span>
+                    <code>NSUserTrackingUsageDescription</code>
+                  </span>
+                </label>
+
+                <label class="permission-option">
+                  <input class="permission-checkbox" type="checkbox" data-key="NSSpeechRecognitionUsageDescription" data-text-es="Para convertir tu voz en texto cuando uses el dictado." data-text-en="To turn your speech into text when you use dictation.">
+                  <span class="permission-option-copy">
+                    <span class="permission-option-title"><span class="lang-es">Reconocimiento de voz</span><span class="lang-en">Speech recognition</span></span>
+                    <code>NSSpeechRecognitionUsageDescription</code>
+                  </span>
+                </label>
+              </div>
+
+              <p class="permission-hint">
+                <span class="lang-es">Desplázate dentro de la lista para ver todos los permisos.</span>
+                <span class="lang-en">Scroll inside the list to see every permission.</span>
+              </p>
+            </div>
+
+            <div class="tool-panel">
+              <div class="tool-output">
+                <div class="tool-output-header">
+                  <span class="tool-output-label">Info.plist</span>
+                  <button type="button" class="tool-copy" data-copy-target="permission-output" data-copied-es="Copiado" data-copied-en="Copied" data-error-es="Copia manualmente" data-error-en="Copy manually">
+                    <span class="tool-copy-label lang-es">Copiar</span>
+                    <span class="tool-copy-label lang-en">Copy</span>
+                  </button>
+                </div>
+                <pre class="tool-code"><code id="permission-output"></code></pre>
+              </div>
+              <p class="tool-note lang-es">Escribe motivos centrados en el beneficio para la persona, no en la implementación. Puedes localizar estos textos con <code>InfoPlist.strings</code>.</p>
+              <p class="tool-note lang-en">Write reasons focused on the benefit to the person, not the implementation. You can localise these strings with <code>InfoPlist.strings</code>.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="tool-card" id="dateformatter" aria-labelledby="dateformatter-title">
+          <header class="tool-card-header">
+            <span class="tool-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7 2h2v2h6V2h2v2h2.5A1.5 1.5 0 0 1 21 5.5v14a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 19.5v-14A1.5 1.5 0 0 1 4.5 4H7V2Zm12 7H5v10h14V9ZM5 7h14V6h-2v1h-2V6H9v1H7V6H5v1Z"/>
+              </svg>
+            </span>
+            <div>
+              <p class="tool-kicker">Foundation</p>
+              <h2 class="tool-title" id="dateformatter-title">
+                <span class="lang-es">Probador de DateFormatter</span>
+                <span class="lang-en">DateFormatter tester</span>
+              </h2>
+              <p class="tool-description lang-es">Escribe un patrón y comprueba el resultado con la fecha elegida. El probador avisa de confusiones habituales como <code>YYYY</code> frente a <code>yyyy</code> o <code>DD</code> frente a <code>dd</code>.</p>
+              <p class="tool-description lang-en">Enter a pattern and check the result for the selected date. The tester warns about common mistakes such as <code>YYYY</code> vs <code>yyyy</code> or <code>DD</code> vs <code>dd</code>.</p>
+            </div>
+          </header>
+
+          <div class="tool-controls">
+            <label class="tool-field" for="date-format">
+              <span class="tool-field-label"><span class="lang-es">Formato</span><span class="lang-en">Format</span></span>
+              <input class="tool-input" id="date-format" type="text" value="yyyy-MM-dd" spellcheck="false" autocomplete="off" autocapitalize="off">
+            </label>
+            <label class="tool-field" for="date-value">
+              <span class="tool-field-label"><span class="lang-es">Fecha</span><span class="lang-en">Date</span></span>
+              <input class="tool-input" id="date-value" type="date" value="{{ site.time | date: '%Y-%m-%d' }}">
+            </label>
+          </div>
+
+          <div class="tool-presets" role="group" aria-label="Formatos de ejemplo / Example formats">
+            <button type="button" class="tool-preset" data-format="yyyy-MM-dd">yyyy-MM-dd</button>
+            <button type="button" class="tool-preset" data-format="dd/MM/yyyy">dd/MM/yyyy</button>
+            <button type="button" class="tool-preset" data-format="d MMM yyyy">d MMM yyyy</button>
+            <button type="button" class="tool-preset" data-format="EEEE, d MMMM">EEEE, d MMMM</button>
+            <button type="button" class="tool-preset" data-format="HH:mm">HH:mm</button>
+            <button type="button" class="tool-preset" data-format="yyyy-MM-dd'T'HH:mm:ssZZZZZ">yyyy-MM-dd'T'HH:mm:ssZZZZZ</button>
+            <button type="button" class="tool-preset" data-format="YYYY-'W'ww">YYYY-'W'ww</button>
+          </div>
+
+          <div class="tool-date-layout">
+            <div class="tool-panel">
+              <span class="tool-panel-label"><span class="lang-es">Resultado</span><span class="lang-en">Result</span></span>
+              <output class="tool-result" id="date-result" for="date-format date-value" aria-live="polite">—</output>
+              <div class="tool-result-actions">
+                <button type="button" class="tool-copy" data-copy-target="date-result" data-copied-es="Copiado" data-copied-en="Copied" data-error-es="Copia manualmente" data-error-en="Copy manually">
+                  <span class="tool-copy-label lang-es">Copiar</span>
+                  <span class="tool-copy-label lang-en">Copy</span>
+                </button>
+              </div>
+            </div>
+            <div class="tool-panel">
+              <span class="tool-panel-label"><span class="lang-es">Avisos</span><span class="lang-en">Warnings</span></span>
+              <ul class="tool-warnings" id="date-warnings" aria-live="polite"></ul>
+            </div>
+          </div>
+
+          <p class="tool-note lang-es">Este probador implementa los patrones Unicode más comunes en el navegador. Para casos límite, confirma el resultado en Xcode con <code>DateFormatter</code>.</p>
+          <p class="tool-note lang-en">This tester implements the most common Unicode patterns in the browser. For edge cases, confirm the result in Xcode with <code>DateFormatter</code>.</p>
+        </section>
+
+        <section class="tool-card" id="colors" aria-labelledby="colors-title">
+          <header class="tool-card-header">
+            <span class="tool-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2a10 10 0 0 0 0 20c1.4 0 2.2-.8 2.2-1.9 0-.7-.3-1.2-.7-1.7-.3-.4-.6-.8-.6-1.3 0-.9.8-1.6 1.8-1.6h1.5A5.8 5.8 0 0 0 22 9.7C22 5.4 17.5 2 12 2Zm-5.5 9a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm3-4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm3.5 4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Z"/>
+              </svg>
+            </span>
+            <div>
+              <p class="tool-kicker">UIKit + SwiftUI</p>
+              <h2 class="tool-title" id="colors-title">
+                <span class="lang-es">Conversor de color</span>
+                <span class="lang-en">Color converter</span>
+              </h2>
+              <p class="tool-description lang-es">Convierte un color HEX a <code>UIColor</code>, SwiftUI <code>Color</code> y componentes Display P3. Los valores P3 se calculan desde sRGB para conservar el color en pantallas compatibles.</p>
+              <p class="tool-description lang-en">Convert a HEX color to <code>UIColor</code>, SwiftUI <code>Color</code>, and Display P3 components. P3 values are converted from sRGB to preserve the color on compatible displays.</p>
+            </div>
+          </header>
+
+          <div class="color-controls">
+            <label class="tool-field" for="color-hex">
+              <span class="tool-field-label">HEX</span>
+              <input class="tool-input" id="color-hex" type="text" value="#0071E3" spellcheck="false" autocomplete="off" autocapitalize="off" maxlength="9">
+            </label>
+            <input class="color-picker" id="color-picker" type="color" value="#0071e3" aria-label="Selector de color / Color picker">
+          </div>
+          <p class="tool-error" id="color-error" role="alert" hidden></p>
+
+          <div class="color-swatches">
+            <div class="color-swatch" id="color-swatch-srgb"><span class="color-swatch-label">sRGB</span></div>
+            <div class="color-swatch" id="color-swatch-p3"><span class="color-swatch-label">Display P3</span></div>
+          </div>
+
+          <div class="color-output-list">
+            <div class="color-output-row">
+              <span class="color-output-label">HEX</span>
+              <code class="color-output-code" id="color-hex-output">#0071E3</code>
+              <button type="button" class="tool-copy" data-copy-target="color-hex-output" data-copied-es="Copiado" data-copied-en="Copied" data-error-es="Copia manualmente" data-error-en="Copy manually">
+                <span class="tool-copy-label lang-es">Copiar</span>
+                <span class="tool-copy-label lang-en">Copy</span>
+              </button>
+            </div>
+            <div class="color-output-row">
+              <span class="color-output-label">RGB</span>
+              <code class="color-output-code" id="color-rgb-output">0, 113, 227</code>
+              <button type="button" class="tool-copy" data-copy-target="color-rgb-output" data-copied-es="Copiado" data-copied-en="Copied" data-error-es="Copia manualmente" data-error-en="Copy manually">
+                <span class="tool-copy-label lang-es">Copiar</span>
+                <span class="tool-copy-label lang-en">Copy</span>
+              </button>
+            </div>
+            <div class="color-output-row">
+              <span class="color-output-label">UIColor</span>
+              <code class="color-output-code" id="color-uicolor-output">UIColor(red: 0.0000, green: 0.4431, blue: 0.8902, alpha: 1.0000)</code>
+              <button type="button" class="tool-copy" data-copy-target="color-uicolor-output" data-copied-es="Copiado" data-copied-en="Copied" data-error-es="Copia manualmente" data-error-en="Copy manually">
+                <span class="tool-copy-label lang-es">Copiar</span>
+                <span class="tool-copy-label lang-en">Copy</span>
+              </button>
+            </div>
+            <div class="color-output-row">
+              <span class="color-output-label">UIColor P3</span>
+              <code class="color-output-code" id="color-uicolor-p3-output">UIColor(displayP3Red: 0.1874, green: 0.4362, blue: 0.8603, alpha: 1.0000)</code>
+              <button type="button" class="tool-copy" data-copy-target="color-uicolor-p3-output" data-copied-es="Copiado" data-copied-en="Copied" data-error-es="Copia manualmente" data-error-en="Copy manually">
+                <span class="tool-copy-label lang-es">Copiar</span>
+                <span class="tool-copy-label lang-en">Copy</span>
+              </button>
+            </div>
+            <div class="color-output-row">
+              <span class="color-output-label">SwiftUI</span>
+              <code class="color-output-code" id="color-swiftui-output">Color(.sRGB, red: 0.0000, green: 0.4431, blue: 0.8902, opacity: 1.0000)</code>
+              <button type="button" class="tool-copy" data-copy-target="color-swiftui-output" data-copied-es="Copiado" data-copied-en="Copied" data-error-es="Copia manualmente" data-error-en="Copy manually">
+                <span class="tool-copy-label lang-es">Copiar</span>
+                <span class="tool-copy-label lang-en">Copy</span>
+              </button>
+            </div>
+            <div class="color-output-row">
+              <span class="color-output-label">SwiftUI P3</span>
+              <code class="color-output-code" id="color-swiftui-p3-output">Color(.displayP3, red: 0.1874, green: 0.4362, blue: 0.8603, opacity: 1.0000)</code>
+              <button type="button" class="tool-copy" data-copy-target="color-swiftui-p3-output" data-copied-es="Copiado" data-copied-en="Copied" data-error-es="Copia manualmente" data-error-en="Copy manually">
+                <span class="tool-copy-label lang-es">Copiar</span>
+                <span class="tool-copy-label lang-en">Copy</span>
+              </button>
+            </div>
+          </div>
+
+          <p class="tool-note lang-es">Un HEX de 8 dígitos se interpreta como <code>#RRGGBBAA</code>. Si tu diseño parte de un color P3, introduce sus componentes directamente en Swift en lugar de convertirlos desde HEX.</p>
+          <p class="tool-note lang-en">An 8-digit HEX value is interpreted as <code>#RRGGBBAA</code>. If your design starts from a P3 color, enter its components directly in Swift instead of converting from HEX.</p>
+        </section>
+      </main>
+    </div>
+
+    <script src="{{ '/js/reveal.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+    <script src="{{ '/js/tools.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+  </body>
+</html>
