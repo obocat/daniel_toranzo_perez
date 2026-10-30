@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es" data-lang="es">
+  {% include head.html %}
+  <body class="tools-page tools-index-page">
+    {% include header.html %}
+
+    <div class="wrapper">
+      <main class="tools-main">
+        <header class="tools-hero">
+          <h1>
+            <span class="lang-es">Herramientas</span>
+            <span class="lang-en">Tools</span>
+          </h1>
+          <p class="tools-intro lang-es">Utilidades sencillas para resolver dudas del día a día. Todo se calcula en tu navegador.</p>
+          <p class="tools-intro lang-en">Small utilities for everyday questions. Everything runs in your browser.</p>
+        </header>
+
+        <nav class="tools-list" aria-label="Herramientas / Tools">
+          <a class="tool-row" href="{{ '/tools/apns/' | relative_url }}">
+            <span class="tool-row-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2a6 6 0 0 0-6 6v3.6L4.3 15a1 1 0 0 0 .9 1.5h13.6a1 1 0 0 0 .9-1.5L18 11.6V8a6 6 0 0 0-6-6Zm0 20a3 3 0 0 0 2.8-2H9.2A3 3 0 0 0 12 22Z"/>
+              </svg>
+            </span>
+            <span class="tool-row-copy">
+              <span class="tool-row-title">
+                <span class="lang-es">Constructor y validador de payloads APNs</span>
+                <span class="lang-en">APNs payload builder and validator</span>
+              </span>
+              <span class="tool-row-description">
+                <span class="lang-es">Revisa el JSON y el tamaño antes de enviarlo.</span>
+                <span class="lang-en">Check the JSON and size before sending.</span>
+              </span>
+            </span>
+            <span class="tool-row-chevron" aria-hidden="true">›</span>
+          </a>
+
+          <a class="tool-row" href="{{ '/tools/json-codable/' | relative_url }}">
+            <span class="tool-row-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 3H6a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h2v-2H6v-4a3 3 0 0 0-1.5-2.6A3 3 0 0 0 6 7V5h2V3Zm8 0h2a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-2v-2h2v-4a3 3 0 0 1 1.5-2.6A3 3 0 0 1 18 7V5h-2V3Z"/>
+              </svg>
+            </span>
+            <span class="tool-row-copy">
+              <span class="tool-row-title">
+                <span class="lang-es">JSON → struct Codable</span>
+                <span class="lang-en">JSON → Codable struct</span>
+              </span>
+              <span class="tool-row-description">
+                <span class="lang-es">Convierte JSON en structs Swift con CodingKeys.</span>
+                <span class="lang-en">Turn JSON into Swift structs with CodingKeys.</span>
+              </span>
+            </span>
+            <span class="tool-row-chevron" aria-hidden="true">›</span>
+          </a>
+
+          <a class="tool-row" href="{{ '/tools/dateformatter/' | relative_url }}">
+            <span class="tool-row-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7 2h2v2h6V2h2v2h2.5A1.5 1.5 0 0 1 21 5.5v14a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 19.5v-14A1.5 1.5 0 0 1 4.5 4H7V2Zm12 7H5v10h14V9ZM5 7h14V6h-2v1h-2V6H9v1H7V6H5v1Z"/>
+              </svg>
+            </span>
+            <span class="tool-row-copy">
+              <span class="tool-row-title">
+                <span class="lang-es">Probador de DateFormatter</span>
+                <span class="lang-en">DateFormatter tester</span>
+              </span>
+              <span class="tool-row-description">
+                <span class="lang-es">Prueba patrones de fecha y detecta errores habituales.</span>
+                <span class="lang-en">Test date patterns and catch common mistakes.</span>
+              </span>
+            </span>
+            <span class="tool-row-chevron" aria-hidden="true">›</span>
+          </a>
+
+          <a class="tool-row" href="{{ '/tools/colors/' | relative_url }}">
+            <span class="tool-row-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2a10 10 0 0 0 0 20c1.4 0 2.2-.8 2.2-1.9 0-.7-.3-1.2-.7-1.7-.3-.4-.6-.8-.6-1.3 0-.9.8-1.6 1.8-1.6h1.5A5.8 5.8 0 0 0 22 9.7C22 5.4 17.5 2 12 2Zm-5.5 9a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm3-4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm3.5 4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Z"/>
+              </svg>
+            </span>
+            <span class="tool-row-copy">
+              <span class="tool-row-title">
+                <span class="lang-es">Conversor de color</span>
+                <span class="lang-en">Color converter</span>
+              </span>
+              <span class="tool-row-description">
+                <span class="lang-es">Convierte HEX a UIColor, SwiftUI y Display P3.</span>
+                <span class="lang-en">Convert HEX to UIColor, SwiftUI, and Display P3.</span>
+              </span>
+            </span>
+            <span class="tool-row-chevron" aria-hidden="true">›</span>
+          </a>
+        </nav>
+      </main>
+    </div>
+
+    <script src="{{ '/js/reveal.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+  </body>
+</html>

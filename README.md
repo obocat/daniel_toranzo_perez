@@ -19,6 +19,8 @@ vanilla JavaScript provides the language switch and UI interactions.
   certifications, contact, and social links.
 - Blog with a yearly archive, tags, reading time, previous/next navigation, and
   per-post SEO metadata.
+- Browser-only iOS developer tools: APNs payload validator, JSON-to-Codable
+  converter, DateFormatter tester, and color converter, each on its own page.
 - Print-friendly CV layout.
 - Responsive Apple-inspired design.
 - Custom domain configured through `CNAME`.
@@ -42,14 +44,27 @@ vanilla JavaScript provides the language switch and UI interactions.
 ├── _layouts/
 │   ├── resume.html          # Main CV page
 │   ├── blog-index.html      # /blog/ listing
-│   └── blog.html            # Individual article
+│   ├── blog.html            # Individual article
+│   ├── tools.html           # /tools/ listing
+│   └── tool.html            # Individual developer tool
 ├── _posts/                  # Blog articles
 ├── .github/workflows/       # Pull request checks
+├── AGENTS.md                # Content and maintenance workflow for agents
 ├── blog/index.html          # Blog entry point
+├── tools/
+│   ├── index.html           # Developer tools listing
+│   ├── apns/                # APNs payload builder and validator
+│   ├── json-codable/        # JSON-to-Codable converter
+│   ├── dateformatter/       # DateFormatter tester
+│   └── colors/              # Color converter
 ├── css/
 │   ├── main.scss            # Source styles
 │   └── main.css             # Compiled styles served by the site
-├── js/reveal.js             # Language switch and UI behaviour
+├── js/
+│   ├── reveal.js            # Language switch and UI behaviour
+│   ├── tools.js             # Shared developer tools behaviour
+│   ├── tool-apns.js         # APNs payload validation
+│   └── tool-json-codable.js # JSON-to-Codable conversion
 ├── script/                  # Content validation
 ├── images/                  # Avatar, project images, social card
 ├── index.html               # CV page
@@ -181,6 +196,29 @@ Notes:
   `resume_section_blog: false` in `_config.yml` to hide that section.
 - The blog archive is available at `/blog/` and is grouped by year.
 
+For the complete issue, branch, validation, and pull-request workflow, see
+[`AGENTS.md`](AGENTS.md).
+
+## Developer tools
+
+The `/tools/` page lists browser-only utilities for iOS development. Each tool
+has its own page:
+
+- **APNs payload builder and validator** (`/tools/apns/`): format a payload,
+  validate its JSON, and check its UTF-8 size against the 4096-byte limit.
+- **JSON-to-Codable converter** (`/tools/json-codable/`): turn a JSON object
+  into Swift `Codable` structs, including nested types and `CodingKeys` when
+  property names differ.
+- **DateFormatter tester** (`/tools/dateformatter/`): enter a Unicode date
+  pattern and preview the result, with warnings for common mistakes such as
+  `YYYY` vs `yyyy` and `DD` vs `dd`.
+- **Color converter** (`/tools/colors/`): convert HEX values to `UIColor`,
+  SwiftUI `Color`, and Display P3 components.
+
+The tools use plain HTML, CSS, and JavaScript. No data leaves the browser. The
+listing is linked from the header, and the listing plus every tool page are
+included in `_site/sitemap.xml`.
+
 ## Deployment
 
 The site is designed for GitHub Pages:
@@ -200,7 +238,7 @@ bundle exec jekyll build
 
 The generated site is written to `_site/`. The build also produces
 `_site/sitemap.xml` through the `jekyll-sitemap` plugin, listing the home page,
-the blog archive, and every published post.
+the blog archive, the developer tools pages, and every published post.
 
 ## Contributing
 
