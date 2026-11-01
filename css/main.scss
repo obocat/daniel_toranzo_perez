@@ -1946,27 +1946,68 @@ html[data-lang='en'] .lang-switch-thumb {
   min-width: 0;
 }
 
-.spring-control-label {
+.spring-control-head {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
   margin-bottom: 0.35rem;
+}
+
+.spring-control-name {
   font-family: var(--mono);
   font-size: 0.75rem;
   line-height: 1.4;
   color: var(--text-secondary);
 }
 
-.spring-control-label output {
-  font: inherit;
+.spring-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.spring-number {
+  width: 5.2rem;
+  padding: 0.25rem 0.4rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background-color: var(--bg);
   color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  text-align: right;
+}
+
+.spring-number:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.spring-unit {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
 }
 
 .spring-range {
   width: 100%;
   margin: 0;
   accent-color: var(--accent);
+}
+
+.spring-range:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.spring-mode-info {
+  margin: 0.55rem 0 0;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: var(--text-tertiary);
 }
 
 .spring-presets {
@@ -1998,7 +2039,7 @@ html[data-lang='en'] .lang-switch-thumb {
 .spring-stats {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem 1.5rem;
+  gap: 0.45rem 1.15rem;
   margin: 0.85rem 0.15rem;
   font-size: 0.85rem;
   line-height: 1.5;
@@ -2038,6 +2079,42 @@ html[data-lang='en'] .lang-switch-thumb {
   border-radius: 50%;
   background-color: var(--accent);
   will-change: transform;
+}
+
+.spring-info {
+  margin-top: 1.25rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.spring-info summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.spring-info summary::marker {
+  color: var(--text-tertiary);
+}
+
+.spring-info p {
+  margin: 0.65rem 0 0;
+}
+
+.spring-info ul {
+  margin: 0.65rem 0 0;
+  padding-left: 1.1rem;
+}
+
+.spring-info li + li {
+  margin-top: 0.3rem;
+}
+
+.spring-info code {
+  font-size: 0.92em;
 }
 
 .payload-meter {

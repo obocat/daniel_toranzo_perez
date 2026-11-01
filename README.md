@@ -213,8 +213,8 @@ has its own page:
   into Swift `Codable` structs, including nested types and `CodingKeys` when
   property names differ.
 - **SwiftUI spring visualizer** (`/tools/springs/`): tune Duration/Bounce,
-  Response/DampingFraction, or InterpolatingSpring, inspect the curve, and copy
-  the SwiftUI code.
+  Response/DampingFraction, or InterpolatingSpring with sliders or exact numeric
+  values, inspect the curve and its model, and copy the SwiftUI code.
 - **DateFormatter tester** (`/tools/dateformatter/`): enter a Unicode date
   pattern and preview the result, with warnings for common mistakes such as
   `YYYY` vs `yyyy` and `DD` vs `dd`.

@@ -1,7 +1,9 @@
 <div class="spring-layout">
   <section class="spring-panel">
     <div class="spring-modes" id="spring-modes" role="group" aria-label="Parámetros / Parameters"></div>
+    <p class="spring-mode-info" id="spring-mode-info" aria-live="polite"></p>
     <div class="spring-controls" id="spring-controls"></div>
+
     <div class="spring-presets">
       <span class="tool-field-label">
         <span class="lang-es">Presets</span>
@@ -9,6 +11,35 @@
       </span>
       <div class="tool-presets" id="spring-presets"></div>
     </div>
+
+    <details class="spring-info">
+      <summary>
+        <span class="lang-es">Cómo leer la curva</span>
+        <span class="lang-en">How to read the curve</span>
+      </summary>
+      <div class="lang-es" lang="es">
+        <ul>
+          <li><code>bounce = 0</code>: críticamente amortiguado, sin rebote.</li>
+          <li><code>bounce &gt; 0</code>: rebota; cuanto mayor, más oscilaciones.</li>
+          <li><code>bounce &lt; 0</code>: sobreamortiguado, llega más lento sin rebotar.</li>
+          <li>La herramienta limita <code>bounce</code> a <code>-0.99</code>: en <code>-1</code> el amortiguamiento tiende a infinito y SwiftUI puede devolver <code>NaN</code>.</li>
+          <li><code>dampingFraction &lt; 1</code>: rebota; <code>1</code>: crítico; <code>&gt; 1</code>: sobreamortiguado.</li>
+          <li><code>duration</code> y <code>response</code> están en segundos: menos tiempo, más rápido.</li>
+          <li><code>initialVelocity</code> positivo empuja hacia el destino; negativo, en contra.</li>
+        </ul>
+      </div>
+      <div class="lang-en" lang="en">
+        <ul>
+          <li><code>bounce = 0</code>: critically damped, with no bounce.</li>
+          <li><code>bounce &gt; 0</code>: bounces; the higher the value, the more oscillations.</li>
+          <li><code>bounce &lt; 0</code>: overdamped, arriving more slowly without bouncing.</li>
+          <li>The tool caps <code>bounce</code> at <code>-0.99</code>: at <code>-1</code> the damping tends to infinity and SwiftUI can return <code>NaN</code>.</li>
+          <li><code>dampingFraction &lt; 1</code>: bounces; <code>1</code>: critical; <code>&gt; 1</code>: overdamped.</li>
+          <li><code>duration</code> and <code>response</code> are in seconds: less time means a faster spring.</li>
+          <li>Positive <code>initialVelocity</code> pushes toward the target; negative pushes against it.</li>
+        </ul>
+      </div>
+    </details>
   </section>
 
   <section class="spring-view">
@@ -24,9 +55,9 @@
     </div>
 
     <div class="tool-actions">
-      <button type="button" class="tool-button" id="spring-play">
-        <span class="lang-es">Reproducir</span>
-        <span class="lang-en">Play</span>
+      <button type="button" class="tool-button" id="spring-play" aria-pressed="false">
+        <span class="lang-es" data-spring-play-label="es">Reproducir</span>
+        <span class="lang-en" data-spring-play-label="en">Play</span>
       </button>
     </div>
 
@@ -41,7 +72,32 @@
       <pre class="tool-code" id="spring-code">—</pre>
     </div>
 
-    <p class="tool-note lang-es">La curva usa el modelo físico del resorte amortiguado, la misma familia de ecuaciones en la que se basa SwiftUI. <code>.spring(duration:bounce:)</code> requiere iOS 17; comprueba el resultado final en un dispositivo.</p>
-    <p class="tool-note lang-en">The curve uses the damped spring physical model, the same family of equations SwiftUI is based on. <code>.spring(duration:bounce:)</code> requires iOS 17; check the final result on a device.</p>
+    <p class="tool-note lang-es">Aproximación visual basada en el modelo de resorte amortiguado de SwiftUI. El snippet asume una propiedad <code>isExpanded</code>. <code>.spring(duration:bounce:)</code> requiere iOS 17; confirma el resultado final en un dispositivo.</p>
+    <p class="tool-note lang-en">A visual approximation based on SwiftUI’s damped spring model. The snippet assumes an <code>isExpanded</code> property. <code>.spring(duration:bounce:)</code> requires iOS 17; check the final result on a device.</p>
+
+    <details class="spring-info">
+      <summary>
+        <span class="lang-es">Cómo se calcula</span>
+        <span class="lang-en">How it is calculated</span>
+      </summary>
+      <div class="lang-es" lang="es">
+        <p>La curva resuelve la ecuación de un resorte amortiguado. Para <code>duration</code>/<code>bounce</code> y <code>response</code>/<code>dampingFraction</code> se normaliza con masa 1; la frecuencia natural y el amortiguamiento se obtienen así:</p>
+        <ul>
+          <li><code>duration</code>/<code>bounce</code>: <code>ω = 2π / duration</code>; <code>ζ = 1 − bounce</code> si <code>bounce ≥ 0</code>, o <code>ζ = 1 / (1 + bounce)</code> si <code>bounce &lt; 0</code>.</li>
+          <li><code>response</code>/<code>dampingFraction</code>: <code>ω = 2π / response</code>; <code>ζ = dampingFraction</code>.</li>
+          <li><code>interpolatingSpring</code>: <code>ω = √(stiffness / mass)</code>; <code>ζ = damping / (2√(stiffness · mass))</code>.</li>
+        </ul>
+        <p>Para animaciones no interrumpidas, la curva coincide con <code>Spring.value(target:initialVelocity:time:)</code> de SwiftUI. Las diferencias prácticas aparecen con <code>blendDuration</code>, velocidad heredada o retargeting. El tiempo de asentamiento usa una tolerancia de ±0.005. <a href="https://developer.apple.com/videos/play/wwdc2023/10158/">Animate with springs (WWDC23)</a>.</p>
+      </div>
+      <div class="lang-en" lang="en">
+        <p>The curve solves the damped spring equation. For <code>duration</code>/<code>bounce</code> and <code>response</code>/<code>dampingFraction</code>, it normalizes with mass 1; the natural frequency and damping ratio are derived like this:</p>
+        <ul>
+          <li><code>duration</code>/<code>bounce</code>: <code>ω = 2π / duration</code>; <code>ζ = 1 − bounce</code> when <code>bounce ≥ 0</code>, or <code>ζ = 1 / (1 + bounce)</code> when <code>bounce &lt; 0</code>.</li>
+          <li><code>response</code>/<code>dampingFraction</code>: <code>ω = 2π / response</code>; <code>ζ = dampingFraction</code>.</li>
+          <li><code>interpolatingSpring</code>: <code>ω = √(stiffness / mass)</code>; <code>ζ = damping / (2√(stiffness · mass))</code>.</li>
+        </ul>
+        <p>For uninterrupted animations, the curve matches SwiftUI’s <code>Spring.value(target:initialVelocity:time:)</code>. Practical differences appear with <code>blendDuration</code>, inherited velocity, or retargeting. Settling time uses a ±0.005 tolerance. <a href="https://developer.apple.com/videos/play/wwdc2023/10158/">Animate with springs (WWDC23)</a>.</p>
+      </div>
+    </details>
   </section>
 </div>
