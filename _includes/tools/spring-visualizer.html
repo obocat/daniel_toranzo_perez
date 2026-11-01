@@ -1,0 +1,47 @@
+<div class="spring-layout">
+  <section class="spring-panel">
+    <div class="spring-modes" id="spring-modes" role="group" aria-label="Parámetros / Parameters"></div>
+    <div class="spring-controls" id="spring-controls"></div>
+    <div class="spring-presets">
+      <span class="tool-field-label">
+        <span class="lang-es">Presets</span>
+        <span class="lang-en">Presets</span>
+      </span>
+      <div class="tool-presets" id="spring-presets"></div>
+    </div>
+  </section>
+
+  <section class="spring-view">
+    <figure class="spring-curve">
+      <svg id="spring-chart" viewBox="0 0 600 260" role="img"></svg>
+    </figure>
+
+    <div class="spring-stats" id="spring-stats"></div>
+
+    <div class="spring-track" id="spring-track" aria-hidden="true">
+      <i class="spring-mark"></i>
+      <b class="spring-ball" id="spring-ball"></b>
+    </div>
+
+    <div class="tool-actions">
+      <button type="button" class="tool-button" id="spring-play">
+        <span class="lang-es">Reproducir</span>
+        <span class="lang-en">Play</span>
+      </button>
+    </div>
+
+    <div class="tool-output">
+      <div class="tool-output-header">
+        <span class="tool-output-label">SwiftUI</span>
+        <button type="button" class="tool-copy" data-copy-target="spring-code" data-copied-es="Copiado" data-copied-en="Copied" data-error-es="Copia manualmente" data-error-en="Copy manually">
+          <span class="tool-copy-label lang-es">Copiar</span>
+          <span class="tool-copy-label lang-en">Copy</span>
+        </button>
+      </div>
+      <pre class="tool-code" id="spring-code">—</pre>
+    </div>
+
+    <p class="tool-note lang-es">La curva usa el modelo físico del resorte amortiguado, la misma familia de ecuaciones en la que se basa SwiftUI. <code>.spring(duration:bounce:)</code> requiere iOS 17; comprueba el resultado final en un dispositivo.</p>
+    <p class="tool-note lang-en">The curve uses the damped spring physical model, the same family of equations SwiftUI is based on. <code>.spring(duration:bounce:)</code> requires iOS 17; check the final result on a device.</p>
+  </section>
+</div>

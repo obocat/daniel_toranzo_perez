@@ -20,7 +20,8 @@ vanilla JavaScript provides the language switch and UI interactions.
 - Blog with a yearly archive, tags, reading time, previous/next navigation, and
   per-post SEO metadata.
 - Browser-only iOS developer tools: APNs payload validator, JSON-to-Codable
-  converter, DateFormatter tester, and color converter, each on its own page.
+  converter, SwiftUI spring visualizer, DateFormatter tester, and color
+  converter, each on its own page.
 - Print-friendly CV layout.
 - Responsive Apple-inspired design.
 - Custom domain configured through `CNAME`.
@@ -55,6 +56,7 @@ vanilla JavaScript provides the language switch and UI interactions.
 │   ├── index.html           # Developer tools listing
 │   ├── apns/                # APNs payload builder and validator
 │   ├── json-codable/        # JSON-to-Codable converter
+│   ├── springs/             # SwiftUI spring visualizer
 │   ├── dateformatter/       # DateFormatter tester
 │   └── colors/              # Color converter
 ├── css/
@@ -64,7 +66,8 @@ vanilla JavaScript provides the language switch and UI interactions.
 │   ├── reveal.js            # Language switch and UI behaviour
 │   ├── tools.js             # Shared developer tools behaviour
 │   ├── tool-apns.js         # APNs payload validation
-│   └── tool-json-codable.js # JSON-to-Codable conversion
+│   ├── tool-json-codable.js # JSON-to-Codable conversion
+│   └── tool-springs.js      # SwiftUI spring visualizer
 ├── script/                  # Content validation
 ├── images/                  # Avatar, project images, social card
 ├── index.html               # CV page
@@ -209,6 +212,9 @@ has its own page:
 - **JSON-to-Codable converter** (`/tools/json-codable/`): turn a JSON object
   into Swift `Codable` structs, including nested types and `CodingKeys` when
   property names differ.
+- **SwiftUI spring visualizer** (`/tools/springs/`): tune Duration/Bounce,
+  Response/DampingFraction, or InterpolatingSpring, inspect the curve, and copy
+  the SwiftUI code.
 - **DateFormatter tester** (`/tools/dateformatter/`): enter a Unicode date
   pattern and preview the result, with warnings for common mistakes such as
   `YYYY` vs `yyyy` and `DD` vs `dd`.
