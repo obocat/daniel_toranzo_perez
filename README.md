@@ -20,8 +20,8 @@ vanilla JavaScript provides the language switch and UI interactions.
 - Blog with a yearly archive, tags, reading time, previous/next navigation, and
   per-post SEO metadata.
 - Browser-only iOS developer tools: APNs payload validator, JSON-to-Codable
-  converter, SwiftUI spring visualizer, DateFormatter tester, and color
-  converter, each on its own page.
+  converter, SwiftUI spring visualizer, SwiftUI gradient animator,
+  DateFormatter tester, and color converter, each on its own page.
 - Print-friendly CV layout.
 - Responsive Apple-inspired design.
 - Custom domain configured through `CNAME`.
@@ -57,6 +57,7 @@ vanilla JavaScript provides the language switch and UI interactions.
 │   ├── apns/                # APNs payload builder and validator
 │   ├── json-codable/        # JSON-to-Codable converter
 │   ├── springs/             # SwiftUI spring visualizer
+│   ├── gradients/           # SwiftUI gradient animator
 │   ├── dateformatter/       # DateFormatter tester
 │   └── colors/              # Color converter
 ├── css/
@@ -67,7 +68,8 @@ vanilla JavaScript provides the language switch and UI interactions.
 │   ├── tools.js             # Shared developer tools behaviour
 │   ├── tool-apns.js         # APNs payload validation
 │   ├── tool-json-codable.js # JSON-to-Codable conversion
-│   └── tool-springs.js      # SwiftUI spring visualizer
+│   ├── tool-springs.js      # SwiftUI spring visualizer
+│   └── tool-gradients.js    # SwiftUI gradient animator
 ├── script/                  # Content validation
 ├── images/                  # Avatar, project images, social card
 ├── index.html               # CV page
@@ -215,6 +217,9 @@ has its own page:
 - **SwiftUI spring visualizer** (`/tools/springs/`): tune Duration/Bounce,
   Response/DampingFraction, or InterpolatingSpring with sliders or exact numeric
   values, inspect the curve and its model, and copy the SwiftUI code.
+- **SwiftUI gradient animator** (`/tools/gradients/`): design linear, angular,
+  radial, and mesh gradients, edit color stops or a 3×3/4×4 mesh, preview the
+  animation, and copy a self-contained `TimelineView` example.
 - **DateFormatter tester** (`/tools/dateformatter/`): enter a Unicode date
   pattern and preview the result, with warnings for common mistakes such as
   `YYYY` vs `yyyy` and `DD` vs `dd`.
