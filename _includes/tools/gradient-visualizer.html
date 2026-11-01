@@ -1,0 +1,163 @@
+<div class="gradient-tool">
+  <div class="gradient-types" id="gradient-types" role="group" aria-label="Tipo de gradiente / Gradient type"></div>
+  <p class="gradient-type-info" id="gradient-type-info" aria-live="polite"></p>
+
+  <div class="gradient-layout">
+    <section class="gradient-panel">
+      <div class="gradient-section" id="gradient-stops-section" hidden>
+        <div class="gradient-section-head">
+          <span class="tool-field-label">
+            <span class="lang-es">Paradas de color</span>
+            <span class="lang-en">Color stops</span>
+          </span>
+          <button type="button" class="tool-copy" id="gradient-add-stop">
+            <span class="lang-es">Añadir parada</span>
+            <span class="lang-en">Add stop</span>
+          </button>
+        </div>
+        <div class="gradient-stops" id="gradient-stops"></div>
+        <p class="gradient-hint lang-es">Entre 2 y 5 paradas. Se ordenan por posición al generar el código.</p>
+        <p class="gradient-hint lang-en">Between 2 and 5 stops. They are sorted by location in the generated code.</p>
+      </div>
+
+      <div class="gradient-section" id="gradient-mesh-section">
+        <div class="gradient-section-head">
+          <span class="tool-field-label">
+            <span class="lang-es">Colores de malla</span>
+            <span class="lang-en">Mesh colors</span>
+          </span>
+          <select class="gradient-select" id="gradient-mesh-size" aria-label="Tamaño de la malla / Mesh size">
+            <option value="3">3 × 3</option>
+            <option value="4">4 × 4</option>
+          </select>
+        </div>
+        <div class="gradient-mesh-grid" id="gradient-mesh-colors"></div>
+        <p class="gradient-hint lang-es">El borde queda fijo; solo se mueven los puntos interiores.</p>
+        <p class="gradient-hint lang-en">The border stays fixed; only interior points move.</p>
+      </div>
+
+      <div class="gradient-section">
+        <span class="tool-field-label">
+          <span class="lang-es">Geometría y animación</span>
+          <span class="lang-en">Geometry and animation</span>
+        </span>
+        <div class="gradient-controls" id="gradient-controls"></div>
+      </div>
+
+      <div class="gradient-section">
+        <span class="tool-field-label">Presets</span>
+        <div class="tool-presets gradient-presets" id="gradient-presets"></div>
+      </div>
+
+      <details class="gradient-info">
+        <summary>
+          <span class="lang-es">Cómo leer la animación</span>
+          <span class="lang-en">How to read the animation</span>
+        </summary>
+        <div class="lang-es" lang="es">
+          <ul>
+            <li><b>Linear:</b> la dirección oscila alrededor del ángulo base. El código anima <code>startPoint</code> y <code>endPoint</code>.</li>
+            <li><b>Angular:</b> el gradiente gira una vuelta completa cada duración. El código anima <code>startAngle</code> y <code>endAngle</code>.</li>
+            <li><b>Radial:</b> el centro se desplaza en círculo. El código anima <code>center</code>.</li>
+            <li><b>Mesh:</b> solo se mueven los puntos interiores; el borde queda fijo para conservar el encuadre. El código anima <code>points</code>.</li>
+            <li>La vista previa de Mesh usa un canvas aproximado; comprueba el resultado en un dispositivo.</li>
+          </ul>
+        </div>
+        <div class="lang-en" lang="en">
+          <ul>
+            <li><b>Linear:</b> the direction oscillates around the base angle. The code animates <code>startPoint</code> and <code>endPoint</code>.</li>
+            <li><b>Angular:</b> the gradient rotates a full turn every duration. The code animates <code>startAngle</code> and <code>endAngle</code>.</li>
+            <li><b>Radial:</b> the center drifts in a circle. The code animates <code>center</code>.</li>
+            <li><b>Mesh:</b> only interior points move; the border stays fixed to preserve the frame. The code animates <code>points</code>.</li>
+            <li>The Mesh preview uses an approximate canvas; check the result on a device.</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+
+    <section class="gradient-view">
+      <div class="gradient-preview-group">
+      <div class="gradient-preview-frame">
+        <div class="gradient-preview-head">
+          <span class="tool-field-label">
+            <span class="lang-es">Vista previa</span>
+            <span class="lang-en">Preview</span>
+          </span>
+          <span class="gradient-api" id="gradient-api">MeshGradient · iOS 18+</span>
+        </div>
+        <div class="gradient-preview" id="gradient-preview" role="img" aria-label="Vista previa de un gradiente de malla animado / Animated mesh gradient preview">
+          <canvas class="gradient-canvas" id="gradient-canvas" aria-hidden="true"></canvas>
+        </div>
+      </div>
+
+      <div class="gradient-progress-row">
+        <input class="gradient-progress" id="gradient-progress" type="range" min="0" max="1000" step="1" value="0" aria-label="Progreso de la animación / Animation progress">
+        <output class="gradient-progress-value" id="gradient-progress-value" for="gradient-progress">0%</output>
+      </div>
+
+      <div class="gradient-stats" id="gradient-stats"></div>
+
+      <div class="tool-actions gradient-actions">
+        <button type="button" class="tool-button" id="gradient-play" aria-pressed="true">
+          <span class="lang-es" data-gradient-play-label="es">Pausar</span>
+          <span class="lang-en" data-gradient-play-label="en">Pause</span>
+        </button>
+        <button type="button" class="tool-button is-secondary" id="gradient-reset">
+          <span class="lang-es">Reiniciar</span>
+          <span class="lang-en">Reset</span>
+        </button>
+        <label class="gradient-toggle" id="gradient-points-toggle" hidden>
+          <input type="checkbox" id="gradient-show-points">
+          <span class="lang-es">Mostrar puntos</span>
+          <span class="lang-en">Show points</span>
+        </label>
+      </div>
+      </div>
+
+      <div class="gradient-code-group">
+      <div class="tool-output">
+        <div class="tool-output-header">
+          <span class="tool-output-label">SwiftUI</span>
+          <button type="button" class="tool-copy" data-copy-target="gradient-code" data-copied-es="Copiado" data-copied-en="Copied" data-error-es="Copia manualmente" data-error-en="Copy manually">
+            <span class="tool-copy-label lang-es">Copiar</span>
+            <span class="tool-copy-label lang-en">Copy</span>
+          </button>
+        </div>
+        <pre class="tool-code" id="gradient-code">—</pre>
+      </div>
+
+      <p class="tool-note lang-es">La vista previa es una aproximación. El código usa <code>TimelineView(.animation)</code> (iOS 15+); para cambios puntuales, valora <code>withAnimation</code> y verifica el resultado en un dispositivo.</p>
+      <p class="tool-note lang-en">The preview is an approximation. The code uses <code>TimelineView(.animation)</code> (iOS 15+); for one-off state changes, consider <code>withAnimation</code> and check the result on a device.</p>
+
+      <details class="gradient-info">
+        <summary>
+          <span class="lang-es">Cómo se anima en SwiftUI</span>
+          <span class="lang-en">How it animates in SwiftUI</span>
+        </summary>
+        <div class="lang-es" lang="es">
+          <p><code>TimelineView(.animation)</code> vuelve a evaluar la vista en cada fotograma. Es la forma más directa de animar un <code>MeshGradient</code> o de calcular puntos y ángulos manualmente. Para cambios de estado puntuales, <code>withAnimation</code> suele ser más barato si los valores son animables. <code>TimelineView</code> requiere iOS 15+.</p>
+          <ul>
+            <li><code>MeshGradient</code> requiere iOS 18+, iPadOS 18+, macOS 15+, tvOS 18+, watchOS 11+ y visionOS 2+.</li>
+            <li>Los puntos se ordenan de izquierda a derecha y de arriba abajo. Los bordes deben cubrir 0...1 para no dejar huecos; si no lo hacen, usa <code>background</code>.</li>
+            <li><code>smoothsColors</code> controla la interpolación suave y <code>colorSpace</code> decide si se mezcla en dispositivo o perceptual.</li>
+            <li>Anima pocos puntos y mantén la malla pequeña. Un <code>TimelineView</code> a la frecuencia de refresco puede costar más que una animación de estado; para cambios lentos, valora <code>TimelineView(.periodic)</code>.</li>
+            <li>Respeta Reduce Motion: si está activo, muestra un gradiente estático o reduce la animación.</li>
+          </ul>
+          <p>Referencias: <a href="https://developer.apple.com/documentation/swiftui/meshgradient">MeshGradient</a>, <a href="https://developer.apple.com/documentation/swiftui/timelineview">TimelineView</a> y <a href="https://developer.apple.com/videos/play/wwdc2024/10151/">Create custom visual effects with SwiftUI (WWDC24)</a>.</p>
+        </div>
+        <div class="lang-en" lang="en">
+          <p><code>TimelineView(.animation)</code> re-evaluates the view every frame. It is the most direct way to animate a <code>MeshGradient</code> or to calculate points and angles manually. For one-off state changes, <code>withAnimation</code> is usually cheaper when the values are animatable. <code>TimelineView</code> requires iOS 15+.</p>
+          <ul>
+            <li><code>MeshGradient</code> requires iOS 18+, iPadOS 18+, macOS 15+, tvOS 18+, watchOS 11+, and visionOS 2+.</li>
+            <li>Points are ordered left to right and top to bottom. Border points should cover 0...1 to avoid gaps; if they do not, use <code>background</code>.</li>
+            <li><code>smoothsColors</code> controls smooth interpolation, and <code>colorSpace</code> chooses device or perceptual blending.</li>
+            <li>Animate few points and keep the mesh small. A display-rate <code>TimelineView</code> can cost more than a state animation; for slow changes, consider <code>TimelineView(.periodic)</code>.</li>
+            <li>Respect Reduce Motion: show a static gradient or reduce the animation when it is enabled.</li>
+          </ul>
+          <p>References: <a href="https://developer.apple.com/documentation/swiftui/meshgradient">MeshGradient</a>, <a href="https://developer.apple.com/documentation/swiftui/timelineview">TimelineView</a>, and <a href="https://developer.apple.com/videos/play/wwdc2024/10151/">Create custom visual effects with SwiftUI (WWDC24)</a>.</p>
+        </div>
+      </details>
+      </div>
+    </section>
+  </div>
+</div>
