@@ -1,7 +1,7 @@
 ---
 title: "SwiftUI: quitar Liquid Glass de un toolbar (sin renunciar al sistema)"
 title_en: "SwiftUI: removing Liquid Glass from a toolbar (without leaving the system)"
-date: 2026-11-11 00:00:00
+date: 2026-11-04 00:00:00
 description: "Cómo usar sharedBackgroundVisibility(.hidden) para mantener un grupo de la barra de navegación sin Liquid Glass, y por qué UIDesignRequiresCompatibility ya no sirve."
 description_en: "How to use sharedBackgroundVisibility(.hidden) to keep a navigation bar group without Liquid Glass, and why UIDesignRequiresCompatibility no longer works."
 lang: es
