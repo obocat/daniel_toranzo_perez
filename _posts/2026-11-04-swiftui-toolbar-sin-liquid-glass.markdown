@@ -103,7 +103,7 @@ Ocultar el fondo es fácil. Lo difícil es que el resultado siga siendo claro, a
 
 ## Compatibilidad con versiones anteriores
 
-`sharedBackgroundVisibility` está disponible a partir de iOS 26.0, y también en iPadOS 26 y macOS 26. El ejemplo usa posiciones de la barra de navegación en iOS; en macOS, usa la posición que corresponda a su barra de herramientas. Si tu app da soporte a versiones anteriores, necesitas compilar con el SDK de iOS 26 o posterior y proteger la ejecución con `#available`.
+`sharedBackgroundVisibility` está disponible a partir de iOS 26.0, y también en iPadOS 26 y macOS 26. El ejemplo usa posiciones de la barra de navegación en iOS. Si tu app da soporte a versiones anteriores, necesitas compilar con el SDK de iOS 26 o posterior y proteger la ejecución con `#available`.
 
 Una extensión reutilizable evita duplicar el contenido del toolbar:
 
@@ -275,7 +275,7 @@ Hiding the background is easy. The hard part is keeping the result clear, access
 
 ## Backward compatibility
 
-`sharedBackgroundVisibility` is available starting in iOS 26.0, as well as iPadOS 26 and macOS 26. The example uses iOS navigation bar placements; on macOS, use the placement that matches its toolbar. If your app supports earlier versions, you need to build with the iOS 26 SDK or later and guard runtime execution with `#available`.
+`sharedBackgroundVisibility` is available starting in iOS 26.0, as well as iPadOS 26 and macOS 26. The example uses iOS navigation bar placements. If your app supports earlier versions, you need to build with the iOS 26 SDK or later and guard runtime execution with `#available`.
 
 A reusable extension avoids duplicating the toolbar content:
 
