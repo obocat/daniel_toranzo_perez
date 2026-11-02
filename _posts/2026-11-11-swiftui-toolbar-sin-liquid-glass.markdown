@@ -2,7 +2,7 @@
 title: "SwiftUI: quitar Liquid Glass de un toolbar (sin renunciar al sistema)"
 title_en: "SwiftUI: removing Liquid Glass from a toolbar (without leaving the system)"
 date: 2026-11-11 00:00:00
-description: "Cómo usar sharedBackgroundVisibility(.hidden) para mantener un grupo de la barra de navegación sin Liquid Glass, y por qué UIDesignRequiresCompatibility ya no es una salida global."
+description: "Cómo usar sharedBackgroundVisibility(.hidden) para mantener un grupo de la barra de navegación sin Liquid Glass, y por qué UIDesignRequiresCompatibility ya no es una vía de escape global."
 description_en: "How to use sharedBackgroundVisibility(.hidden) to keep a navigation bar group without Liquid Glass, and why UIDesignRequiresCompatibility is no longer a global escape hatch."
 lang: es
 tags: [iOS, SwiftUI, Liquid Glass, Toolbar]
@@ -13,9 +13,9 @@ reading_time: 8
 
 <div class="lang-es" lang="es" markdown="1">
 
-Liquid Glass es el lenguaje visual que Apple introdujo en iOS 26. Cambia la forma en que se agrupan y se dibujan las barras, los botones y las hojas: los ítems del toolbar comparten un fondo de cristal que se adapta al contenido que hay detrás. Para la mayoría de pantallas, adoptarlo es lo correcto.
+Liquid Glass es el lenguaje visual que Apple introdujo en iOS 26. Cambia la forma en que se agrupan y se dibujan las barras, los botones y las sheets: los elementos del toolbar comparten un fondo de cristal que se adapta al contenido que hay detrás. En la mayoría de los casos, adoptarlo es lo correcto.
 
-Pero hay excepciones. A veces el diseño de producto o la identidad de marca piden que un componente concreto no lleve ese fondo: un logo que ya tiene su propia forma, un avatar que necesita un color sólido o un control que debe integrarse con una superficie propia. En esos casos no hace falta renunciar al sistema entero. SwiftUI tiene una API pensada para esta excepción.
+Pero hay excepciones. A veces, por diseño de producto o por identidad de marca, nos piden mantener un componente concreto sin ese fondo: un logo que ya tiene su propia forma, un avatar que necesita un color sólido o un control que debe integrarse en una superficie propia. No hace falta renunciar al sistema entero para conseguirlo. SwiftUI tiene una API pensada precisamente para esta excepción.
 
 ## La API: `sharedBackgroundVisibility(.hidden)`
 
@@ -41,26 +41,26 @@ struct ToolbarWithoutGlassView: View {
 }
 ```
 
-La posición del modificador es la parte importante: va después del cierre de `ToolbarItemGroup`, no dentro del `Button`. `sharedBackgroundVisibility` es una API de `ToolbarContent`; si la aplicas a una `View`, el compilador no la encontrará. El ejemplo asume un deployment target de iOS 26 o superior; si tu app soporta versiones anteriores, usa el helper de la sección de compatibilidad.
+Lo importante es dónde va: después del cierre de `ToolbarItemGroup`, no dentro del `Button`. `sharedBackgroundVisibility` es una API de `ToolbarContent`; si la aplicas a una `View`, el compilador no la encontrará. El ejemplo da por hecho un target de iOS 26 o superior; si tu app soporta versiones anteriores, usa la extensión de compatibilidad que veremos más adelante.
 
-El código original usaba `.navigationBarLeading`. Esa colocación sigue existiendo, pero está en la sección de APIs obsoletas. `.topBarLeading` es la forma actual y expresa mejor que el ítem vive en la barra superior, no en una navigation bar concreta.
+El código original usaba `.navigationBarLeading`. Esa posición todavía existe, pero está marcada como obsoleta. `.topBarLeading` es la forma recomendada y deja más claro que el elemento pertenece a la barra superior, no a una barra de navegación concreta.
 
 ## Qué hace exactamente
 
-El nombre describe el comportamiento: controla la visibilidad del fondo que comparten los ítems del toolbar. Al pasarle `.hidden`, el sistema deja de dibujar ese fondo compartido y coloca el ítem en su propio grupo. No es un `background(.clear)` ni un truco de transparencia: es una instrucción al sistema para que no aplique el efecto de cristal a ese contenido.
+Antes de usarlo, merece la pena entender qué cambia y qué no. El nombre describe el comportamiento: controla la visibilidad del fondo que comparten los elementos del toolbar. Al pasarle `.hidden`, el sistema deja de dibujar ese fondo compartido y coloca el elemento en su propio grupo. No es un `background(.clear)` ni un juego de transparencias: es una instrucción al sistema para que no aplique el efecto de cristal a ese contenido.
 
-Si el grupo tiene un solo ítem, el resultado es ese ítem sin la cápsula compartida. Si tiene varios, el grupo deja de usar el fondo común. Los botones siguen siendo interactivos; lo que cambia es el tratamiento visual del contenedor. El resto de ítems del toolbar conserva su tratamiento.
+Con un solo elemento, el resultado es ese elemento sin la cápsula compartida; con varios, el grupo entero deja de usar el fondo común. Los botones siguen siendo interactivos: lo que cambia es el tratamiento visual del contenedor, no su comportamiento. El resto de elementos del toolbar conserva el suyo.
 
-Conviene no confundir dos capas distintas:
+Hay dos capas distintas que no conviene mezclar:
 
 - `sharedBackgroundVisibility(.hidden)` actúa sobre el fondo compartido del contenido del toolbar.
-- Las APIs de fondo de la barra controlan la superficie de la barra de navegación.
+- Las APIs que controlan el fondo de la barra actúan sobre su superficie.
 
-Ocultar el fondo de un ítem no rediseña toda la barra. Si lo que necesitas es que la barra completa deje de tener un fondo, esta no es la herramienta; y, en cualquier caso, piensa primero si realmente quieres separarte del sistema.
+Ocultar el fondo de un elemento no rediseña toda la barra. Si lo que necesitas es que la barra completa deje de tener un fondo, esta API no es la herramienta adecuada. Y, antes de nada, pregúntate si realmente quieres separarte del sistema.
 
-## Un caso real: una marca que ya tiene su propio fondo
+## Un caso real: una marca que ya tiene su propia identidad
 
-Imagina un logo de marca en la esquina superior izquierda. Si lo metes en una cápsula de Liquid Glass, el sistema añade una capa que compite con el logo y puede hacer que parezca un botón genérico. Ocultar el fondo compartido permite que el logo se lea como contenido de la barra.
+Veamos un caso típico. Imagina el logo de una marca en la esquina superior izquierda. Si lo metes en una cápsula de Liquid Glass, el sistema añade una capa que compite con el logo y puede hacer que parezca un botón genérico. Ocultar el fondo compartido permite que el logo se lea como contenido de la barra.
 
 ```swift
 import SwiftUI
@@ -91,28 +91,28 @@ struct BrandToolbarView: View {
 }
 ```
 
-Si el logo no es interactivo, no lo escribas como un `Button` solo para que parezca parte del toolbar. Un `HStack` normal, con una etiqueta de accesibilidad adecuada, suele ser más honesto. Si sí es interactivo, mantén el área táctil y el foco de teclado que tendría cualquier otro botón.
+Si el logo no es interactivo, no lo escribas como un `Button` solo para que parezca parte del toolbar. Un `HStack` normal, con una etiqueta de accesibilidad adecuada, suele ser más coherente. Si lo es, mantén el área táctil y el foco de teclado que tendría cualquier otro botón.
 
-## Qué se pierde al quitar el cristal
+## Qué se pierde al quitar el fondo de cristal
 
-Liquid Glass no es solo decoración. El fondo de cristal separa el contenido del toolbar de lo que hay detrás y ayuda a mantener la legibilidad cuando la pantalla tiene fotos, mapas o colores vivos. Al ocultarlo, esa responsabilidad pasa a tu diseño.
+Ahora bien, quitar el cristal tiene un coste. Liquid Glass no es solo decoración: el fondo de cristal separa el contenido del toolbar de lo que hay detrás y ayuda a mantener la legibilidad cuando la pantalla tiene fotos, mapas o colores vivos. Al ocultarlo, esa responsabilidad recae ahora en tu diseño.
 
 Antes de dar por buena una excepción, comprueba:
 
 - El contraste en modo claro y oscuro.
-- El contenido que queda detrás del ítem, especialmente al hacer scroll.
-- Los ajustes de Reduce Transparency y Increase Contrast.
-- Dynamic Type: el texto no debería romper el grupo.
+- El contenido que queda detrás del elemento, especialmente al hacer scroll.
+- Los ajustes Reducir transparencia y Aumentar contraste.
+- El tamaño de texto dinámico (Dynamic Type): el texto no debería romper el grupo.
 - El área táctil, que debe seguir siendo cómoda.
-- VoiceOver: si el ítem es un botón, necesita una etiqueta clara; si es una marca, no debería anunciarse como una acción.
+- VoiceOver: si el elemento es un botón, necesita una etiqueta clara; si es una marca, no debería anunciarse como una acción.
 
 Ocultar el fondo es fácil. Lo difícil es que el resultado siga siendo claro, accesible y coherente con el resto de la pantalla.
 
 ## Compatibilidad con versiones anteriores
 
-`sharedBackgroundVisibility` está disponible en iOS 26.0 o posterior, y también en iPadOS 26 y macOS 26. El ejemplo usa colocaciones de la barra de navegación de iOS; en macOS, usa la colocación que corresponda a su barra de herramientas. Si tu deployment target es anterior, necesitas compilar con el SDK de iOS 26 o posterior y proteger la ejecución con `#available`.
+`sharedBackgroundVisibility` está disponible a partir de iOS 26.0, y también en iPadOS 26 y macOS 26. El ejemplo usa posiciones de la barra de navegación en iOS; en macOS, usa la posición que corresponda a su barra de herramientas. Si tu app da soporte a versiones anteriores, necesitas compilar con el SDK de iOS 26 o posterior y proteger la ejecución con `#available`.
 
-Un helper reutilizable evita duplicar el contenido del toolbar:
+Una extensión reutilizable evita duplicar el contenido del toolbar:
 
 ```swift
 import SwiftUI
@@ -149,13 +149,13 @@ struct CompatibleToolbarView: View {
 }
 ```
 
-El helper usa el resultado del `ToolbarContentBuilder` para devolver el mismo contenido con o sin el modificador. En iOS 26 y posteriores oculta el fondo; en versiones anteriores devuelve `self` y no cambia nada.
+La extensión aprovecha `ToolbarContentBuilder` para devolver el mismo contenido con o sin el modificador. En iOS 26 y posteriores oculta el fondo; en versiones anteriores devuelve `self` y no cambia nada.
 
-Un matiz importante: `#available` protege la ejecución, no la compilación. Si compilas con un SDK anterior a iOS 26, el símbolo `sharedBackgroundVisibility` no existe y el código no compila. Para usar esta API necesitas Xcode 26 o posterior, aunque tu app siga dando soporte a iOS 17 u 18.
+Un matiz importante: `#available` protege la ejecución, no la compilación. Si compilas con un SDK anterior a iOS 26, el símbolo `sharedBackgroundVisibility` no existe y el código no compila. Para usar esta API necesitas Xcode 26 o posterior, aunque tu app siga dando soporte a iOS 17 o 18.
 
 ## `UIDesignRequiresCompatibility`: el final de la prórroga
 
-Durante la transición a iOS 26, Apple ofreció una salida global: la clave `UIDesignRequiresCompatibility` en `Info.plist`.
+Todo esto nos lleva a la pregunta que suele aparecer después: ¿y la clave global? Durante la transición a iOS 26, Apple ofreció una vía de escape: `UIDesignRequiresCompatibility` en `Info.plist`.
 
 ```xml
 <key>UIDesignRequiresCompatibility</key>
@@ -164,36 +164,60 @@ Durante la transición a iOS 26, Apple ofreció una salida global: la clave `UID
 
 Con `YES`, la app se ejecuta en modo de compatibilidad y conserva el aspecto anterior. Fue útil para ganar tiempo, pero nunca fue una estrategia de diseño: es una prórroga para adaptar la app, no una forma de mantener dos lenguajes visuales indefinidamente.
 
-Apple documenta que el sistema ignora esta clave cuando compilas con el SDK de iOS 27 o posterior, y lo mismo ocurre con iPadOS 27, Mac Catalyst 27, macOS 27 y tvOS 27. Dicho de otra forma: si tu app se compila con el SDK de iOS 27, la clave ya no te devuelve el diseño anterior.
+Según la documentación de Apple, el sistema ignora esta clave cuando compilas con el SDK de iOS 27 o posterior, y lo mismo ocurre con iPadOS 27, Mac Catalyst 27, macOS 27 y tvOS 27. Dicho de otro modo: si tu app se compila con el SDK de iOS 27, la clave ya no te devuelve el diseño anterior.
 
-Hay un matiz que conviene no perder: si sigues compilando con el SDK de iOS 26, la clave todavía puede tener efecto en iOS 26. Pero eso significa quedarse en un SDK antiguo, con las consecuencias de mantenimiento y compatibilidad que eso implica. No es una salida a largo plazo.
+Hay un matiz que no conviene pasar por alto: si sigues compilando con el SDK de iOS 26, la clave todavía puede tener efecto en iOS 26. Pero eso significa quedarse en un SDK antiguo, con las consecuencias de mantenimiento y compatibilidad que eso implica. No es una solución a largo plazo.
 
-Además, la clave es global. No sirve para decir "solo esta pantalla sin Liquid Glass". Para una excepción por componente, la API que vimos arriba es la adecuada.
+Además, la clave es global. No sirve para pedir "solo esta pantalla sin Liquid Glass". Para una excepción por componente, la API que vimos antes es la adecuada.
 
 | Necesidad | Herramienta |
 | --- | --- |
-| Ocultar el cristal de un ítem o grupo del toolbar | `.sharedBackgroundVisibility(.hidden)` en iOS 26+ |
+| Ocultar el cristal de un elemento o grupo del toolbar | `.sharedBackgroundVisibility(.hidden)` en iOS 26+ |
 | Separar grupos manteniendo el cristal | `ToolbarSpacer` en iOS 26+ |
 | Modo de compatibilidad para toda la app | `UIDesignRequiresCompatibility` (ignorado con el SDK de iOS 27) |
 
-## Mi opinión: excepciones, no régimen
+## Mi opinión: excepciones, no una norma
 
-Personalmente, creo que la consistencia con el sistema debe ser la opción por defecto. Los usuarios aprenden una vez cómo se ven y se comportan los controles de iOS; Liquid Glass forma parte de ese contrato visual. Cambiarlo en un componente aislado puede hacer que la persona dude si eso es un botón, un adorno o contenido.
+Con todo esto sobre la mesa, mi postura es clara: la consistencia con el sistema debería ser la opción por defecto. Los usuarios aprenden una vez cómo se ven y se comportan los controles de iOS, y Liquid Glass forma parte de ese lenguaje visual. Cambiarlo en un componente aislado puede hacer que el usuario dude si eso es un botón, un elemento decorativo o contenido.
 
-Pero la consistencia no es un dogma. Hay excepciones legítimas: una marca que ya tiene su propio lenguaje, un control que necesita un fondo propio para ser legible o una superficie que no debe competir con el cristal del sistema. La clave es que sea una excepción deliberada, documentada y probada, no una forma de evitar adaptar la app.
+Pero la consistencia no es una regla absoluta. Hay excepciones legítimas: una marca que ya tiene su propio lenguaje, un control que necesita un fondo propio para ser legible o una superficie que no debe competir con el cristal del sistema. Lo importante es que sea una excepción deliberada, documentada y probada, no una forma de evitar adaptar la app.
 
-Si alguien pide "sin Liquid Glass en toda la app", la conversación correcta no es buscar otra clave mágica. Es explicar el coste: la compatibilidad global se acaba con el SDK de iOS 27 y las excepciones por componente hay que mantenerlas. Propón adoptar el sistema por defecto y aislar las excepciones con una justificación concreta.
+Si alguien pide "sin Liquid Glass en toda la app", la conversación correcta no consiste en buscar otra clave mágica, sino en explicar el coste: el modo de compatibilidad global deja de funcionar en las apps compiladas con el SDK de iOS 27, y las excepciones por componente hay que mantenerlas. Propón adoptar el sistema por defecto y aislar las excepciones con una justificación concreta.
 
-## Checklist antes de ocultar el fondo
+## Lista de comprobación antes de ocultar el fondo
 
+Antes de cerrar, un repaso rápido. No todo es diseño: una excepción visual también puede afectar al comportamiento, a la accesibilidad o a la compatibilidad.
+
+**Diseño**
+
+- ¿La excepción está justificada por marca o legibilidad, y no solo por preferencia?
 - ¿El componente necesita realmente su propio fondo?
-- ¿Es un ítem del toolbar y no la barra completa?
+- ¿Sigue siendo coherente con el resto de la pantalla y con el sistema?
+
+**Comportamiento**
+
+- ¿La acción del elemento sigue funcionando?
+- ¿La navegación, el botón de volver, la búsqueda y el resto del toolbar siguen igual?
+- ¿Funciona en todos los estados (carga, vacío, error, edición) y en iPad o landscape?
+- ¿El elemento sigue siendo alcanzable cuando la barra se colapsa o se hace scroll?
+
+**Técnica**
+
+- ¿Es un elemento del toolbar y no la barra completa?
 - ¿El modificador está en el `ToolbarItem` o `ToolbarItemGroup`, no en la vista interior?
-- ¿Usas `.topBarLeading` o `.topBarTrailing` en lugar de las colocaciones obsoletas?
-- ¿Tienes un fallback para iOS anterior a 26?
-- ¿Probaste contraste, modo oscuro, Reduce Transparency, Dynamic Type y VoiceOver?
-- ¿El ítem sigue teniendo un área táctil y un foco de teclado adecuados?
-- ¿La excepción está documentada para que no se convierta en la norma?
+- ¿Usas `.topBarLeading` o `.topBarTrailing` en lugar de las posiciones obsoletas?
+- ¿Tienes una alternativa para iOS anterior a 26?
+- ¿Compilas con el SDK de iOS 26 o posterior?
+
+**Accesibilidad**
+
+- ¿Probaste el contraste, el modo oscuro, Reducir transparencia, Aumentar contraste, Dynamic Type y VoiceOver?
+- ¿El área táctil y el foco de teclado siguen siendo adecuados?
+
+**Mantenimiento**
+
+- ¿La excepción está documentada y tiene una prueba visual o una revisión de diseño que evite que se convierta en la norma?
+- ¿Sabes cuándo revisarla o eliminarla?
 
 ## Referencias
 
@@ -209,7 +233,7 @@ Si alguien pide "sin Liquid Glass en toda la app", la conversación correcta no 
 
 Liquid Glass is the visual language Apple introduced in iOS 26. It changes how bars, buttons, and sheets are grouped and drawn: toolbar items share a glass background that adapts to the content behind them. For most screens, adopting it is the right call.
 
-But there are exceptions. Sometimes product design or brand identity asks for a specific component to keep that background off: a logo that already has its own shape, an avatar that needs a solid color, or a control that should blend into a custom surface. You don't have to abandon the whole system for that. SwiftUI has an API designed for this exception.
+But there are exceptions. Sometimes, because of product design or brand identity, we're asked to keep a specific component without that background: a logo that already has its own shape, an avatar that needs a solid color, or a control that should sit on its own surface. You don't have to abandon the whole system to do it. SwiftUI has an API designed for exactly this exception.
 
 ## The API: `sharedBackgroundVisibility(.hidden)`
 
@@ -235,26 +259,26 @@ struct ToolbarWithoutGlassView: View {
 }
 ```
 
-The placement is the important part: it goes after the closing brace of `ToolbarItemGroup`, not inside the `Button`. `sharedBackgroundVisibility` is a `ToolbarContent` API; if you apply it to a `View`, the compiler won't find it. The example assumes an iOS 26 or later deployment target; if your app supports earlier versions, use the helper in the compatibility section.
+What matters is where it goes: after the closing brace of `ToolbarItemGroup`, not inside the `Button`. `sharedBackgroundVisibility` is a `ToolbarContent` API; if you apply it to a `View`, the compiler won't find it. The example assumes an iOS 26 or later target; if your app supports earlier versions, use the compatibility extension later in the article.
 
-The original code used `.navigationBarLeading`. That placement still exists, but it sits in the deprecated section. `.topBarLeading` is the current spelling and better expresses that the item lives in the top bar, not in a specific navigation bar.
+The original code used `.navigationBarLeading`. That placement still exists, but it is marked as deprecated. `.topBarLeading` is the recommended form and makes it clearer that the item belongs to the top bar, not to a specific navigation bar.
 
 ## What it actually does
 
-The name describes the behavior: it controls the visibility of the background shared by toolbar items. Passing `.hidden` tells the system to stop drawing that shared background and places the item in its own grouping. It is not `background(.clear)` or a transparency trick: it is an instruction to the system not to apply the glass effect to that content.
+Before using it, it's worth understanding what changes and what doesn't. The name describes the behavior: it controls the visibility of the background shared by toolbar items. Passing `.hidden` tells the system to stop drawing that shared background and places the item in its own grouping. It is not `background(.clear)` or a transparency trick: it is an instruction to the system not to apply the glass effect to that content.
 
-If the group has a single item, the result is that item without the shared capsule. If it has several, the group stops using the shared background. The buttons remain interactive; what changes is the visual treatment of the container. The rest of the toolbar items keep their treatment.
+With a single item, the result is that item without the shared capsule; with several, the whole group stops using the shared background. The buttons remain interactive: what changes is the visual treatment of the container, not its behavior. The rest of the toolbar items keep theirs.
 
-Don't confuse two different layers:
+There are two different layers here, and it's worth keeping them apart:
 
 - `sharedBackgroundVisibility(.hidden)` acts on the shared background of the toolbar content.
 - The bar background APIs control the surface of the navigation bar.
 
-Hiding an item's background does not redesign the whole bar. If you need the entire bar to have no background, this is not the tool; and either way, think first about whether you really want to leave the system.
+Hiding an item's background does not redesign the whole bar. If you need the entire bar to have no background, this API is not the right tool. And before anything else, ask yourself whether you really want to leave the system.
 
-## A real case: a brand that already has its own background
+## A real case: a brand that already has its own identity
 
-Imagine a brand logo in the top-leading corner. If you put it inside a Liquid Glass capsule, the system adds a layer that competes with the logo and can make it look like a generic button. Hiding the shared background lets the logo read as toolbar content.
+Let's look at a common case. Imagine a brand logo in the top-leading corner. If you put it inside a Liquid Glass capsule, the system adds a layer that competes with the logo and can make it look like a generic button. Hiding the shared background lets the logo read as toolbar content.
 
 ```swift
 import SwiftUI
@@ -285,17 +309,17 @@ struct BrandToolbarView: View {
 }
 ```
 
-If the logo isn't interactive, don't write it as a `Button` just to make it look at home in the toolbar. A plain `HStack` with a proper accessibility label is usually more honest. If it is interactive, keep the hit target and keyboard focus any other button would have.
+If the logo isn't interactive, don't write it as a `Button` just to make it look at home in the toolbar. A plain `HStack` with a proper accessibility label usually fits better. If it is interactive, keep the hit target and keyboard focus any other button would have.
 
-## What you lose when you remove the glass
+## What you lose when you remove the glass background
 
-Liquid Glass is not just decoration. The glass background separates toolbar content from what's behind it and helps keep text legible when the screen has photos, maps, or vivid colors. When you hide it, that responsibility moves to your design.
+Of course, removing the glass comes at a cost. Liquid Glass is not just decoration: the glass background separates toolbar content from what's behind it and helps keep text legible when the screen has photos, maps, or vivid colors. When you hide it, that responsibility becomes part of your design.
 
 Before accepting an exception, check:
 
 - Contrast in light and dark mode.
 - The content behind the item, especially while scrolling.
-- Reduce Transparency and Increase Contrast settings.
+- The Reduce Transparency and Increase Contrast settings.
 - Dynamic Type: text shouldn't break the group.
 - The hit target, which should remain comfortable.
 - VoiceOver: if the item is a button, it needs a clear label; if it's a brand mark, it shouldn't be announced as an action.
@@ -304,9 +328,9 @@ Hiding the background is easy. The hard part is keeping the result clear, access
 
 ## Backward compatibility
 
-`sharedBackgroundVisibility` is available in iOS 26.0 and later, as well as iPadOS 26 and macOS 26. The example uses iOS navigation bar placements; on macOS, use the placement that matches its toolbar. If your deployment target is earlier, you need to build with the iOS 26 SDK or later and guard runtime execution with `#available`.
+`sharedBackgroundVisibility` is available starting in iOS 26.0, as well as iPadOS 26 and macOS 26. The example uses iOS navigation bar placements; on macOS, use the placement that matches its toolbar. If your app supports earlier versions, you need to build with the iOS 26 SDK or later and guard runtime execution with `#available`.
 
-A reusable helper avoids duplicating the toolbar content:
+A reusable extension avoids duplicating the toolbar content:
 
 ```swift
 import SwiftUI
@@ -343,13 +367,13 @@ struct CompatibleToolbarView: View {
 }
 ```
 
-The helper uses the `ToolbarContentBuilder` result to return the same content with or without the modifier. On iOS 26 and later it hides the background; on earlier versions it returns `self` and changes nothing.
+The extension uses `ToolbarContentBuilder` to return the same content with or without the modifier. On iOS 26 and later it hides the background; on earlier versions it returns `self` and changes nothing.
 
 One important nuance: `#available` guards runtime, not compilation. If you build with an SDK older than iOS 26, the `sharedBackgroundVisibility` symbol doesn't exist and the code won't compile. You need Xcode 26 or later to use this API, even if your app still supports iOS 17 or 18.
 
 ## `UIDesignRequiresCompatibility`: the end of the grace period
 
-During the transition to iOS 26, Apple offered a global escape hatch: the `UIDesignRequiresCompatibility` key in `Info.plist`.
+All of this leads to the question that usually comes next: what about the global key? During the transition to iOS 26, Apple offered an escape hatch: `UIDesignRequiresCompatibility` in `Info.plist`.
 
 ```xml
 <key>UIDesignRequiresCompatibility</key>
@@ -358,11 +382,11 @@ During the transition to iOS 26, Apple offered a global escape hatch: the `UIDes
 
 With `YES`, the app runs in compatibility mode and keeps the previous look. It was useful for buying time, but it was never a design strategy: it is a grace period for adapting the app, not a way to maintain two visual languages indefinitely.
 
-Apple documents that the system ignores this key when you build with the iOS 27 SDK or later, and the same applies to iPadOS 27, Mac Catalyst 27, macOS 27, and tvOS 27. In other words: if your app is built with the iOS 27 SDK, the key no longer brings the old design back.
+According to Apple's documentation, the system ignores this key when you build with the iOS 27 SDK or later, and the same applies to iPadOS 27, Mac Catalyst 27, macOS 27, and tvOS 27. In other words: if your app is built with the iOS 27 SDK, the key no longer brings the old design back.
 
-There is a nuance worth keeping: if you still build with the iOS 26 SDK, the key can still have an effect on iOS 26. But that means staying on an old SDK, with the maintenance and compatibility consequences that implies. It is not a long-term solution.
+There is a nuance worth keeping in mind: if you still build with the iOS 26 SDK, the key can still have an effect on iOS 26. But that means staying on an old SDK, with the maintenance and compatibility consequences that implies. It is not a long-term solution.
 
-The key is also global. It cannot say "only this screen without Liquid Glass". For a per-component exception, the API above is the right tool.
+The key is also global. It can't be scoped to "only this screen without Liquid Glass". For a per-component exception, the API above is the right tool.
 
 | Need | Tool |
 | --- | --- |
@@ -370,24 +394,48 @@ The key is also global. It cannot say "only this screen without Liquid Glass". F
 | Separate groups while keeping the glass | `ToolbarSpacer` on iOS 26+ |
 | Compatibility mode for the whole app | `UIDesignRequiresCompatibility` (ignored with the iOS 27 SDK) |
 
-## My take: exceptions, not a regime
+## My take: exceptions, not the norm
 
-Personally, I think consistency with the system should be the default. Users learn once how iOS controls look and behave; Liquid Glass is part of that visual contract. Changing it in one isolated component can make people wonder whether it is a button, an ornament, or content.
+With all this on the table, my position is clear: consistency with the system should be the default. Users learn once how iOS controls look and behave, and Liquid Glass is part of that visual language. Changing it in one isolated component can make people wonder whether it is a button, an ornament, or content.
 
-But consistency isn't dogma. There are legitimate exceptions: a brand that already has its own language, a control that needs its own background to be legible, or a surface that shouldn't compete with the system glass. The key is that it should be a deliberate, documented, and tested exception, not a way to avoid adapting the app.
+But consistency isn't an absolute rule. There are legitimate exceptions: a brand that already has its own language, a control that needs its own background to be legible, or a surface that shouldn't compete with the system glass. What matters is that it should be a deliberate, documented, and tested exception, not a way to avoid adapting the app.
 
-If someone asks for "no Liquid Glass in the whole app", the right conversation isn't about finding another magic key. It's about explaining the cost: global compatibility mode ends for apps built with the iOS 27 SDK, and per-component exceptions have to be maintained. Propose adopting the system by default and isolating exceptions with a concrete justification.
+If someone asks for "no Liquid Glass in the whole app", the right conversation isn't about finding another magic key. It's about explaining the cost: global compatibility mode stops working for apps built with the iOS 27 SDK, and per-component exceptions have to be maintained. Propose adopting the system by default and isolating exceptions with a concrete justification.
 
 ## Checklist before hiding the background
 
+Before we wrap up, a quick checklist. Not everything here is about design: a visual exception can also affect behavior, accessibility, or compatibility.
+
+**Design**
+
+- Is the exception justified by brand or legibility, rather than personal preference?
 - Does the component really need its own background?
+- Does it still feel consistent with the rest of the screen and with the system?
+
+**Behavior**
+
+- Does the item's action still work?
+- Are navigation, the back button, search, and the rest of the toolbar unaffected?
+- Does it work in every state (loading, empty, error, editing) and on iPad or landscape?
+- Is the item still reachable when the bar collapses or scrolls?
+
+**Technical**
+
 - Is it a toolbar item and not the whole bar?
-- Is the modifier on the `ToolbarItem` or `ToolbarItemGroup`, not on the inner view?
+- Is the modifier on `ToolbarItem` or `ToolbarItemGroup`, not on the inner view?
 - Are you using `.topBarLeading` or `.topBarTrailing` instead of deprecated placements?
 - Do you have a fallback for iOS earlier than 26?
-- Did you test contrast, dark mode, Reduce Transparency, Dynamic Type, and VoiceOver?
-- Does the item still have an adequate hit target and keyboard focus?
-- Is the exception documented so it doesn't become the norm?
+- Are you building with the iOS 26 SDK or later?
+
+**Accessibility**
+
+- Did you test contrast, dark mode, Reduce Transparency, Increase Contrast, Dynamic Type, and VoiceOver?
+- Are the hit target and keyboard focus still adequate?
+
+**Maintenance**
+
+- Is the exception documented, with a visual test or design review to keep it from becoming the norm?
+- Do you know when to revisit or remove it?
 
 ## References
 
