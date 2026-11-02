@@ -49,13 +49,6 @@ Antes de usarlo, merece la pena entender qué cambia y qué no. El nombre descri
 
 Con un solo elemento, el resultado es ese elemento sin la cápsula compartida; con varios, el grupo entero deja de usar el fondo común. Los botones siguen siendo interactivos: lo que cambia es el tratamiento visual del contenedor, no su comportamiento. El resto de elementos del toolbar conserva el suyo.
 
-Hay dos capas distintas que no conviene mezclar:
-
-- `sharedBackgroundVisibility(.hidden)` actúa sobre el fondo compartido del contenido del toolbar.
-- Las APIs que controlan el fondo de la barra actúan sobre su superficie.
-
-Ocultar el fondo de un elemento no rediseña toda la barra. Si lo que necesitas es que la barra completa deje de tener un fondo, esta API no es la herramienta adecuada. Y, antes de nada, pregúntate si realmente quieres separarte del sistema.
-
 ## Un caso real: una marca que ya tiene su propia identidad
 
 Veamos un caso típico. Imagina el logo de una marca en la esquina superior izquierda. Si lo metes en una cápsula de Liquid Glass, el sistema añade una capa que compite con el logo y puede hacer que parezca un botón genérico. Ocultar el fondo compartido permite que el logo se lea como contenido de la barra.
@@ -264,13 +257,6 @@ What matters is where it goes: after the closing brace of `ToolbarItemGroup`, no
 Before using it, it's worth understanding what changes and what doesn't. The name describes the behavior: it controls the visibility of the background shared by toolbar items. Passing `.hidden` tells the system to stop drawing that shared background and places the item in its own grouping. It is not `background(.clear)` or a transparency trick: it is an instruction to the system not to apply the glass effect to that content.
 
 With a single item, the result is that item without the shared capsule; with several, the whole group stops using the shared background. The buttons remain interactive: what changes is the visual treatment of the container, not its behavior. The rest of the toolbar items keep theirs.
-
-There are two different layers here, and it's worth keeping them apart:
-
-- `sharedBackgroundVisibility(.hidden)` acts on the shared background of the toolbar content.
-- The bar background APIs control the surface of the navigation bar.
-
-Hiding an item's background does not redesign the whole bar. If you need the entire bar to have no background, this API is not the right tool. And before anything else, ask yourself whether you really want to leave the system.
 
 ## A real case: a brand that already has its own identity
 
