@@ -157,8 +157,6 @@ Según la documentación de Apple, el sistema ignora esta clave cuando compilas 
 
 Hay un matiz que no conviene pasar por alto: si sigues compilando con el SDK de iOS 26, la clave todavía puede tener efecto en iOS 26. Pero eso significa quedarse en un SDK antiguo, con las consecuencias de mantenimiento y compatibilidad que eso implica. No es una solución a largo plazo.
 
-Además, la clave es global. No sirve para pedir "solo esta pantalla sin Liquid Glass". Para una excepción por componente, la API que vimos antes es la adecuada.
-
 | Necesidad | Herramienta |
 | --- | --- |
 | Ocultar el cristal de un elemento o grupo del toolbar | `.sharedBackgroundVisibility(.hidden)` en iOS 26+ |
@@ -356,8 +354,6 @@ With `YES`, the app runs in compatibility mode and keeps the previous look. It w
 According to Apple's documentation, the system ignores this key when you build with the iOS 27 SDK or later, and the same applies to iPadOS 27, Mac Catalyst 27, macOS 27, and tvOS 27. In other words: if your app is built with the iOS 27 SDK, `UIDesignRequiresCompatibility` no longer brings the old design back.
 
 There is a nuance worth keeping in mind: if you still build with the iOS 26 SDK, the key can still have an effect on iOS 26. But that means staying on an old SDK, with the maintenance and compatibility consequences that implies. It is not a long-term solution.
-
-The key is also global. It can't be scoped to "only this screen without Liquid Glass". For a per-component exception, the API above is the right tool.
 
 | Need | Tool |
 | --- | --- |
