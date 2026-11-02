@@ -13,7 +13,7 @@ reading_time: 8
 
 <div class="lang-es" lang="es" markdown="1">
 
-Liquid Glass es el lenguaje visual que Apple introdujo en iOS 26. Cambia la forma en que se agrupan y se dibujan las barras, los botones y las sheets: los elementos del toolbar comparten un fondo de cristal que se adapta al contenido que hay detrás. En la mayoría de los casos, adoptarlo es lo correcto.
+Liquid Glass es el lenguaje visual que Apple introdujo en iOS 26. Cambia la forma en que se agrupan y se dibujan las barras, los botones y las sheets: los elementos del toolbar comparten un fondo de Liquid Glass que se adapta al contenido que hay detrás. En la mayoría de los casos, adoptarlo es lo correcto.
 
 Pero hay excepciones. A veces, por diseño de producto o por identidad de marca, nos piden mantener un componente concreto sin ese fondo: un logo que ya tiene su propia forma, un avatar que necesita un color sólido o un control que debe integrarse en una superficie propia. No hace falta renunciar al sistema entero para conseguirlo. SwiftUI tiene una API pensada precisamente para esta excepción.
 
@@ -45,7 +45,7 @@ Lo importante es dónde va: después del cierre de `ToolbarItemGroup`, no dentro
 
 ## Qué hace exactamente
 
-Antes de usarlo, merece la pena entender qué cambia y qué no. El nombre describe el comportamiento: controla la visibilidad del fondo que comparten los elementos del toolbar. Al pasarle `.hidden`, el sistema deja de dibujar ese fondo compartido y coloca el elemento en su propio grupo. No es un `background(.clear)` ni un juego de transparencias: es una instrucción al sistema para que no aplique el efecto de cristal a ese contenido.
+Antes de usarlo, merece la pena entender qué cambia y qué no. El nombre describe el comportamiento: controla la visibilidad del fondo que comparten los elementos del toolbar. Al pasarle `.hidden`, el sistema deja de dibujar ese fondo compartido y coloca el elemento en su propio grupo. No es un `background(.clear)` ni un juego de transparencias: es una instrucción al sistema para que no aplique el efecto de Liquid Glass a ese contenido.
 
 Con un solo elemento, el resultado es ese elemento sin la cápsula compartida; con varios, el grupo entero deja de usar el fondo común. Los botones siguen siendo interactivos: lo que cambia es el tratamiento visual del contenedor, no su comportamiento. El resto de elementos del toolbar conserva el suyo.
 
@@ -84,9 +84,9 @@ struct BrandToolbarView: View {
 
 Si el logo no es interactivo, no lo escribas como un `Button` solo para que parezca parte del toolbar. Un `HStack` normal, con una etiqueta de accesibilidad adecuada, suele ser más coherente. Si lo es, mantén el área táctil y el foco de teclado que tendría cualquier otro botón.
 
-## Qué se pierde al quitar el fondo de cristal
+## Qué se pierde al quitar el fondo de Liquid Glass
 
-Ahora bien, quitar el cristal tiene un coste. Liquid Glass no es solo decoración: el fondo de cristal separa el contenido del toolbar de lo que hay detrás y ayuda a mantener la legibilidad cuando la pantalla tiene fotos, mapas o colores vivos. Al ocultarlo, esa responsabilidad recae ahora en tu diseño.
+Ahora bien, quitar Liquid Glass tiene un coste. No es solo decoración: el fondo de Liquid Glass separa el contenido del toolbar de lo que hay detrás y ayuda a mantener la legibilidad cuando la pantalla tiene fotos, mapas o colores vivos. Al ocultarlo, esa responsabilidad recae ahora en tu diseño.
 
 Antes de dar por buena una excepción, comprueba:
 
@@ -159,15 +159,15 @@ Hay un matiz que no conviene pasar por alto: si sigues compilando con el SDK de 
 
 | Necesidad | Herramienta |
 | --- | --- |
-| Ocultar el cristal de un elemento o grupo del toolbar | `.sharedBackgroundVisibility(.hidden)` en iOS 26+ |
-| Separar grupos manteniendo el cristal | `ToolbarSpacer` en iOS 26+ |
+| Ocultar Liquid Glass de un elemento o grupo del toolbar | `.sharedBackgroundVisibility(.hidden)` en iOS 26+ |
+| Separar grupos manteniendo Liquid Glass | `ToolbarSpacer` en iOS 26+ |
 | Modo de compatibilidad para toda la app | `UIDesignRequiresCompatibility` (ignorado con el SDK de iOS 27) |
 
 ## Mi opinión: excepciones, no una norma
 
 Con todo esto sobre la mesa, mi postura es clara: la consistencia con el sistema debería ser la opción por defecto. Los usuarios aprenden una vez cómo se ven y se comportan los controles de iOS, y Liquid Glass forma parte de ese lenguaje visual. Cambiarlo en un componente aislado puede hacer que el usuario dude si eso es un botón, un elemento decorativo o contenido.
 
-Pero la consistencia no es una regla absoluta. Hay excepciones legítimas: una marca que ya tiene su propio lenguaje, un control que necesita un fondo propio para ser legible o una superficie que no debe competir con el cristal del sistema. Lo importante es que sea una excepción deliberada, documentada y probada, no una forma de evitar adaptar la app.
+Pero la consistencia no es una regla absoluta. Hay excepciones legítimas: una marca que ya tiene su propio lenguaje, un control que necesita un fondo propio para ser legible o una superficie que no debe competir con el Liquid Glass del sistema. Lo importante es que sea una excepción deliberada, documentada y probada, no una forma de evitar adaptar la app.
 
 Si alguien pide "sin Liquid Glass en toda la app", la conversación correcta no consiste en buscar otra clave mágica, sino en explicar el coste: el modo de compatibilidad global deja de funcionar en las apps compiladas con el SDK de iOS 27, y las excepciones por componente hay que mantenerlas. Propón adoptar el sistema por defecto y aislar las excepciones con una justificación concreta.
 
@@ -357,8 +357,8 @@ There is a nuance worth keeping in mind: if you still build with the iOS 26 SDK,
 
 | Need | Tool |
 | --- | --- |
-| Hide the glass on a toolbar item or group | `.sharedBackgroundVisibility(.hidden)` on iOS 26+ |
-| Separate groups while keeping the glass | `ToolbarSpacer` on iOS 26+ |
+| Hide Liquid Glass on a toolbar item or group | `.sharedBackgroundVisibility(.hidden)` on iOS 26+ |
+| Separate groups while keeping Liquid Glass | `ToolbarSpacer` on iOS 26+ |
 | Compatibility mode for the whole app | `UIDesignRequiresCompatibility` (ignored with the iOS 27 SDK) |
 
 ## My take: exceptions, not the norm
