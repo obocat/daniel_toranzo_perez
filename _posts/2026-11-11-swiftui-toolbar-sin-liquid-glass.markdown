@@ -43,8 +43,6 @@ struct ToolbarWithoutGlassView: View {
 
 Lo importante es dónde va: después del cierre de `ToolbarItemGroup`, no dentro del `Button`. `sharedBackgroundVisibility` es una API de `ToolbarContent`; si la aplicas a una `View`, el compilador no la encontrará. El ejemplo da por hecho un target de iOS 26 o superior; si tu app soporta versiones anteriores, usa la extensión de compatibilidad que veremos más adelante.
 
-El código original usaba `.navigationBarLeading`. Esa posición todavía existe, pero está marcada como obsoleta. `.topBarLeading` es la forma recomendada y deja más claro que el elemento pertenece a la barra superior, no a una barra de navegación concreta.
-
 ## Qué hace exactamente
 
 Antes de usarlo, merece la pena entender qué cambia y qué no. El nombre describe el comportamiento: controla la visibilidad del fondo que comparten los elementos del toolbar. Al pasarle `.hidden`, el sistema deja de dibujar ese fondo compartido y coloca el elemento en su propio grupo. No es un `background(.clear)` ni un juego de transparencias: es una instrucción al sistema para que no aplique el efecto de cristal a ese contenido.
@@ -205,7 +203,7 @@ Antes de cerrar, un repaso rápido. No todo es diseño: una excepción visual ta
 
 - ¿Es un elemento del toolbar y no la barra completa?
 - ¿El modificador está en el `ToolbarItem` o `ToolbarItemGroup`, no en la vista interior?
-- ¿Usas `.topBarLeading` o `.topBarTrailing` en lugar de las posiciones obsoletas?
+- ¿Usas `.topBarLeading` o `.topBarTrailing`?
 - ¿Tienes una alternativa para iOS anterior a 26?
 - ¿Compilas con el SDK de iOS 26 o posterior?
 
@@ -260,8 +258,6 @@ struct ToolbarWithoutGlassView: View {
 ```
 
 What matters is where it goes: after the closing brace of `ToolbarItemGroup`, not inside the `Button`. `sharedBackgroundVisibility` is a `ToolbarContent` API; if you apply it to a `View`, the compiler won't find it. The example assumes an iOS 26 or later target; if your app supports earlier versions, use the compatibility extension later in the article.
-
-The original code used `.navigationBarLeading`. That placement still exists, but it is marked as deprecated. `.topBarLeading` is the recommended form and makes it clearer that the item belongs to the top bar, not to a specific navigation bar.
 
 ## What it actually does
 
@@ -423,7 +419,7 @@ Before we wrap up, a quick checklist. Not everything here is about design: a vis
 
 - Is it a toolbar item and not the whole bar?
 - Is the modifier on `ToolbarItem` or `ToolbarItemGroup`, not on the inner view?
-- Are you using `.topBarLeading` or `.topBarTrailing` instead of deprecated placements?
+- Are you using `.topBarLeading` or `.topBarTrailing`?
 - Do you have a fallback for iOS earlier than 26?
 - Are you building with the iOS 26 SDK or later?
 
