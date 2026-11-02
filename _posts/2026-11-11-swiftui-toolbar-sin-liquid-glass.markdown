@@ -169,34 +169,6 @@ Con todo esto sobre la mesa, mi postura es clara: la consistencia con el sistema
 
 Pero la consistencia no es una regla absoluta. Hay excepciones legítimas: una marca que ya tiene su propio lenguaje, un control que necesita un fondo propio para ser legible o una superficie que no debe competir con el Liquid Glass del sistema. Lo importante es que sea una excepción deliberada, documentada y probada, no una forma de evitar adaptar la app.
 
-## Lista de comprobación antes de ocultar el fondo
-
-Antes de cerrar, un repaso rápido. No todo es diseño: una excepción visual también puede afectar a la accesibilidad, a la compatibilidad o al mantenimiento.
-
-**Diseño**
-
-- ¿La excepción está justificada por marca o legibilidad, y no solo por preferencia?
-- ¿El componente necesita realmente su propio fondo?
-- ¿Sigue siendo coherente con el resto de la pantalla y con el sistema?
-
-**Técnica**
-
-- ¿Es un elemento del toolbar y no la barra completa?
-- ¿El modificador está en el `ToolbarItem` o `ToolbarItemGroup`, no en la vista interior?
-- ¿Usas `.topBarLeading` o `.topBarTrailing`?
-- ¿Tienes una alternativa para iOS anterior a 26?
-- ¿Compilas con el SDK de iOS 26 o posterior?
-
-**Accesibilidad**
-
-- ¿Probaste el contraste, el modo oscuro, Reducir transparencia, Aumentar contraste, Dynamic Type y VoiceOver?
-- ¿El área táctil y el foco de teclado siguen siendo adecuados?
-
-**Mantenimiento**
-
-- ¿La excepción está documentada y tiene una prueba visual o una revisión de diseño que evite que se convierta en la norma?
-- ¿Sabes cuándo revisarla o eliminarla?
-
 ## Referencias
 
 - [`sharedBackgroundVisibility(_:)`](https://developer.apple.com/documentation/swiftui/toolbarcontent/sharedbackgroundvisibility%28_%3A%29)
@@ -364,34 +336,6 @@ There is a nuance worth keeping in mind: if you still build with the iOS 26 SDK,
 With all this on the table, my position is clear: consistency with the system should be the default. Users learn once how iOS controls look and behave, and Liquid Glass is part of that visual language. Changing it in one isolated component can make people wonder whether it is a button, an ornament, or content.
 
 But consistency isn't an absolute rule. There are legitimate exceptions: a brand that already has its own language, a control that needs its own background to be legible, or a surface that shouldn't compete with the system's Liquid Glass. What matters is that it should be a deliberate, documented, and tested exception, not a way to avoid adapting the app.
-
-## Checklist before hiding the background
-
-Before we wrap up, a quick checklist. Not everything here is about design: a visual exception can also affect accessibility, compatibility, or maintenance.
-
-**Design**
-
-- Is the exception justified by brand or legibility, rather than personal preference?
-- Does the component really need its own background?
-- Does it still feel consistent with the rest of the screen and with the system?
-
-**Technical**
-
-- Is it a toolbar item and not the whole bar?
-- Is the modifier on `ToolbarItem` or `ToolbarItemGroup`, not on the inner view?
-- Are you using `.topBarLeading` or `.topBarTrailing`?
-- Do you have a fallback for iOS earlier than 26?
-- Are you building with the iOS 26 SDK or later?
-
-**Accessibility**
-
-- Did you test contrast, dark mode, Reduce Transparency, Increase Contrast, Dynamic Type, and VoiceOver?
-- Are the hit target and keyboard focus still adequate?
-
-**Maintenance**
-
-- Is the exception documented, with a visual test or design review to keep it from becoming the norm?
-- Do you know when to revisit or remove it?
 
 ## References
 
