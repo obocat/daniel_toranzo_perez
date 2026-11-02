@@ -169,7 +169,7 @@ Con todo esto sobre la mesa, mi postura es clara: la consistencia con el sistema
 
 Pero la consistencia no es una regla absoluta. Hay excepciones legítimas: una marca que ya tiene su propio lenguaje, un control que necesita un fondo propio para ser legible o una superficie que no debe competir con el Liquid Glass del sistema. Lo importante es que sea una excepción deliberada, documentada y probada, no una forma de evitar adaptar la app.
 
-Si alguien pide "sin Liquid Glass en toda la app", la conversación correcta no consiste en buscar otra clave mágica, sino en explicar el coste: el modo de compatibilidad global deja de funcionar en las apps compiladas con el SDK de iOS 27, y las excepciones por componente hay que mantenerlas. Propón adoptar el sistema por defecto y aislar las excepciones con una justificación concreta.
+Si alguien pide "sin Liquid Glass en toda la app", la conversación correcta no consiste en buscar otra solución mágica, sino en explicar el coste: el modo de compatibilidad global deja de funcionar en las apps compiladas con el SDK de iOS 27, y las excepciones por componente hay que mantenerlas. Propón adoptar el sistema por defecto y aislar las excepciones con una justificación concreta.
 
 ## Lista de comprobación antes de ocultar el fondo
 
@@ -367,7 +367,7 @@ With all this on the table, my position is clear: consistency with the system sh
 
 But consistency isn't an absolute rule. There are legitimate exceptions: a brand that already has its own language, a control that needs its own background to be legible, or a surface that shouldn't compete with the system's Liquid Glass. What matters is that it should be a deliberate, documented, and tested exception, not a way to avoid adapting the app.
 
-If someone asks for "no Liquid Glass in the whole app", the right conversation isn't about finding another magic key. It's about explaining the cost: global compatibility mode stops working for apps built with the iOS 27 SDK, and per-component exceptions have to be maintained. Propose adopting the system by default and isolating exceptions with a concrete justification.
+If someone asks for "no Liquid Glass in the whole app", the right conversation isn't about finding another magic solution. It's about explaining the cost: global compatibility mode stops working for apps built with the iOS 27 SDK, and per-component exceptions have to be maintained. Propose adopting the system by default and isolating exceptions with a concrete justification.
 
 ## Checklist before hiding the background
 
