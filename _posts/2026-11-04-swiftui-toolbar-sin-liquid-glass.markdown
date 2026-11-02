@@ -159,6 +159,8 @@ Según la documentación de Apple, el sistema ignora esta clave cuando compilas 
 
 Hay un matiz que no conviene pasar por alto: si sigues compilando con el SDK de iOS 26, la clave todavía puede tener efecto en iOS 26. Pero eso significa quedarse en un SDK antiguo, con las consecuencias de mantenimiento y compatibilidad que eso implica. No es una solución a largo plazo.
 
+Y hay una fecha que convierte ese matiz en algo más urgente. [Apple ha anunciado](https://developer.apple.com/news/?id=k1mtkt1k) que, a partir de abril de 2027, las apps de iOS y iPadOS que se suban a App Store Connect deberán compilarse con el SDK de iOS 27 o posterior. No es una fecha en la que iOS deje de leer la clave en apps ya instaladas, sino una fecha de caducidad práctica: en cuanto actualices el SDK para publicar, `UIDesignRequiresCompatibility` dejará de tener efecto. Las builds ya publicadas no cambian por sí solas, pero las actualizaciones tendrán que asumir el nuevo diseño.
+
 | Necesidad | Herramienta |
 | --- | --- |
 | Ocultar Liquid Glass de un elemento o grupo del toolbar | `.sharedBackgroundVisibility(.hidden)` en iOS 26+ |
@@ -328,6 +330,8 @@ With `YES`, the app runs in compatibility mode and keeps the previous look. It w
 According to Apple's documentation, the system ignores this key when you build with the iOS 27 SDK or later. If your app is built with the iOS 27 SDK, `UIDesignRequiresCompatibility` no longer brings the old design back.
 
 There is a nuance worth keeping in mind: if you still build with the iOS 26 SDK, the key can still have an effect on iOS 26. But that means staying on an old SDK, with the maintenance and compatibility consequences that implies. It is not a long-term solution.
+
+And there is a date that makes that nuance more urgent. [Apple has announced](https://developer.apple.com/news/?id=k1mtkt1k) that, starting in April 2027, iOS and iPadOS apps uploaded to App Store Connect must be built with the iOS 27 SDK or later. This is not a date when iOS stops reading the key in already-installed apps; it is a practical expiration date: as soon as you update the SDK to ship, `UIDesignRequiresCompatibility` stops having any effect. Builds already published do not change on their own, but updates will have to embrace the new design.
 
 | Need | Tool |
 | --- | --- |
