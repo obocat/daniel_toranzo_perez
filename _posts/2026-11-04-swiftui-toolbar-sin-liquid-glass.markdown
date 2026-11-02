@@ -17,7 +17,7 @@ Liquid Glass es el lenguaje visual que Apple introdujo en iOS 26. Cambia la form
 
 Pero hay excepciones. A veces, por diseño de producto o por identidad de marca, nos piden mantener un componente concreto sin ese fondo: un logo que ya tiene su propia forma, un avatar que necesita un color sólido o un control que debe integrarse en una superficie propia. No hace falta renunciar al sistema entero para conseguirlo. SwiftUI tiene una API pensada precisamente para esta excepción.
 
-Este artículo se centra en una excepción visual muy concreta. Si estás preparando la app para compilar con el SDK de iOS 27 y los nuevos dispositivos, el primer paso es resolver la adaptación de layout y cámara; lo conté en [Adaptar una app al iPhone Duo: layouts fáciles, cámara difícil](/blog/2026/10/29/iphone-duo-layout-camara/). Una vez resuelta esa base, tiene más sentido afinar excepciones como la de este artículo.
+Si estás preparando la app para compilar con el SDK de iOS 27 y para los nuevos dispositivos como el iPhone Duo, el primer paso es resolver la adaptación de layout y cámara; lo conté en [Adaptar una app al iPhone Duo: layouts fáciles, cámara difícil](/blog/2026/10/29/iphone-duo-layout-camara/). Una vez resuelta esa base, tiene más sentido afinar excepciones como la de este artículo.
 
 ## La API: `sharedBackgroundVisibility(.hidden)`
 
@@ -187,7 +187,7 @@ Liquid Glass is the visual language Apple introduced in iOS 26. It changes how b
 
 But there are exceptions. Sometimes, because of product design or brand identity, we're asked to keep a specific component without that background: a logo that already has its own shape, an avatar that needs a solid color, or a control that should sit on its own surface. You don't have to abandon the whole system to do it. SwiftUI has an API designed for exactly this exception.
 
-This article focuses on a very specific visual exception. If you're preparing the app to build with the iOS 27 SDK and the new devices, the first step is to handle the layout and camera adaptation; I covered that in [Adapting an app to iPhone Duo: easy layouts, hard camera](/blog/2026/10/29/iphone-duo-layout-camara/). Once that foundation is in place, it makes more sense to fine-tune exceptions like the one in this article.
+If you're preparing the app to build with the iOS 27 SDK and for new devices such as the iPhone Duo, the first step is to handle the layout and camera adaptation; I covered that in [Adapting an app to iPhone Duo: easy layouts, hard camera](/blog/2026/10/29/iphone-duo-layout-camara/). Once that foundation is in place, it makes more sense to fine-tune exceptions like the one in this article.
 
 ## The API: `sharedBackgroundVisibility(.hidden)`
 
