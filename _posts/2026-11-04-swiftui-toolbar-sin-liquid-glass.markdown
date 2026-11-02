@@ -8,7 +8,7 @@ lang: es
 tags: [iOS, SwiftUI, Liquid Glass, Toolbar]
 categories: blog
 layout: blog
-reading_time: 8
+reading_time: 7
 ---
 
 <div class="lang-es" lang="es" markdown="1">
