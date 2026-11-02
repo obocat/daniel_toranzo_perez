@@ -211,7 +211,7 @@ Antes de cerrar, un repaso rápido. No todo es diseño: una excepción visual ta
 
 <div class="lang-en" lang="en" markdown="1">
 
-Liquid Glass is the visual language Apple introduced in iOS 26. It changes how bars, buttons, and sheets are grouped and drawn: toolbar items share a glass background that adapts to the content behind them. For most screens, adopting it is the right call.
+Liquid Glass is the visual language Apple introduced in iOS 26. It changes how bars, buttons, and sheets are grouped and drawn: toolbar items share a Liquid Glass background that adapts to the content behind them. For most screens, adopting it is the right call.
 
 But there are exceptions. Sometimes, because of product design or brand identity, we're asked to keep a specific component without that background: a logo that already has its own shape, an avatar that needs a solid color, or a control that should sit on its own surface. You don't have to abandon the whole system to do it. SwiftUI has an API designed for exactly this exception.
 
@@ -243,7 +243,7 @@ What matters is where it goes: after the closing brace of `ToolbarItemGroup`, no
 
 ## What it actually does
 
-Before using it, it's worth understanding what changes and what doesn't. The name describes the behavior: it controls the visibility of the background shared by toolbar items. Passing `.hidden` tells the system to stop drawing that shared background and places the item in its own grouping. It is not `background(.clear)` or a transparency trick: it is an instruction to the system not to apply the glass effect to that content.
+Before using it, it's worth understanding what changes and what doesn't. The name describes the behavior: it controls the visibility of the background shared by toolbar items. Passing `.hidden` tells the system to stop drawing that shared background and places the item in its own grouping. It is not `background(.clear)` or a transparency trick: it is an instruction to the system not to apply the Liquid Glass effect to that content.
 
 With a single item, the result is that item without the shared capsule; with several, the whole group stops using the shared background. The buttons remain interactive: what changes is the visual treatment of the container, not its behavior. The rest of the toolbar items keep theirs.
 
@@ -282,9 +282,9 @@ struct BrandToolbarView: View {
 
 If the logo isn't interactive, don't write it as a `Button` just to make it look at home in the toolbar. A plain `HStack` with a proper accessibility label usually fits better. If it is interactive, keep the hit target and keyboard focus any other button would have.
 
-## What you lose when you remove the glass background
+## What you lose when you remove the Liquid Glass background
 
-Of course, removing the glass comes at a cost. Liquid Glass is not just decoration: the glass background separates toolbar content from what's behind it and helps keep text legible when the screen has photos, maps, or vivid colors. When you hide it, that responsibility becomes part of your design.
+Of course, removing it comes at a cost. Liquid Glass is not just decoration: its background separates toolbar content from what's behind it and helps keep text legible when the screen has photos, maps, or vivid colors. When you hide it, that responsibility becomes part of your design.
 
 Before accepting an exception, check:
 
@@ -365,7 +365,7 @@ There is a nuance worth keeping in mind: if you still build with the iOS 26 SDK,
 
 With all this on the table, my position is clear: consistency with the system should be the default. Users learn once how iOS controls look and behave, and Liquid Glass is part of that visual language. Changing it in one isolated component can make people wonder whether it is a button, an ornament, or content.
 
-But consistency isn't an absolute rule. There are legitimate exceptions: a brand that already has its own language, a control that needs its own background to be legible, or a surface that shouldn't compete with the system glass. What matters is that it should be a deliberate, documented, and tested exception, not a way to avoid adapting the app.
+But consistency isn't an absolute rule. There are legitimate exceptions: a brand that already has its own language, a control that needs its own background to be legible, or a surface that shouldn't compete with the system's Liquid Glass. What matters is that it should be a deliberate, documented, and tested exception, not a way to avoid adapting the app.
 
 If someone asks for "no Liquid Glass in the whole app", the right conversation isn't about finding another magic key. It's about explaining the cost: global compatibility mode stops working for apps built with the iOS 27 SDK, and per-component exceptions have to be maintained. Propose adopting the system by default and isolating exceptions with a concrete justification.
 
