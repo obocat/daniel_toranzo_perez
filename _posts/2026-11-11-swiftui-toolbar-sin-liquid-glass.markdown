@@ -153,7 +153,7 @@ Todo esto nos lleva a la pregunta que suele aparecer después: ¿y la clave glob
 
 Con `YES`, la app se ejecuta en modo de compatibilidad y conserva el aspecto anterior. Fue útil para ganar tiempo, pero nunca fue una estrategia de diseño: es una prórroga para adaptar la app, no una forma de mantener dos lenguajes visuales indefinidamente.
 
-Según la documentación de Apple, el sistema ignora esta clave cuando compilas con el SDK de iOS 27 o posterior, y lo mismo ocurre con iPadOS 27, Mac Catalyst 27, macOS 27 y tvOS 27. Dicho de otro modo: si tu app se compila con el SDK de iOS 27, `UIDesignRequiresCompatibility` ya no te devuelve el diseño anterior.
+Según la documentación de Apple, el sistema ignora esta clave cuando compilas con el SDK de iOS 27 o posterior. Si tu app se compila con el SDK de iOS 27, `UIDesignRequiresCompatibility` ya no te devuelve el diseño anterior.
 
 Hay un matiz que no conviene pasar por alto: si sigues compilando con el SDK de iOS 26, la clave todavía puede tener efecto en iOS 26. Pero eso significa quedarse en un SDK antiguo, con las consecuencias de mantenimiento y compatibilidad que eso implica. No es una solución a largo plazo.
 
@@ -351,7 +351,7 @@ All of this leads to the question that usually comes next: what about the global
 
 With `YES`, the app runs in compatibility mode and keeps the previous look. It was useful for buying time, but it was never a design strategy: it is a grace period for adapting the app, not a way to maintain two visual languages indefinitely.
 
-According to Apple's documentation, the system ignores this key when you build with the iOS 27 SDK or later, and the same applies to iPadOS 27, Mac Catalyst 27, macOS 27, and tvOS 27. In other words: if your app is built with the iOS 27 SDK, `UIDesignRequiresCompatibility` no longer brings the old design back.
+According to Apple's documentation, the system ignores this key when you build with the iOS 27 SDK or later. If your app is built with the iOS 27 SDK, `UIDesignRequiresCompatibility` no longer brings the old design back.
 
 There is a nuance worth keeping in mind: if you still build with the iOS 26 SDK, the key can still have an effect on iOS 26. But that means staying on an old SDK, with the maintenance and compatibility consequences that implies. It is not a long-term solution.
 
