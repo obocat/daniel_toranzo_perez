@@ -142,8 +142,6 @@ struct CompatibleToolbarView: View {
 
 La extensión aprovecha `ToolbarContentBuilder` para devolver el mismo contenido con o sin el modificador. En iOS 26 y posteriores oculta el fondo; en versiones anteriores devuelve `self` y no cambia nada.
 
-Un matiz importante: `#available` protege la ejecución, no la compilación. Si compilas con un SDK anterior a iOS 26, el símbolo `sharedBackgroundVisibility` no existe y el código no compila. Para usar esta API necesitas Xcode 26 o posterior, aunque tu app siga dando soporte a iOS 17 o 18.
-
 ## `UIDesignRequiresCompatibility`: el final de la prórroga
 
 Todo esto nos lleva a la pregunta que suele aparecer después: ¿y la clave global? Durante la transición a iOS 26, Apple ofreció una vía de escape: `UIDesignRequiresCompatibility` en `Info.plist`.
@@ -177,20 +175,13 @@ Si alguien pide "sin Liquid Glass en toda la app", la conversación correcta no 
 
 ## Lista de comprobación antes de ocultar el fondo
 
-Antes de cerrar, un repaso rápido. No todo es diseño: una excepción visual también puede afectar al comportamiento, a la accesibilidad o a la compatibilidad.
+Antes de cerrar, un repaso rápido. No todo es diseño: una excepción visual también puede afectar a la accesibilidad, a la compatibilidad o al mantenimiento.
 
 **Diseño**
 
 - ¿La excepción está justificada por marca o legibilidad, y no solo por preferencia?
 - ¿El componente necesita realmente su propio fondo?
 - ¿Sigue siendo coherente con el resto de la pantalla y con el sistema?
-
-**Comportamiento**
-
-- ¿La acción del elemento sigue funcionando?
-- ¿La navegación, el botón de volver, la búsqueda y el resto del toolbar siguen igual?
-- ¿Funciona en todos los estados (carga, vacío, error, edición) y en iPad o landscape?
-- ¿El elemento sigue siendo alcanzable cuando la barra se colapsa o se hace scroll?
 
 **Técnica**
 
@@ -351,8 +342,6 @@ struct CompatibleToolbarView: View {
 
 The extension uses `ToolbarContentBuilder` to return the same content with or without the modifier. On iOS 26 and later it hides the background; on earlier versions it returns `self` and changes nothing.
 
-One important nuance: `#available` guards runtime, not compilation. If you build with an SDK older than iOS 26, the `sharedBackgroundVisibility` symbol doesn't exist and the code won't compile. You need Xcode 26 or later to use this API, even if your app still supports iOS 17 or 18.
-
 ## `UIDesignRequiresCompatibility`: the end of the grace period
 
 All of this leads to the question that usually comes next: what about the global key? During the transition to iOS 26, Apple offered an escape hatch: `UIDesignRequiresCompatibility` in `Info.plist`.
@@ -386,20 +375,13 @@ If someone asks for "no Liquid Glass in the whole app", the right conversation i
 
 ## Checklist before hiding the background
 
-Before we wrap up, a quick checklist. Not everything here is about design: a visual exception can also affect behavior, accessibility, or compatibility.
+Before we wrap up, a quick checklist. Not everything here is about design: a visual exception can also affect accessibility, compatibility, or maintenance.
 
 **Design**
 
 - Is the exception justified by brand or legibility, rather than personal preference?
 - Does the component really need its own background?
 - Does it still feel consistent with the rest of the screen and with the system?
-
-**Behavior**
-
-- Does the item's action still work?
-- Are navigation, the back button, search, and the rest of the toolbar unaffected?
-- Does it work in every state (loading, empty, error, editing) and on iPad or landscape?
-- Is the item still reachable when the bar collapses or scrolls?
 
 **Technical**
 
