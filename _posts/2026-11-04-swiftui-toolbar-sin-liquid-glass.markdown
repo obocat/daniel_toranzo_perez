@@ -13,7 +13,7 @@ reading_time: 7
 
 <div class="lang-es" lang="es" markdown="1">
 
-Liquid Glass es el lenguaje visual que Apple introdujo en iOS 26. Cambia la forma en que se agrupan y se dibujan las barras, los botones y las sheets: los elementos del toolbar comparten un fondo de Liquid Glass que se adapta al contenido que hay detrás. En la mayoría de los casos, adoptarlo es lo correcto.
+Liquid Glass es el lenguaje visual que Apple introdujo en iOS 26. Cambia la forma en que se agrupan y se dibujan las barras de navegación, los botones y las sheets: los elementos del toolbar comparten un fondo de Liquid Glass que se adapta al contenido que hay detrás. En la mayoría de los casos, adoptarlo es lo correcto.
 
 Pero hay excepciones. A veces, por diseño de producto o por identidad de marca, nos piden mantener un componente concreto sin ese fondo: un logo que ya tiene su propia forma, un avatar que necesita un color sólido o un control que debe integrarse en una superficie propia. No hace falta renunciar al sistema entero para conseguirlo. SwiftUI tiene una API pensada precisamente para esta excepción.
 
@@ -185,7 +185,7 @@ Pero la consistencia no es una regla absoluta. Hay excepciones legítimas: una m
 
 <div class="lang-en" lang="en" markdown="1">
 
-Liquid Glass is the visual language Apple introduced in iOS 26. It changes how bars, buttons, and sheets are grouped and drawn: toolbar items share a Liquid Glass background that adapts to the content behind them. For most screens, adopting it is the right call.
+Liquid Glass is the visual language Apple introduced in iOS 26. It changes how navigation bars, buttons, and sheets are grouped and drawn: toolbar items share a Liquid Glass background that adapts to the content behind them. For most screens, adopting it is the right call.
 
 But there are exceptions. Sometimes, because of product design or brand identity, we're asked to keep a specific component without that background: a logo that already has its own shape, an avatar that needs a solid color, or a control that should sit on its own surface. You don't have to abandon the whole system to do it. SwiftUI has an API designed for exactly this exception.
 
