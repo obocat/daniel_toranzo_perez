@@ -21,7 +21,7 @@ Conviene empezar por lo importante: deprecado no significa eliminado. Las apps q
 
 Xcode 27 marca como obsoleto el framework completo de Multipeer Connectivity. No es una API suelta ni una clase concreta: es el framework entero el que queda marcado como obsoleto en iOS 27, iPadOS 27, macOS 27, tvOS 27 y visionOS 27. Apple pide a los desarrolladores que planifiquen la migración a Network framework.
 
-Eso no convierte a las apps existentes en código roto. Si tu app ya está publicada y compila con un SDK anterior, seguirá funcionando. Si compilas con Xcode 27, empezarás a ver avisos de deprecación y tendrás que decidir cuándo abordar el cambio. La pregunta útil no es "¿deja de funcionar hoy?", sino "¿cuánto tiempo más quiero mantener una dependencia que ya no avanza?".
+Eso no convierte a las apps existentes en código que no compila. Si tu app ya está publicada y compila con un SDK anterior, seguirá funcionando. Si compilas con Xcode 27, empezarás a ver avisos de deprecación y tendrás que decidir cuándo abordar el cambio. La pregunta útil no es "¿deja de funcionar hoy?", sino "¿cuánto tiempo más quiero mantener una dependencia que ya no avanza?".
 
 ## Network framework: más piezas, más control
 
@@ -180,7 +180,7 @@ Let's start with the important part: deprecated does not mean removed. Apps that
 
 Xcode 27 deprecates the entire Multipeer Connectivity framework. This is not a single API or a specific class: the whole framework is marked as obsolete across iOS 27, iPadOS 27, macOS 27, tvOS 27, and visionOS 27. Apple asks developers to plan their migration to Network framework.
 
-That does not turn existing apps into broken code. If your app is already shipped and builds with an older SDK, it will keep working. If you build with Xcode 27, you will start seeing deprecation warnings and will have to decide when to tackle the change. The useful question is not "does it stop working today?" but "how long do I want to maintain a dependency that is no longer moving forward?".
+That does not turn existing apps into code that does not compile. If your app is already shipped and builds with an older SDK, it will keep working. If you build with Xcode 27, you will start seeing deprecation warnings and will have to decide when to tackle the change. The useful question is not "does it stop working today?" but "how long do I want to maintain a dependency that is no longer moving forward?".
 
 ## Network framework: more pieces, more control
 
