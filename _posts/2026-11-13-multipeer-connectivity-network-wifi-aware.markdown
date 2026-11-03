@@ -2,8 +2,8 @@
 title: "Multipeer Connectivity está deprecado: qué cambia y cómo pasar a Network"
 title_en: "Multipeer Connectivity is deprecated: what changes and how to move to Network"
 date: 2026-11-13 00:00:00
-description: "Multipeer Connectivity está deprecado en Xcode 27. Qué implica, cómo migrar a Network framework y por qué Wi-Fi Aware necesita el entitlement com.apple.developer.wifi-aware."
-description_en: "Multipeer Connectivity is deprecated in Xcode 27. What it means, how to migrate to Network framework, and why Wi-Fi Aware requires the com.apple.developer.wifi-aware entitlement."
+description: "Multipeer Connectivity está deprecado en Xcode 27. Qué implica y cómo migrar a Network framework."
+description_en: "Multipeer Connectivity is deprecated in Xcode 27. What it means and how to migrate to Network framework."
 lang: es
 tags: [iOS, Network, MultipeerConnectivity, Wi-Fi Aware, Networking]
 categories: blog
@@ -15,7 +15,7 @@ reading_time: 9
 
 Multipeer Connectivity fue durante años la forma más rápida de conectar dos dispositivos Apple sin montar un servidor. Descubría dispositivos cercanos, abría una sesión y permitía enviar datos o recursos con relativamente poco código. Ese atajo tiene fecha: Xcode 27 marca todo el framework como deprecado y Apple recomienda migrar a Network framework.
 
-Conviene empezar por lo importante: deprecado no significa eliminado. Las apps que ya usan Multipeer Connectivity siguen funcionando y el framework no desaparece de la noche a la mañana. Lo que cambia es su estatus: deja de ser el camino recomendado, no recibirá nuevas mejoras y cada vez será más difícil justificar una inversión en él. Apple lo dice de forma explícita en la nota técnica TN3213.
+Conviene empezar por lo importante: deprecado no significa eliminado. Las apps que ya usan Multipeer Connectivity siguen funcionando y el framework no desaparece de la noche a la mañana. Lo que cambia es su estatus: deja de ser el camino recomendado, no recibirá nuevas mejoras y cada vez será más difícil justificar una inversión en él. Apple lo dice de forma explícita en la nota técnica [TN3213](https://developer.apple.com/documentation/technotes/tn3213-moving-from-multipeer-connectivity-to-network-framework).
 
 ## Qué ha cambiado exactamente
 
@@ -31,7 +31,6 @@ Multipeer Connectivity resolvía tres problemas a la vez: descubrir dispositivos
 - `NetworkListener` acepta conexiones entrantes.
 - `NetworkConnection` abre y gestiona conexiones salientes.
 - `TCP`, `TLS` y `QUIC` definen el transporte y la seguridad.
-- `TLV` o `Coder` añaden framing para que los mensajes no se mezclen.
 
 La API nueva de iOS 26 se escribe con `async/await` y builders. La API clásica de Network, con `NWListener`, `NWConnection` y `NWBrowser`, sigue existiendo y permite hacer lo mismo, pero con una mecánica distinta. Para una migración grande, la nota técnica de Apple recomienda la API nueva.
 
@@ -82,7 +81,7 @@ La segunda es el rendimiento y el control. QUIC permite varios streams fiables y
 
 La tercera es la arquitectura. Multipeer Connectivity usaba una red completamente conectada: todos los dispositivos hablaban con todos. Network framework soporta tanto cliente-servidor como malla completa. Para muchas apps, un servidor claro y varios clientes es más fácil de mantener, de depurar y de razonar que una sesión simétrica.
 
-La cuarta es la concurrencia. La API nueva se apoya en `async/await` y en la concurrencia estructurada de Swift. Puedes activar el modo de lenguaje Swift 6 y dejar que el compilador detecte carreras de datos. Multipeer Connectivity trabajaba con delegates y colas internas, lo que hacía más fácil acabar con callbacks fuera de orden o con estado compartido difícil de seguir.
+La cuarta es la concurrencia. La API nueva se apoya en `async/await` y en la concurrencia estructurada de Swift. Multipeer Connectivity trabajaba con delegates y colas internas, lo que hacía más fácil acabar con callbacks fuera de orden o con estado compartido difícil de seguir.
 
 La quinta es la privacidad. En lugar de `MCPeerID`, puedes generar un `UUID` como identificador, decidir si lo persistes y rotarlo cuando tenga sentido. También puedes controlar el nombre del servicio Bonjour y los metadatos que publicas en el TXT record. Eso te da más margen para no exponer información estable sobre el dispositivo.
 
@@ -148,13 +147,13 @@ No todo son ventajas. Network framework es más bajo nivel y eso significa más 
 
 También desaparece la comodidad de `MCSession`. Ahora eres tú quien mantiene el mapa de conexiones, quien decide qué hacer con una conexión duplicada y quien cierra las que ya no necesita. Esa responsabilidad es una oportunidad para simplificar la arquitectura, pero no es gratis.
 
-Y está el coste operativo del entitlement. Wi-Fi Aware necesita la capacidad, la declaración de servicios y el emparejamiento previo. Si el perfil no está bien configurado, la API no arranca. Si además usas QUIC con Wi-Fi Aware, ten en cuenta que esa combinación no está soportada antes de iOS 27; en iOS 26 tendrás que elegir otra combinación de protocolos.
+Y está el coste operativo del entitlement. Wi-Fi Aware necesita la capacidad, la declaración de servicios y el emparejamiento previo. Si además usas QUIC con Wi-Fi Aware, ten en cuenta que esa combinación no está soportada antes de iOS 27; en iOS 26 tendrás que elegir otra combinación de protocolos.
 
 ## Conclusión
 
 Multipeer Connectivity no desaparece de la noche a la mañana, pero Xcode 27 ya ha puesto el reloj a correr. Si tienes una app en producción que depende de él, el trabajo real no es sustituir una clase por otra: es repensar descubrimiento, conexión, seguridad y transporte.
 
-Mi recomendación es separar la decisión en dos. Primero, decide si necesitas Wi-Fi Aware o si te basta Network sobre Bonjour y TCP/UDP. Después, migra por capas: descubre servicios, abre una conexión, añade TLS y, por último, define el protocolo de mensajes. Si dejas el entitlement y el emparejamiento para el final, te encontrarás con una migración que funciona en el simulador pero no en un dispositivo real.
+Mi recomendación es separar la decisión en dos. Primero, decide si necesitas Wi-Fi Aware o si te basta Network sobre Bonjour y TCP/UDP. Después, migra por capas: descubre servicios, abre una conexión, añade TLS y, por último, define el protocolo de mensajes.
 
 La deprecación es una molestia, sí. También es el momento adecuado para quitar una capa que ya no evoluciona y quedarte con una base más explícita, más segura y más fácil de probar.
 
@@ -175,7 +174,7 @@ La deprecación es una molestia, sí. También es el momento adecuado para quita
 
 Multipeer Connectivity was for years the fastest way to connect two Apple devices without running a server. It discovered nearby devices, opened a session, and let you send data or resources with relatively little code. That shortcut now has an expiration date: Xcode 27 marks the entire framework as deprecated, and Apple recommends migrating to Network framework.
 
-Let's start with the important part: deprecated does not mean removed. Apps that already use Multipeer Connectivity keep working, and the framework will not disappear overnight. What changes is its status: it is no longer the recommended path, it will not receive new features, and it will become harder to justify investing in it. Apple says this explicitly in technote TN3213.
+Let's start with the important part: deprecated does not mean removed. Apps that already use Multipeer Connectivity keep working, and the framework will not disappear overnight. What changes is its status: it is no longer the recommended path, it will not receive new features, and it will become harder to justify investing in it. Apple says this explicitly in technote [TN3213](https://developer.apple.com/documentation/technotes/tn3213-moving-from-multipeer-connectivity-to-network-framework).
 
 ## What exactly changed
 
@@ -191,7 +190,6 @@ Multipeer Connectivity solved three problems at once: discovering devices, creat
 - `NetworkListener` accepts incoming connections.
 - `NetworkConnection` opens and manages outgoing connections.
 - `TCP`, `TLS`, and `QUIC` define the transport and security.
-- `TLV` or `Coder` add framing so messages do not get mixed up.
 
 The new iOS 26 API uses `async/await` and builders. The classic Network API, with `NWListener`, `NWConnection`, and `NWBrowser`, still exists and can do the same things, but with different mechanics. For a large migration, Apple's technote recommends the new API.
 
@@ -242,7 +240,7 @@ The second is performance and control. QUIC supports multiple reliable streams a
 
 The third is architecture. Multipeer Connectivity used a fully connected network: every peer talked to every other peer. Network framework supports both client-server and full mesh. For many apps, a clear server and several clients are easier to maintain, debug, and reason about than a symmetric session.
 
-The fourth is concurrency. The new API relies on `async/await` and Swift's structured concurrency. You can enable Swift 6 language mode and let the compiler catch data races. Multipeer Connectivity worked with delegates and internal queues, which made it easy to end up with out-of-order callbacks or hard-to-follow shared state.
+The fourth is concurrency. The new API relies on `async/await` and Swift's structured concurrency. Multipeer Connectivity worked with delegates and internal queues, which made it easy to end up with out-of-order callbacks or hard-to-follow shared state.
 
 The fifth is privacy. Instead of `MCPeerID`, you can generate a `UUID` as an identifier, decide whether to persist it, and rotate it when it makes sense. You can also control the Bonjour service name and the metadata you publish in the TXT record. That gives you more room to avoid exposing stable information about the device.
 
@@ -308,13 +306,13 @@ It is not all advantages. Network framework is lower level, which means more cod
 
 The convenience of `MCSession` is also gone. You now own the connection map, decide what to do with a duplicate connection, and close the ones you no longer need. That responsibility is an opportunity to simplify the architecture, but it is not free.
 
-Then there is the operational cost of the entitlement. Wi-Fi Aware needs the capability, the service declarations, and prior pairing. If the profile is not configured correctly, the API will not start. And if you use QUIC with Wi-Fi Aware, note that the combination is not supported before iOS 27; on iOS 26 you will need a different protocol combination.
+Then there is the operational cost of the entitlement. Wi-Fi Aware needs the capability, the service declarations, and prior pairing. And if you use QUIC with Wi-Fi Aware, note that the combination is not supported before iOS 27; on iOS 26 you will need a different protocol combination.
 
 ## Conclusion
 
 Multipeer Connectivity will not disappear overnight, but Xcode 27 has already started the clock. If you have a production app that depends on it, the real work is not replacing one class with another: it is rethinking discovery, connection, security, and transport.
 
-My recommendation is to split the decision in two. First, decide whether you need Wi-Fi Aware or whether Network over Bonjour and TCP/UDP is enough. Then migrate in layers: discover services, open a connection, add TLS, and finally define the message protocol. If you leave the entitlement and pairing for the end, you will end up with a migration that works in the simulator but not on a real device.
+My recommendation is to split the decision in two. First, decide whether you need Wi-Fi Aware or whether Network over Bonjour and TCP/UDP is enough. Then migrate in layers: discover services, open a connection, add TLS, and finally define the message protocol.
 
 The deprecation is annoying, yes. It is also the right time to remove a layer that no longer evolves and keep a foundation that is more explicit, more secure, and easier to test.
 
