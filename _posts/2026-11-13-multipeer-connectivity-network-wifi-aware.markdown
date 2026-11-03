@@ -147,7 +147,7 @@ No todo son ventajas. Network framework es más bajo nivel y eso significa más 
 
 También desaparece la comodidad de `MCSession`. Ahora eres tú quien mantiene el mapa de conexiones, quien decide qué hacer con una conexión duplicada y quien cierra las que ya no necesita. Esa responsabilidad es una oportunidad para simplificar la arquitectura, pero no es gratis.
 
-Y está el coste operativo del entitlement. Wi-Fi Aware necesita la capacidad, la declaración de servicios y el emparejamiento previo. Si además usas QUIC con Wi-Fi Aware, ten en cuenta que esa combinación no está soportada antes de iOS 27; en iOS 26 tendrás que elegir otra combinación de protocolos.
+Wi-Fi Aware necesita la capacidad, la declaración de servicios y el emparejamiento previo. Si además usas QUIC con Wi-Fi Aware, ten en cuenta que esa combinación no está soportada antes de iOS 27; en iOS 26 tendrás que elegir otra combinación de protocolos.
 
 ## Conclusión
 
@@ -306,7 +306,7 @@ It is not all advantages. Network framework is lower level, which means more cod
 
 The convenience of `MCSession` is also gone. You now own the connection map, decide what to do with a duplicate connection, and close the ones you no longer need. That responsibility is an opportunity to simplify the architecture, but it is not free.
 
-Then there is the operational cost of the entitlement. Wi-Fi Aware needs the capability, the service declarations, and prior pairing. And if you use QUIC with Wi-Fi Aware, note that the combination is not supported before iOS 27; on iOS 26 you will need a different protocol combination.
+Wi-Fi Aware needs the capability, the service declarations, and prior pairing. And if you use QUIC with Wi-Fi Aware, note that the combination is not supported before iOS 27; on iOS 26 you will need a different protocol combination.
 
 ## Conclusion
 
