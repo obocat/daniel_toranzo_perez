@@ -108,7 +108,7 @@ func startListener() async throws {
 }
 ```
 
-En el otro extremo, el navegador descubre servicios y devuelve endpoints:
+En el otro extremo, se descubren servicios y se devuelven endpoints:
 
 ```swift
 func browse() async throws {
@@ -267,7 +267,7 @@ func startListener() async throws {
 }
 ```
 
-On the other side, the browser discovers services and returns endpoints:
+On the other side, services are discovered and endpoints are returned:
 
 ```swift
 func browse() async throws {
