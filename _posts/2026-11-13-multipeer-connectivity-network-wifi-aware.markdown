@@ -69,7 +69,7 @@ Además, hay que declarar los servicios en el `Info.plist` con la clave `WiFiAwa
 
 El nombre del servicio tiene reglas estrictas: hasta 15 caracteres, solo letras, números y guiones, sin empezar ni terminar con guion, y con el sufijo `_tcp` o `_udp`. Si el nombre no es válido, la app puede fallar al arrancar. No es un detalle que convenga dejar para el final.
 
-Tampoco es un permiso de runtime que el usuario concede con un diálogo. Es una capacidad de aprovisionamiento: tiene que estar en el perfil de la app. Si tu cuenta no la tiene disponible, tendrás que solicitarla a Apple. Y, antes de conectar, hace falta emparejar los dispositivos con `AccessorySetupKit` o `DeviceDiscoveryUI`.
+Tampoco es un permiso de runtime que el usuario concede con un diálogo. Es una capacidad de aprovisionamiento: tiene que estar en el perfil de la app. Si tu cuenta no la tiene disponible, tendrás que solicitarla a Apple.
 
 Wi-Fi Aware está disponible en iOS 26 y iPadOS 26 en modelos compatibles, como iPhone 12 y posteriores o iPad de décima generación y posteriores. Si tu app necesita funcionar en dispositivos más antiguos, tendrás que mantener una ruta alternativa con Network sobre la red local.
 
@@ -228,7 +228,7 @@ You also need to declare the services in `Info.plist` under the `WiFiAwareServic
 
 Service names have strict rules: up to 15 characters, only letters, numbers, and hyphens, no leading or trailing hyphen, and a `_tcp` or `_udp` suffix. If the name is invalid, the app can crash at launch. This is not a detail to leave for the end.
 
-It is also not a runtime permission that the user grants in a dialog. It is a provisioning capability: it has to be in the app's profile. If your account does not have it available, you will need to request it from Apple. And before connecting, devices need to be paired using `AccessorySetupKit` or `DeviceDiscoveryUI`.
+It is also not a runtime permission that the user grants in a dialog. It is a provisioning capability: it has to be in the app's profile. If your account does not have it available, you will need to request it from Apple.
 
 Wi-Fi Aware is available in iOS 26 and iPadOS 26 on supported models, such as iPhone 12 and later or iPad (10th generation) and later. If your app needs to support older devices, you will need to keep an alternative path using Network over the local network.
 
