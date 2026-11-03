@@ -15,7 +15,7 @@ reading_time: 9
 
 Multipeer Connectivity fue durante años la forma más rápida de conectar dos dispositivos Apple sin montar un servidor. Descubría dispositivos cercanos, abría una sesión y permitía enviar datos o recursos con relativamente poco código. Ese atajo tiene fecha: Xcode 27 marca todo el framework como deprecado y Apple recomienda migrar a Network framework.
 
-Conviene empezar por lo importante: deprecado no significa eliminado. Las apps que ya usan Multipeer Connectivity siguen funcionando y el framework no desaparece de la noche a la mañana. Lo que cambia es su estatus: deja de ser el camino recomendado, no recibirá nuevas mejoras y cada vez será más difícil justificar una inversión en él. Apple lo dice de forma explícita en la nota técnica [TN3213](https://developer.apple.com/documentation/technotes/tn3213-moving-from-multipeer-connectivity-to-network-framework).
+Conviene empezar por lo importante: deprecado no significa eliminado. Las apps que ya usan Multipeer Connectivity siguen funcionando y el framework no desaparece de la noche a la mañana. Lo que cambia es su estatus: deja de ser el camino recomendado, no recibirá nuevas mejoras y cada vez será más difícil justificar usarlo. Apple lo dice de forma explícita en la nota técnica [TN3213](https://developer.apple.com/documentation/technotes/tn3213-moving-from-multipeer-connectivity-to-network-framework).
 
 ## Qué ha cambiado exactamente
 
@@ -174,7 +174,7 @@ La deprecación es una molestia, sí. También es el momento adecuado para quita
 
 Multipeer Connectivity was for years the fastest way to connect two Apple devices without running a server. It discovered nearby devices, opened a session, and let you send data or resources with relatively little code. That shortcut now has an expiration date: Xcode 27 marks the entire framework as deprecated, and Apple recommends migrating to Network framework.
 
-Let's start with the important part: deprecated does not mean removed. Apps that already use Multipeer Connectivity keep working, and the framework will not disappear overnight. What changes is its status: it is no longer the recommended path, it will not receive new features, and it will become harder to justify investing in it. Apple says this explicitly in technote [TN3213](https://developer.apple.com/documentation/technotes/tn3213-moving-from-multipeer-connectivity-to-network-framework).
+Let's start with the important part: deprecated does not mean removed. Apps that already use Multipeer Connectivity keep working, and the framework will not disappear overnight. What changes is its status: it is no longer the recommended path, it will not receive new features, and it will become harder to justify using it. Apple says this explicitly in technote [TN3213](https://developer.apple.com/documentation/technotes/tn3213-moving-from-multipeer-connectivity-to-network-framework).
 
 ## What exactly changed
 
