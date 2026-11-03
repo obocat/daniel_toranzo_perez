@@ -139,7 +139,7 @@ func connect(to endpoint: NWEndpoint) async throws {
 
 El resto del trabajo es el que Multipeer hacía por ti: identificar dispositivos, eliminar conexiones duplicadas, definir el framing de los mensajes y gestionarlos cuando envías datos grandes. La nota técnica de Apple entra en cada uno de esos puntos.
 
-Si quieres usar el peer-to-peer Wi-Fi de Apple sin pasar por Wi-Fi Aware, Network lo activa con `.peerToPeerIncluded(true)`. Apple advierte que ese modo puede consumir más batería y afectar al rendimiento de la red, así que conviene apagarlo en cuanto termines de descubrir o conectar. Para uso nuevo, Wi-Fi Aware suele ser la opción más recomendable.
+Si quieres usar el peer-to-peer Wi-Fi de Apple sin pasar por Wi-Fi Aware, Network lo activa con `.peerToPeerIncluded(true)`. Apple advierte que ese modo puede consumir más batería y afectar al rendimiento de la red, así que conviene apagarlo en cuanto termines de descubrir o conectar.
 
 ## Lo que cuesta la migración
 
@@ -298,7 +298,7 @@ func connect(to endpoint: NWEndpoint) async throws {
 
 The rest is the work Multipeer used to do for you: identifying devices, removing duplicate connections, defining message framing, and managing them when you send large payloads. Apple's technote covers each of those points.
 
-If you want Apple's peer-to-peer Wi-Fi without going through Wi-Fi Aware, Network enables it with `.peerToPeerIncluded(true)`. Apple warns that this mode can use more battery and affect network performance, so it should be turned off as soon as discovery or connection is done. For new work, Wi-Fi Aware is usually the better option.
+If you want Apple's peer-to-peer Wi-Fi without going through Wi-Fi Aware, Network enables it with `.peerToPeerIncluded(true)`. Apple warns that this mode can use more battery and affect network performance, so it should be turned off as soon as discovery or connection is done.
 
 ## What the migration costs
 
