@@ -1,0 +1,356 @@
+---
+title: "SwiftUI: quitar Liquid Glass de un toolbar (sin renunciar al sistema)"
+title_en: "SwiftUI: removing Liquid Glass from a toolbar (without leaving the system)"
+date: 2026-11-04 00:00:00
+description: "Cómo usar sharedBackgroundVisibility(.hidden) para mantener un grupo de la barra de navegación sin Liquid Glass, y por qué UIDesignRequiresCompatibility ya no sirve."
+description_en: "How to use sharedBackgroundVisibility(.hidden) to keep a navigation bar group without Liquid Glass, and why UIDesignRequiresCompatibility no longer works."
+lang: es
+tags: [iOS, SwiftUI, Liquid Glass, Toolbar]
+categories: blog
+layout: blog
+reading_time: 7
+---
+
+<div class="lang-es" lang="es" markdown="1">
+
+Liquid Glass es el lenguaje visual que Apple introdujo en iOS 26. Cambia la forma en que se agrupan y se dibujan las barras de navegación, los botones y las sheets: los elementos del toolbar comparten un fondo de Liquid Glass que se adapta al contenido que hay detrás. En la mayoría de los casos, adoptarlo es lo correcto.
+
+Pero hay excepciones. A veces, por diseño de producto o por identidad de marca, nos piden mantener un componente concreto sin ese fondo: un logo que ya tiene su propia forma, un avatar que necesita un color sólido o un control que debe integrarse en una superficie propia. No hace falta renunciar al sistema entero para conseguirlo. SwiftUI tiene una API pensada precisamente para esta excepción.
+
+Si estás preparando la app para compilar con el SDK de iOS 27 y para los nuevos dispositivos como el iPhone Duo, el primer paso es resolver la adaptación de layout y cámara; lo conté en [Adaptar una app al iPhone Duo: layouts fáciles, cámara difícil](/blog/2026/10/29/iphone-duo-layout-camara/). Una vez resuelta esa base, tiene más sentido afinar excepciones como la de este artículo.
+
+## La API: `sharedBackgroundVisibility(.hidden)`
+
+El modificador se aplica al contenido del toolbar, no a la vista que hay dentro. Este es el ejemplo mínimo:
+
+```swift
+import SwiftUI
+
+struct ToolbarWithoutGlassView: View {
+    var body: some View {
+        NavigationStack {
+            Text("Test")
+                .toolbar {
+                    ToolbarItemGroup(placement: .topBarLeading) {
+                        Button("Test") {
+                            print("Tapped")
+                        }
+                    }
+                    .sharedBackgroundVisibility(.hidden)
+                }
+        }
+    }
+}
+```
+
+Lo importante es dónde va: después del cierre de `ToolbarItemGroup`, no dentro del `Button`. `sharedBackgroundVisibility` es una API de `ToolbarContent`; si la aplicas a una `View`, el compilador no la encontrará. El ejemplo da por hecho un target de iOS 26 o superior; si tu app soporta versiones anteriores, usa la extensión de compatibilidad que veremos más adelante.
+
+## Qué hace exactamente
+
+Antes de usarlo, merece la pena entender qué cambia y qué no. El nombre describe el comportamiento: controla la visibilidad del fondo que comparten los elementos del toolbar. Al pasarle `.hidden`, el sistema deja de dibujar ese fondo compartido y coloca el elemento en su propio grupo. No es un `background(.clear)` ni un juego de transparencias: es una instrucción al sistema para que no aplique el efecto de Liquid Glass a ese contenido.
+
+Con un solo elemento, el resultado es ese elemento sin la cápsula compartida; con varios, el grupo entero deja de usar el fondo común. Los botones siguen siendo interactivos: lo que cambia es el tratamiento visual del contenedor, no su comportamiento. El resto de elementos del toolbar conserva el suyo.
+
+## Un caso real: una marca que ya tiene su propia identidad
+
+Veamos un caso típico. Imagina el logo de una marca en la esquina superior izquierda. Si lo metes en una cápsula de Liquid Glass, el sistema añade una capa que compite con el logo y puede hacer que parezca un botón genérico. Ocultar el fondo compartido permite que el logo se lea como contenido de la barra.
+
+```swift
+import SwiftUI
+
+struct BrandToolbarView: View {
+    var body: some View {
+        NavigationStack {
+            Text("Home")
+                .toolbar {
+                    ToolbarItemGroup(placement: .topBarLeading) {
+                        Button {
+                            print("Brand tapped")
+                        } label: {
+                            HStack(spacing: 8) {
+                                Image(systemName: "sparkles")
+                                    .foregroundStyle(.tint)
+
+                                Text("Acme")
+                                    .font(.headline)
+                            }
+                        }
+                        .accessibilityLabel("Acme")
+                    }
+                    .sharedBackgroundVisibility(.hidden)
+                }
+        }
+    }
+}
+```
+
+Si el logo no es interactivo, no lo escribas como un `Button` solo para que parezca parte del toolbar. Un `HStack` normal, con una etiqueta de accesibilidad adecuada, suele ser más coherente. Si lo es, mantén el área táctil y el foco de teclado que tendría cualquier otro botón.
+
+## Qué se pierde al quitar el fondo de Liquid Glass
+
+Ahora bien, quitar Liquid Glass tiene un coste. No es solo decoración: el fondo de Liquid Glass separa el contenido del toolbar de lo que hay detrás y ayuda a mantener la legibilidad cuando la pantalla tiene fotos, mapas o colores vivos. Al ocultarlo, esa responsabilidad recae ahora en tu diseño.
+
+Antes de dar por buena una excepción, comprueba:
+
+- El contraste en modo claro y oscuro.
+- El contenido que queda detrás del elemento, especialmente al hacer scroll.
+- Los ajustes Reducir transparencia y Aumentar contraste.
+- El tamaño de texto dinámico (Dynamic Type): el texto no debería romper el grupo.
+- El área táctil, que debe seguir siendo cómoda.
+- VoiceOver: si el elemento es un botón, necesita una etiqueta clara; si es una marca, no debería anunciarse como una acción.
+
+Ocultar el fondo es fácil. Lo difícil es que el resultado siga siendo claro, accesible y coherente con el resto de la pantalla.
+
+## Compatibilidad con versiones anteriores
+
+`sharedBackgroundVisibility` está disponible a partir de iOS 26.0, y también en iPadOS 26 y macOS 26. El ejemplo usa posiciones de la barra de navegación en iOS. Si tu app da soporte a versiones anteriores, necesitas compilar con el SDK de iOS 26 o posterior y proteger la ejecución con `#available`.
+
+Una extensión reutilizable evita duplicar el contenido del toolbar:
+
+```swift
+import SwiftUI
+
+extension ToolbarContent {
+    @ToolbarContentBuilder
+    func hideSharedGlassIfAvailable() -> some ToolbarContent {
+        if #available(iOS 26.0, *) {
+            sharedBackgroundVisibility(.hidden)
+        } else {
+            self
+        }
+    }
+}
+
+struct CompatibleToolbarView: View {
+    var body: some View {
+        NavigationStack {
+            Text("Test")
+                .toolbar {
+                    ToolbarItemGroup(placement: .topBarLeading) {
+                        Button("Test") {
+                            print("Tapped")
+                        }
+                    }
+                    .hideSharedGlassIfAvailable()
+                }
+        }
+    }
+}
+
+#Preview {
+    CompatibleToolbarView()
+}
+```
+
+La extensión aprovecha `ToolbarContentBuilder` para devolver el mismo contenido con o sin el modificador. En iOS 26 y posteriores oculta el fondo; en versiones anteriores devuelve `self` y no cambia nada.
+
+## `UIDesignRequiresCompatibility`: el final de la prórroga
+
+Todo esto nos lleva a la pregunta que suele aparecer después: ¿y la clave global? Durante la transición a iOS 26, Apple ofreció una vía de escape: `UIDesignRequiresCompatibility` en `Info.plist`.
+
+```xml
+<key>UIDesignRequiresCompatibility</key>
+<true/>
+```
+
+Con `YES`, la app se ejecuta en modo de compatibilidad y conserva el aspecto anterior. Fue útil para ganar tiempo, pero nunca fue una estrategia de diseño: es una prórroga para adaptar la app, no una forma de mantener dos lenguajes visuales indefinidamente.
+
+Según la documentación de Apple, el sistema ignora esta clave cuando compilas con el SDK de iOS 27 o posterior. Si tu app se compila con el SDK de iOS 27, `UIDesignRequiresCompatibility` ya no te devuelve el diseño anterior.
+
+Hay un matiz que no conviene pasar por alto: si sigues compilando con el SDK de iOS 26, la clave puede tener efecto en iOS 26. Pero eso significa quedarse en un SDK antiguo, con las consecuencias de mantenimiento y compatibilidad que eso implica. No es una solución a largo plazo.
+
+Y hay una fecha que convierte ese matiz en algo más urgente. [Apple ha anunciado](https://developer.apple.com/news/?id=k1mtkt1k) que, a partir de abril de 2027, las apps de iOS y iPadOS que se suban a App Store Connect deberán compilarse con el SDK de iOS 27 o posterior. No es una fecha en la que iOS deje de leer la clave en apps ya instaladas, sino una fecha de caducidad práctica: en cuanto actualices el SDK para publicar, `UIDesignRequiresCompatibility` dejará de tener efecto. Las builds ya publicadas no cambian por sí solas, pero las actualizaciones tendrán que asumir el nuevo diseño.
+
+| Necesidad | Herramienta |
+| --- | --- |
+| Ocultar Liquid Glass de un elemento o grupo del toolbar | `.sharedBackgroundVisibility(.hidden)` en iOS 26+ |
+| Separar grupos manteniendo Liquid Glass | `ToolbarSpacer` en iOS 26+ |
+| Modo de compatibilidad para toda la app | `UIDesignRequiresCompatibility` (ignorado con el SDK de iOS 27) |
+
+## Mi opinión: excepciones, no una norma
+
+Con todo esto sobre la mesa, mi postura es clara: la consistencia con el sistema debería ser la opción por defecto. Los usuarios aprenden una vez cómo se ven y se comportan los controles de iOS, y Liquid Glass forma parte de ese lenguaje visual. Cambiarlo en un componente aislado puede hacer que el usuario dude si eso es un botón, un elemento decorativo o contenido.
+
+Pero la consistencia no es una regla absoluta. Hay excepciones legítimas: una marca que ya tiene su propio lenguaje, un control que necesita un fondo propio para ser legible o una superficie que no debe competir con el Liquid Glass del sistema. Lo importante es que sea una excepción deliberada, documentada y probada, no una forma de evitar adaptar la app.
+
+## Referencias
+
+- [`sharedBackgroundVisibility(_:)`](https://developer.apple.com/documentation/swiftui/toolbarcontent/sharedbackgroundvisibility%28_%3A%29)
+- [UIDesignRequiresCompatibility](https://developer.apple.com/documentation/bundleresources/information-property-list/uidesignrequirescompatibility)
+- [ToolbarItemPlacement.topBarLeading](https://developer.apple.com/documentation/swiftui/toolbaritemplacement/topbarleading)
+- [Build a SwiftUI app with the new design (WWDC25)](https://developer.apple.com/videos/play/wwdc2025/323/)
+- [When toolbar items share a glass background in iOS 26](https://sarunw.com/posts/swiftui-toolbar-item-grouping-ios-26/)
+
+</div>
+
+<div class="lang-en" lang="en" markdown="1">
+
+Liquid Glass is the visual language Apple introduced in iOS 26. It changes how navigation bars, buttons, and sheets are grouped and drawn: toolbar items share a Liquid Glass background that adapts to the content behind them. For most screens, adopting it is the right call.
+
+But there are exceptions. Sometimes, because of product design or brand identity, we're asked to keep a specific component without that background: a logo that already has its own shape, an avatar that needs a solid color, or a control that should sit on its own surface. You don't have to abandon the whole system to do it. SwiftUI has an API designed for exactly this exception.
+
+If you're preparing the app to build with the iOS 27 SDK and for new devices such as the iPhone Duo, the first step is to handle the layout and camera adaptation; I covered that in [Adapting an app to iPhone Duo: easy layouts, hard camera](/blog/2026/10/29/iphone-duo-layout-camara/). Once that foundation is in place, it makes more sense to fine-tune exceptions like the one in this article.
+
+## The API: `sharedBackgroundVisibility(.hidden)`
+
+The modifier applies to the toolbar content, not to the view inside it. Here is the minimal example:
+
+```swift
+import SwiftUI
+
+struct ToolbarWithoutGlassView: View {
+    var body: some View {
+        NavigationStack {
+            Text("Test")
+                .toolbar {
+                    ToolbarItemGroup(placement: .topBarLeading) {
+                        Button("Test") {
+                            print("Tapped")
+                        }
+                    }
+                    .sharedBackgroundVisibility(.hidden)
+                }
+        }
+    }
+}
+```
+
+What matters is where it goes: after the closing brace of `ToolbarItemGroup`, not inside the `Button`. `sharedBackgroundVisibility` is a `ToolbarContent` API; if you apply it to a `View`, the compiler won't find it. The example assumes an iOS 26 or later target; if your app supports earlier versions, use the compatibility extension later in the article.
+
+## What it actually does
+
+Before using it, it's worth understanding what changes and what doesn't. The name describes the behavior: it controls the visibility of the background shared by toolbar items. Passing `.hidden` tells the system to stop drawing that shared background and places the item in its own grouping. It is not `background(.clear)` or a transparency trick: it is an instruction to the system not to apply the Liquid Glass effect to that content.
+
+With a single item, the result is that item without the shared capsule; with several, the whole group stops using the shared background. The buttons remain interactive: what changes is the visual treatment of the container, not its behavior. The rest of the toolbar items keep theirs.
+
+## A real case: a brand that already has its own identity
+
+Let's look at a common case. Imagine a brand logo in the top-leading corner. If you put it inside a Liquid Glass capsule, the system adds a layer that competes with the logo and can make it look like a generic button. Hiding the shared background lets the logo read as toolbar content.
+
+```swift
+import SwiftUI
+
+struct BrandToolbarView: View {
+    var body: some View {
+        NavigationStack {
+            Text("Home")
+                .toolbar {
+                    ToolbarItemGroup(placement: .topBarLeading) {
+                        Button {
+                            print("Brand tapped")
+                        } label: {
+                            HStack(spacing: 8) {
+                                Image(systemName: "sparkles")
+                                    .foregroundStyle(.tint)
+
+                                Text("Acme")
+                                    .font(.headline)
+                            }
+                        }
+                        .accessibilityLabel("Acme")
+                    }
+                    .sharedBackgroundVisibility(.hidden)
+                }
+        }
+    }
+}
+```
+
+If the logo isn't interactive, don't write it as a `Button` just to make it look at home in the toolbar. A plain `HStack` with a proper accessibility label usually fits better. If it is interactive, keep the hit target and keyboard focus any other button would have.
+
+## What you lose when you remove the Liquid Glass background
+
+Of course, removing it comes at a cost. Liquid Glass is not just decoration: its background separates toolbar content from what's behind it and helps keep text legible when the screen has photos, maps, or vivid colors. When you hide it, that responsibility becomes part of your design.
+
+Before accepting an exception, check:
+
+- Contrast in light and dark mode.
+- The content behind the item, especially while scrolling.
+- The Reduce Transparency and Increase Contrast settings.
+- Dynamic Type: text shouldn't break the group.
+- The hit target, which should remain comfortable.
+- VoiceOver: if the item is a button, it needs a clear label; if it's a brand mark, it shouldn't be announced as an action.
+
+Hiding the background is easy. The hard part is keeping the result clear, accessible, and consistent with the rest of the screen.
+
+## Backward compatibility
+
+`sharedBackgroundVisibility` is available starting in iOS 26.0, as well as iPadOS 26 and macOS 26. The example uses iOS navigation bar placements. If your app supports earlier versions, you need to build with the iOS 26 SDK or later and guard runtime execution with `#available`.
+
+A reusable extension avoids duplicating the toolbar content:
+
+```swift
+import SwiftUI
+
+extension ToolbarContent {
+    @ToolbarContentBuilder
+    func hideSharedGlassIfAvailable() -> some ToolbarContent {
+        if #available(iOS 26.0, *) {
+            sharedBackgroundVisibility(.hidden)
+        } else {
+            self
+        }
+    }
+}
+
+struct CompatibleToolbarView: View {
+    var body: some View {
+        NavigationStack {
+            Text("Test")
+                .toolbar {
+                    ToolbarItemGroup(placement: .topBarLeading) {
+                        Button("Test") {
+                            print("Tapped")
+                        }
+                    }
+                    .hideSharedGlassIfAvailable()
+                }
+        }
+    }
+}
+
+#Preview {
+    CompatibleToolbarView()
+}
+```
+
+The extension uses `ToolbarContentBuilder` to return the same content with or without the modifier. On iOS 26 and later it hides the background; on earlier versions it returns `self` and changes nothing.
+
+## `UIDesignRequiresCompatibility`: the end of the grace period
+
+All of this leads to the question that usually comes next: what about the global key? During the transition to iOS 26, Apple offered an escape hatch: `UIDesignRequiresCompatibility` in `Info.plist`.
+
+```xml
+<key>UIDesignRequiresCompatibility</key>
+<true/>
+```
+
+With `YES`, the app runs in compatibility mode and keeps the previous look. It was useful for buying time, but it was never a design strategy: it is a grace period for adapting the app, not a way to maintain two visual languages indefinitely.
+
+According to Apple's documentation, the system ignores this key when you build with the iOS 27 SDK or later. If your app is built with the iOS 27 SDK, `UIDesignRequiresCompatibility` no longer brings the old design back.
+
+There is a nuance worth keeping in mind: if you still build with the iOS 26 SDK, the key can have an effect on iOS 26. But that means staying on an old SDK, with the maintenance and compatibility consequences that implies. It is not a long-term solution.
+
+And there is a date that makes that nuance more urgent. [Apple has announced](https://developer.apple.com/news/?id=k1mtkt1k) that, starting in April 2027, iOS and iPadOS apps uploaded to App Store Connect must be built with the iOS 27 SDK or later. This is not a date when iOS stops reading the key in already-installed apps; it is a practical expiration date: as soon as you update the SDK to ship, `UIDesignRequiresCompatibility` stops having any effect. Builds already published do not change on their own, but updates will have to embrace the new design.
+
+| Need | Tool |
+| --- | --- |
+| Hide Liquid Glass on a toolbar item or group | `.sharedBackgroundVisibility(.hidden)` on iOS 26+ |
+| Separate groups while keeping Liquid Glass | `ToolbarSpacer` on iOS 26+ |
+| Compatibility mode for the whole app | `UIDesignRequiresCompatibility` (ignored with the iOS 27 SDK) |
+
+## My take: exceptions, not the norm
+
+With all this on the table, my position is clear: consistency with the system should be the default. Users learn once how iOS controls look and behave, and Liquid Glass is part of that visual language. Changing it in one isolated component can make people wonder whether it is a button, an ornament, or content.
+
+But consistency isn't an absolute rule. There are legitimate exceptions: a brand that already has its own language, a control that needs its own background to be legible, or a surface that shouldn't compete with the system's Liquid Glass. What matters is that it should be a deliberate, documented, and tested exception, not a way to avoid adapting the app.
+
+## References
+
+- [`sharedBackgroundVisibility(_:)`](https://developer.apple.com/documentation/swiftui/toolbarcontent/sharedbackgroundvisibility%28_%3A%29)
+- [UIDesignRequiresCompatibility](https://developer.apple.com/documentation/bundleresources/information-property-list/uidesignrequirescompatibility)
+- [ToolbarItemPlacement.topBarLeading](https://developer.apple.com/documentation/swiftui/toolbaritemplacement/topbarleading)
+- [Build a SwiftUI app with the new design (WWDC25)](https://developer.apple.com/videos/play/wwdc2025/323/)
+- [When toolbar items share a glass background in iOS 26](https://sarunw.com/posts/swiftui-toolbar-item-grouping-ios-26/)
+
+</div>
