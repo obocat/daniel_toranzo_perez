@@ -1,7 +1,7 @@
 ---
 title: "SF Symbols personalizados: color y animación más allá del catálogo"
 title_en: "Custom SF Symbols: color and motion beyond the catalog"
-date: 2026-11-06 00:00:00
+date: 2026-11-09 00:00:00
 description: "Los SF Symbols personalizados no son iconos estáticos: con las anotaciones correctas heredan los modos de color y las animaciones del sistema."
 description_en: "Custom SF Symbols are not static icons: with the right annotations they inherit the system's rendering modes and animations."
 lang: es
