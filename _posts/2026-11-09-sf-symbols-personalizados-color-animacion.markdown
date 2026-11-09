@@ -130,13 +130,13 @@ struct BatterySymbol: View {
 }
 ```
 
-No todos los símbolos personalizados tienen que soportar todo. Lo sano es probar cada efecto en la app SF Symbols antes de llevarlo al código. Si el preview se ve como un fade plano, es probable que en la app también lo sea.
+No todos los símbolos personalizados tienen que soportar todo. Lo sano es probar cada efecto en la app SF Symbols antes de llevarlo al código.
 
 ## Lo que no resuelve un símbolo personalizado
 
 Un SF Symbol no es una ilustración. Es un icono pequeño, reconocible y ópticamente alineado con el resto del sistema. Si metes un logo complejo con gradientes, sombras y detalles finos, va a sufrir en tamaños pequeños y en modo oscuro.
 
-Tampoco conviene copiar símbolos de Apple que representan productos o features y modificar sus trazos. La app SF Symbols marca algunos símbolos como no personalizables. Para variantes, lo correcto es usar la librería de componentes o crear un símbolo propio desde cero.
+Tampoco conviene copiar símbolos de Apple que representan productos o features y modificar sus trazos. La app SF Symbols marca algunos símbolos como no personalizables.
 
 Y hay una limitación práctica: las anotaciones dependen de que el número y el orden de los paths se mantengan. Si editas el SVG y eliminas o reordenas paths, las anotaciones pueden quedar desincronizadas. Valida y revisa el símbolo después de cada cambio.
 
@@ -316,13 +316,13 @@ struct BatterySymbol: View {
 }
 ```
 
-Not every custom symbol has to support everything. The sensible approach is to test each effect in the SF Symbols app before taking it to code. If the preview looks like a flat fade, it probably will in the app too.
+Not every custom symbol has to support everything. The sensible approach is to test each effect in the SF Symbols app before taking it to code.
 
 ## What a custom symbol does not solve
 
 An SF Symbol is not an illustration. It is a small, recognizable icon that is optically aligned with the rest of the system. If you drop in a complex logo with gradients, shadows, and fine details, it will struggle at small sizes and in dark mode.
 
-You should also avoid copying Apple symbols that depict products or features and modifying their paths. The SF Symbols app marks some symbols as non-customizable. For variants, the right move is to use the component library or create your own symbol from scratch.
+You should also avoid copying Apple symbols that depict products or features and modifying their paths. The SF Symbols app marks some symbols as non-customizable.
 
 There is also a practical limitation: annotations depend on the number and order of paths staying the same. If you edit the SVG and remove or reorder paths, the annotations can become out of sync. Validate and review the symbol after every change.
 
