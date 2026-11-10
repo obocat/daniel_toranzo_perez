@@ -82,7 +82,10 @@ La diferencia importante es de nivel. `layoutPriority` responde a una pregunta l
 
 ## El matiz de `.split`
 
-`.split` no significa "siempre lado a lado". Significa que el contenedor intentará repartir el espacio entre las dos secciones y decidirá la orientación según el espacio disponible. En el iPhone Duo también tiene en cuenta regiones reservadas como el pliegue.
+> **Importante:** `.split` no significa "siempre lado a lado". Significa que el contenedor intentará repartir el espacio entre las dos secciones y decidirá la orientación según el espacio disponible.
+{: .doc-callout .doc-callout--important}
+
+En el iPhone Duo también tiene en cuenta regiones reservadas como el pliegue.
 
 Si quieres limitar la split a un eje concreto, puedes usar:
 
@@ -94,7 +97,10 @@ Eso es útil cuando el diseño solo tiene sentido en horizontal. Pero conviene n
 
 ## Cuándo usarlo y cuándo no
 
-`ArrangementView` no es un sustituto general de `HStack`, `VStack` o `ZStack`. Es un contenedor especializado para una relación estable entre contenido principal y secundario. Antes de usarlo, merece la pena responder:
+> **Nota:** `ArrangementView` no es un sustituto general de `HStack`, `VStack` o `ZStack`. Es un contenedor especializado para una relación estable entre contenido principal y secundario.
+{: .doc-callout .doc-callout--note}
+
+Antes de usarlo, merece la pena responder:
 
 - ¿La relación principal/secundaria tiene sentido en todas las poses?
 - ¿Qué sección puede desaparecer cuando no hay espacio?
@@ -201,7 +207,10 @@ The important difference is one of level. `layoutPriority` answers a local quest
 
 ## The `.split` nuance
 
-`.split` doesn't mean "always side by side". It means the container will try to share space between the two sections and decide the orientation based on available space. On iPhone Duo it also accounts for reserved regions such as the fold.
+> **Important:** `.split` doesn't mean "always side by side". It means the container will try to share space between the two sections and decide the orientation based on available space.
+{: .doc-callout .doc-callout--important}
+
+On iPhone Duo it also accounts for reserved regions such as the fold.
 
 If you want to constrain the split to a specific axis, you can use:
 
@@ -213,7 +222,10 @@ That's useful when the design only makes sense horizontally. But don't force it 
 
 ## When to use it, and when not to
 
-`ArrangementView` is not a general replacement for `HStack`, `VStack`, or `ZStack`. It is a specialised container for a stable relationship between primary and secondary content. Before using it, it's worth answering:
+> **Note:** `ArrangementView` is not a general replacement for `HStack`, `VStack`, or `ZStack`. It is a specialised container for a stable relationship between primary and secondary content.
+{: .doc-callout .doc-callout--note}
+
+Before using it, it's worth answering:
 
 - Does the primary/secondary relationship make sense in every pose?
 - Which section can disappear when there isn't enough space?
