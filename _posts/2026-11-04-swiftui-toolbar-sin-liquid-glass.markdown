@@ -43,7 +43,10 @@ struct ToolbarWithoutGlassView: View {
 }
 ```
 
-Lo importante es dónde va: después del cierre de `ToolbarItemGroup`, no dentro del `Button`. `sharedBackgroundVisibility` es una API de `ToolbarContent`; si la aplicas a una `View`, el compilador no la encontrará. El ejemplo da por hecho un target de iOS 26 o superior; si tu app soporta versiones anteriores, usa la extensión de compatibilidad que veremos más adelante.
+> **Importante:** El modificador va después del cierre de `ToolbarItemGroup`, no dentro del `Button`. `sharedBackgroundVisibility` es una API de `ToolbarContent`; si la aplicas a una `View`, el compilador no la encontrará.
+{: .doc-callout .doc-callout--important}
+
+El ejemplo da por hecho un target de iOS 26 o superior; si tu app soporta versiones anteriores, usa la extensión de compatibilidad que veremos más adelante.
 
 ## Qué hace exactamente
 
@@ -88,7 +91,8 @@ Si el logo no es interactivo, no lo escribas como un `Button` solo para que pare
 
 ## Qué se pierde al quitar el fondo de Liquid Glass
 
-Ahora bien, quitar Liquid Glass tiene un coste. No es solo decoración: el fondo de Liquid Glass separa el contenido del toolbar de lo que hay detrás y ayuda a mantener la legibilidad cuando la pantalla tiene fotos, mapas o colores vivos. Al ocultarlo, esa responsabilidad recae ahora en tu diseño.
+> **Nota:** Quitar Liquid Glass no es solo decoración. El fondo separa el contenido del toolbar de lo que hay detrás y ayuda a mantener la legibilidad cuando la pantalla tiene fotos, mapas o colores vivos. Al ocultarlo, esa responsabilidad recae en tu diseño.
+{: .doc-callout .doc-callout--note}
 
 Antes de dar por buena una excepción, comprueba:
 
@@ -155,7 +159,8 @@ Todo esto nos lleva a la pregunta que suele aparecer después: ¿y la clave glob
 
 Con `YES`, la app se ejecuta en modo de compatibilidad y conserva el aspecto anterior. Fue útil para ganar tiempo, pero nunca fue una estrategia de diseño: es una prórroga para adaptar la app, no una forma de mantener dos lenguajes visuales indefinidamente.
 
-Según la documentación de Apple, el sistema ignora esta clave cuando compilas con el SDK de iOS 27 o posterior. Si tu app se compila con el SDK de iOS 27, `UIDesignRequiresCompatibility` ya no te devuelve el diseño anterior.
+> **Importante:** Según la documentación de Apple, el sistema ignora esta clave cuando compilas con el SDK de iOS 27 o posterior. Si tu app se compila con el SDK de iOS 27, `UIDesignRequiresCompatibility` ya no te devuelve el diseño anterior.
+{: .doc-callout .doc-callout--important}
 
 Hay un matiz que no conviene pasar por alto: si sigues compilando con el SDK de iOS 26, la clave puede tener efecto en iOS 26. Pero eso significa quedarse en un SDK antiguo, con las consecuencias de mantenimiento y compatibilidad que eso implica. No es una solución a largo plazo.
 
@@ -215,7 +220,10 @@ struct ToolbarWithoutGlassView: View {
 }
 ```
 
-What matters is where it goes: after the closing brace of `ToolbarItemGroup`, not inside the `Button`. `sharedBackgroundVisibility` is a `ToolbarContent` API; if you apply it to a `View`, the compiler won't find it. The example assumes an iOS 26 or later target; if your app supports earlier versions, use the compatibility extension later in the article.
+> **Important:** The modifier goes after the closing brace of `ToolbarItemGroup`, not inside the `Button`. `sharedBackgroundVisibility` is a `ToolbarContent` API; if you apply it to a `View`, the compiler won't find it.
+{: .doc-callout .doc-callout--important}
+
+The example assumes an iOS 26 or later target; if your app supports earlier versions, use the compatibility extension later in the article.
 
 ## What it actually does
 
@@ -260,7 +268,8 @@ If the logo isn't interactive, don't write it as a `Button` just to make it look
 
 ## What you lose when you remove the Liquid Glass background
 
-Of course, removing it comes at a cost. Liquid Glass is not just decoration: its background separates toolbar content from what's behind it and helps keep text legible when the screen has photos, maps, or vivid colors. When you hide it, that responsibility becomes part of your design.
+> **Note:** Removing Liquid Glass is not just decoration. Its background separates toolbar content from what's behind it and helps keep text legible when the screen has photos, maps, or vivid colors. When you hide it, that responsibility becomes part of your design.
+{: .doc-callout .doc-callout--note}
 
 Before accepting an exception, check:
 
@@ -327,7 +336,8 @@ All of this leads to the question that usually comes next: what about the global
 
 With `YES`, the app runs in compatibility mode and keeps the previous look. It was useful for buying time, but it was never a design strategy: it is a grace period for adapting the app, not a way to maintain two visual languages indefinitely.
 
-According to Apple's documentation, the system ignores this key when you build with the iOS 27 SDK or later. If your app is built with the iOS 27 SDK, `UIDesignRequiresCompatibility` no longer brings the old design back.
+> **Important:** According to Apple's documentation, the system ignores this key when you build with the iOS 27 SDK or later. If your app is built with the iOS 27 SDK, `UIDesignRequiresCompatibility` no longer brings the old design back.
+{: .doc-callout .doc-callout--important}
 
 There is a nuance worth keeping in mind: if you still build with the iOS 26 SDK, the key can have an effect on iOS 26. But that means staying on an old SDK, with the maintenance and compatibility consequences that implies. It is not a long-term solution.
 

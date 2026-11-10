@@ -32,7 +32,10 @@ El flujo habitual es:
 5. Exportar el símbolo y añadirlo al asset catalog como Symbol Image Set.
 6. Usarlo con `Image("custom.orbit")`, no con `Image(systemName:)`.
 
-La app SF Symbols es la que valida que el SVG cumple el formato. También es donde se guardan las anotaciones. De hecho, si exportas una plantilla para editarla, esa exportación **no incluye** las anotaciones. Para conservarlas, hay que arrastrar el SVG editado sobre el símbolo existente.
+La app SF Symbols es la que valida que el SVG cumple el formato. También es donde se guardan las anotaciones.
+
+> **Importante:** Si exportas una plantilla para editarla, esa exportación **no incluye** las anotaciones. Para conservarlas, hay que arrastrar el SVG editado sobre el símbolo existente.
+{: .doc-callout .doc-callout--important}
 
 ## De un SVG normal a un SF Symbol
 
@@ -42,7 +45,10 @@ La app SF Symbols espera una plantilla con una estructura muy concreta. Si ya ti
 - [**SwiftDraw**](https://github.com/swhitty/SwiftDraw): herramienta de línea de comandos. Con `brew install swiftdraw`, puedes ejecutar `swiftdraw icon.svg --format sfsymbol`. Expande trazos, ajusta el winding de los paths y alinea el resultado para que Xcode lo acepte.
 - **Plugins de Figma** como [**SF Symbol Generator**](https://www.figma.com/community/plugin/1487107089082698461/sf-symbol-generator) y [**SF Symbols Optimizer**](https://www.figma.com/community/plugin/1265484574589944515/sf-symbols-optimizer): exportan iconos de Figma como SVG de SF Symbols, con variantes estáticas o variables.
 
-La advertencia es la misma que con el resto del flujo: estas herramientas ahorran el trabajo de estructura, no el de diseño. No pueden adivinar qué capas deben formar parte de una jerarquía, qué colores van en palette o qué partes deben animarse. Además, los SVG convencionales suelen traer trazos, máscaras, compound paths o grupos anidados que no siempre se convierten bien. Revisa el resultado en la app SF Symbols, comprueba la dirección de los paths y anota las capas antes de darlo por bueno.
+> **Nota:** Estas herramientas ahorran el trabajo de estructura, no el de diseño. No pueden adivinar qué capas deben formar parte de una jerarquía, qué colores van en palette o qué partes deben animarse.
+{: .doc-callout .doc-callout--note}
+
+Los SVG convencionales suelen traer trazos, máscaras, compound paths o grupos anidados que no siempre se convierten bien. Revisa el resultado en la app SF Symbols, comprueba la dirección de los paths y anota las capas antes de darlo por bueno.
 
 ## Color: cuatro modos, no uno
 
@@ -138,7 +144,8 @@ Un SF Symbol no es una ilustración. Es un icono pequeño, reconocible y óptica
 
 Tampoco conviene copiar símbolos de Apple que representan productos o features y modificar sus trazos. La app SF Symbols marca algunos símbolos como no personalizables.
 
-Y hay una limitación práctica: las anotaciones dependen de que el número y el orden de los paths se mantengan. Si editas el SVG y eliminas o reordenas paths, las anotaciones pueden quedar desincronizadas. Valida y revisa el símbolo después de cada cambio.
+> **Importante:** Las anotaciones dependen de que el número y el orden de los paths se mantengan. Si editas el SVG y eliminas o reordenas paths, las anotaciones pueden quedar desincronizadas. Valida y revisa el símbolo después de cada cambio.
+{: .doc-callout .doc-callout--important}
 
 ## Accesibilidad y movimiento
 
@@ -218,7 +225,10 @@ The usual workflow is:
 5. Export the symbol and add it to the asset catalog as a Symbol Image Set.
 6. Use it with `Image("custom.orbit")`, not `Image(systemName:)`.
 
-The SF Symbols app validates that the SVG follows the format. It is also where annotations live. In fact, if you export a template to edit it, that export **does not include** the annotations. To keep them, drag the edited SVG onto the existing symbol.
+The SF Symbols app validates that the SVG follows the format. It is also where annotations live.
+
+> **Important:** If you export a template to edit it, that export **does not include** the annotations. To keep them, drag the edited SVG onto the existing symbol.
+{: .doc-callout .doc-callout--important}
 
 ## From a regular SVG to an SF Symbol
 
@@ -228,7 +238,10 @@ The SF Symbols app expects a template with a very specific structure. If you alr
 - [**SwiftDraw**](https://github.com/swhitty/SwiftDraw): a command-line tool. With `brew install swiftdraw`, you can run `swiftdraw icon.svg --format sfsymbol`. It expands strokes, fixes path winding, and aligns the result so Xcode accepts it.
 - **Figma plugins** such as [**SF Symbol Generator**](https://www.figma.com/community/plugin/1487107089082698461/sf-symbol-generator) and [**SF Symbols Optimizer**](https://www.figma.com/community/plugin/1265484574589944515/sf-symbols-optimizer): they export Figma icons as SF Symbols SVGs, with static or variable variants.
 
-The warning is the same as with the rest of the workflow: these tools save you the structural work, not the design work. They cannot guess which layers belong in a hierarchy, which colors go into a palette, or which parts should animate. Conventional SVGs often contain strokes, masks, compound paths, or nested groups that do not always convert cleanly. Review the result in the SF Symbols app, check path direction, and annotate the layers before calling it done.
+> **Note:** These tools save you the structural work, not the design work. They cannot guess which layers belong in a hierarchy, which colors go into a palette, or which parts should animate.
+{: .doc-callout .doc-callout--note}
+
+Conventional SVGs often contain strokes, masks, compound paths, or nested groups that do not always convert cleanly. Review the result in the SF Symbols app, check path direction, and annotate the layers before calling it done.
 
 ## Color: four modes, not one
 
@@ -324,7 +337,8 @@ An SF Symbol is not an illustration. It is a small, recognizable icon that is op
 
 You should also avoid copying Apple symbols that depict products or features and modifying their paths. The SF Symbols app marks some symbols as non-customizable.
 
-There is also a practical limitation: annotations depend on the number and order of paths staying the same. If you edit the SVG and remove or reorder paths, the annotations can become out of sync. Validate and review the symbol after every change.
+> **Important:** Annotations depend on the number and order of paths staying the same. If you edit the SVG and remove or reorder paths, the annotations can become out of sync. Validate and review the symbol after every change.
+{: .doc-callout .doc-callout--important}
 
 ## Accessibility and motion
 
