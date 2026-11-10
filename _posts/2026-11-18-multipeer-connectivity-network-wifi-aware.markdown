@@ -1,7 +1,7 @@
 ---
 title: "Multipeer Connectivity está deprecado: qué cambia y cómo pasar a Network"
 title_en: "Multipeer Connectivity is deprecated: what changes and how to move to Network"
-date: 2026-11-16 00:00:00
+date: 2026-11-18 00:00:00
 description: "Multipeer Connectivity está deprecado en Xcode 27. Qué implica y cómo migrar a Network framework."
 description_en: "Multipeer Connectivity is deprecated in Xcode 27. What it means and how to migrate to Network framework."
 lang: es
