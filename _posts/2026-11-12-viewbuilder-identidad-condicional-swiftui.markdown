@@ -1,7 +1,7 @@
 ---
 title: "ViewBuilder y applyIf: el coste oculto de una condición en SwiftUI"
 title_en: "ViewBuilder and applyIf: the hidden cost of a condition in SwiftUI"
-date: 2026-11-11 00:00:00
+date: 2026-11-12 00:00:00
 description: "Por qué un if dentro de @ViewBuilder cambia la identidad estructural de la vista y puede reiniciar su estado."
 description_en: "Why an if inside @ViewBuilder changes the view's structural identity and can reset its state."
 lang: es
