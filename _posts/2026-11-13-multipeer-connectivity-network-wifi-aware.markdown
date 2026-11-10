@@ -15,7 +15,10 @@ reading_time: 9
 
 Multipeer Connectivity fue durante años la forma más rápida de conectar dos dispositivos Apple sin montar un servidor. Descubría dispositivos cercanos, abría una sesión y permitía enviar datos o recursos con relativamente poco código. Ese atajo tiene fecha: Xcode 27 marca todo el framework como deprecado y Apple recomienda migrar a Network framework.
 
-Conviene empezar por lo importante: deprecado no significa eliminado. Las apps que ya usan Multipeer Connectivity siguen funcionando y el framework no desaparece de la noche a la mañana. Lo que cambia es su estatus: deja de ser el camino recomendado, no recibirá nuevas mejoras y cada vez será más difícil justificar usarlo. Apple lo dice de forma explícita en la nota técnica [TN3213](https://developer.apple.com/documentation/technotes/tn3213-moving-from-multipeer-connectivity-to-network-framework).
+> **Nota:** Deprecado no significa eliminado. Las apps que ya usan Multipeer Connectivity siguen funcionando y el framework no desaparece de la noche a la mañana.
+{: .doc-callout .doc-callout--note}
+
+Lo que cambia es su estatus: deja de ser el camino recomendado, no recibirá nuevas mejoras y cada vez será más difícil justificar usarlo. Apple lo dice de forma explícita en la nota técnica [TN3213](https://developer.apple.com/documentation/technotes/tn3213-moving-from-multipeer-connectivity-to-network-framework).
 
 ## Qué ha cambiado exactamente
 
@@ -38,7 +41,8 @@ La contrapartida es clara: ya no hay una `MCSession` que lo haga todo por ti. Ti
 
 ## El nuevo entitlement: Wi-Fi Aware
 
-Aquí hay un matiz que conviene no mezclar. Migrar a Network framework no te obliga a usar Wi-Fi Aware. Si solo necesitas TCP o UDP sobre la red local, o Bonjour para descubrir servicios, Network funciona sin ese entitlement.
+> **Nota:** Migrar a Network framework no te obliga a usar Wi-Fi Aware. Si solo necesitas TCP o UDP sobre la red local, o Bonjour para descubrir servicios, Network funciona sin ese entitlement.
+{: .doc-callout .doc-callout--note}
 
 El entitlement aparece cuando quieres usar Wi-Fi Aware, el transporte que Apple recomienda para peer-to-peer moderno. Wi-Fi Aware permite descubrir, emparejar y conectar dispositivos cercanos sin internet ni punto de acceso, con conexiones autenticadas y cifradas en la capa Wi-Fi. Para usarlo, la app necesita la capacidad `com.apple.developer.wifi-aware`, con un array que incluya `Publish`, `Subscribe` o ambos.
 
@@ -69,7 +73,8 @@ Además, hay que declarar los servicios en el `Info.plist` con la clave `WiFiAwa
 
 El nombre del servicio tiene reglas estrictas: hasta 15 caracteres, solo letras, números y guiones, sin empezar ni terminar con guion, y con el sufijo `_tcp` o `_udp`. Si el nombre no es válido, la app puede fallar al arrancar. No es un detalle que convenga dejar para el final.
 
-Tampoco es un permiso de runtime que el usuario concede con un diálogo. Es una capacidad de aprovisionamiento: tiene que estar en el perfil de la app. Si tu cuenta no la tiene disponible, tendrás que solicitarla a Apple.
+> **Importante:** No es un permiso de runtime que el usuario concede con un diálogo. Es una capacidad de aprovisionamiento: tiene que estar en el perfil de la app. Si tu cuenta no la tiene disponible, tendrás que solicitarla a Apple.
+{: .doc-callout .doc-callout--important}
 
 Wi-Fi Aware está disponible en iOS 26 y iPadOS 26 en modelos compatibles, como iPhone 12 y posteriores o iPad de décima generación y posteriores. Si tu app necesita funcionar en dispositivos más antiguos, tendrás que mantener una ruta alternativa con Network sobre la red local.
 
@@ -147,7 +152,10 @@ No todo son ventajas. Network framework es más bajo nivel y eso significa más 
 
 También desaparece la comodidad de `MCSession`. Ahora eres tú quien mantiene el mapa de conexiones, quien decide qué hacer con una conexión duplicada y quien cierra las que ya no necesita. Esa responsabilidad es una oportunidad para simplificar la arquitectura, pero no es gratis.
 
-Wi-Fi Aware necesita la capacidad, la declaración de servicios y el emparejamiento previo. Si además usas QUIC con Wi-Fi Aware, ten en cuenta que esa combinación no está soportada antes de iOS 27; en iOS 26 tendrás que elegir otra combinación de protocolos.
+Wi-Fi Aware necesita la capacidad, la declaración de servicios y el emparejamiento previo.
+
+> **Importante:** Si usas QUIC con Wi-Fi Aware, esa combinación no está soportada antes de iOS 27; en iOS 26 tendrás que elegir otra combinación de protocolos.
+{: .doc-callout .doc-callout--important}
 
 ## Conclusión
 
@@ -174,7 +182,10 @@ La deprecación es una molestia, sí. También es el momento adecuado para quita
 
 Multipeer Connectivity was for years the fastest way to connect two Apple devices without running a server. It discovered nearby devices, opened a session, and let you send data or resources with relatively little code. That shortcut now has an expiration date: Xcode 27 marks the entire framework as deprecated, and Apple recommends migrating to Network framework.
 
-Let's start with the important part: deprecated does not mean removed. Apps that already use Multipeer Connectivity keep working, and the framework will not disappear overnight. What changes is its status: it is no longer the recommended path, it will not receive new features, and it will become harder to justify using it. Apple says this explicitly in technote [TN3213](https://developer.apple.com/documentation/technotes/tn3213-moving-from-multipeer-connectivity-to-network-framework).
+> **Note:** Deprecated does not mean removed. Apps that already use Multipeer Connectivity keep working, and the framework will not disappear overnight.
+{: .doc-callout .doc-callout--note}
+
+What changes is its status: it is no longer the recommended path, it will not receive new features, and it will become harder to justify using it. Apple says this explicitly in technote [TN3213](https://developer.apple.com/documentation/technotes/tn3213-moving-from-multipeer-connectivity-to-network-framework).
 
 ## What exactly changed
 
@@ -197,7 +208,8 @@ The trade-off is clear: there is no longer an `MCSession` that does everything f
 
 ## The new entitlement: Wi-Fi Aware
 
-There is a distinction worth keeping straight. Migrating to Network framework does not force you to use Wi-Fi Aware. If you only need TCP or UDP on the local network, or Bonjour for service discovery, Network works without that entitlement.
+> **Note:** Migrating to Network framework does not force you to use Wi-Fi Aware. If you only need TCP or UDP on the local network, or Bonjour for service discovery, Network works without that entitlement.
+{: .doc-callout .doc-callout--note}
 
 The entitlement appears when you want to use Wi-Fi Aware, the transport Apple recommends for modern peer-to-peer. Wi-Fi Aware lets nearby devices discover, pair, and connect without the internet or an access point, with connections authenticated and encrypted at the Wi-Fi layer. To use it, the app needs the `com.apple.developer.wifi-aware` capability, with an array that includes `Publish`, `Subscribe`, or both.
 
@@ -228,7 +240,8 @@ You also need to declare the services in `Info.plist` under the `WiFiAwareServic
 
 Service names have strict rules: up to 15 characters, only letters, numbers, and hyphens, no leading or trailing hyphen, and a `_tcp` or `_udp` suffix. If the name is invalid, the app can crash at launch. This is not a detail to leave for the end.
 
-It is also not a runtime permission that the user grants in a dialog. It is a provisioning capability: it has to be in the app's profile. If your account does not have it available, you will need to request it from Apple.
+> **Important:** It is not a runtime permission that the user grants in a dialog. It is a provisioning capability: it has to be in the app's profile. If your account does not have it available, you will need to request it from Apple.
+{: .doc-callout .doc-callout--important}
 
 Wi-Fi Aware is available in iOS 26 and iPadOS 26 on supported models, such as iPhone 12 and later or iPad (10th generation) and later. If your app needs to support older devices, you will need to keep an alternative path using Network over the local network.
 
@@ -306,7 +319,10 @@ It is not all advantages. Network framework is lower level, which means more cod
 
 The convenience of `MCSession` is also gone. You now own the connection map, decide what to do with a duplicate connection, and close the ones you no longer need. That responsibility is an opportunity to simplify the architecture, but it is not free.
 
-Wi-Fi Aware needs the capability, the service declarations, and prior pairing. And if you use QUIC with Wi-Fi Aware, note that the combination is not supported before iOS 27; on iOS 26 you will need a different protocol combination.
+Wi-Fi Aware needs the capability, the service declarations, and prior pairing.
+
+> **Important:** If you use QUIC with Wi-Fi Aware, the combination is not supported before iOS 27; on iOS 26 you will need a different protocol combination.
+{: .doc-callout .doc-callout--important}
 
 ## Conclusion
 
