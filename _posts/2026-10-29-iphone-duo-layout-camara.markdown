@@ -53,7 +53,8 @@ GeometryReader { proxy in
 
 La recomendación es usar el tamaño real de la escena o del contenedor, no dimensiones fijas de iPhone, y no tomar decisiones de layout a partir de `UIInterfaceOrientation`. En un Duo, la orientación clásica no cuenta toda la historia.
 
-También hay que tener cuidado con dónde se coloca un `ArrangementView`: no debe ir dentro de un `NavigationSplitView`, una lista, un scroll view o cualquier contenedor que pueda dejar parte de la vista inaccesible.
+> **Importante:** No coloques un `ArrangementView` dentro de un `NavigationSplitView`, una lista, un scroll view o cualquier contenedor que pueda dejar parte de la vista inaccesible.
+{: .doc-callout .doc-callout--important}
 
 ## La cámara: el problema que no se veía en el simulador
 
@@ -69,7 +70,8 @@ La solución no fue calcular ángulos a mano. Fue usar `AVCaptureDevice.Rotation
 
 `AVCaptureDevice.RotationCoordinator` monitoriza la orientación física de un dispositivo de captura y proporciona ángulos de ajuste para mantener las imágenes niveladas con respecto a la gravedad.
 
-La API existe desde iOS 17, así que no es exclusiva del Duo; lo que cambia es que aquí pasa a ser la pieza central.
+> **Nota:** `AVCaptureDevice.RotationCoordinator` existe desde iOS 17, así que no es exclusiva del Duo; lo que cambia es que aquí pasa a ser la pieza central.
+{: .doc-callout .doc-callout--note}
 
 El coordinador publica dos ángulos:
 
@@ -195,7 +197,10 @@ Ese callback es el que recrea el coordinador con la capa ya instalada. En un Duo
 
 ## Lo que el simulador no te cuenta
 
-El simulador sirve para validar layouts, tamaños, barras y poses. Para la cámara hace falta un dispositivo físico. Nuestra lista de pruebas fue algo así:
+> **Importante:** El simulador sirve para validar layouts, tamaños, barras y poses, pero la cámara hay que probarla en un dispositivo físico.
+{: .doc-callout .doc-callout--important}
+
+Nuestra lista de pruebas fue algo así:
 
 - Cerrar, abrir y dejar el Duo parcialmente plegado con la cámara activa.
 - Rotar en cada pose: vertical, horizontal, tipo tienda de campaña y tipo portátil.
@@ -264,7 +269,8 @@ GeometryReader { proxy in
 
 The recommendation is to use the actual scene or container size, not fixed iPhone dimensions, and not to make layout decisions from `UIInterfaceOrientation`. On a Duo, classic orientation doesn't tell the whole story.
 
-Also be careful where you place an `ArrangementView`: it should not go inside a `NavigationSplitView`, a list, a scroll view, or any container that might make part of the view inaccessible.
+> **Important:** Don't place an `ArrangementView` inside a `NavigationSplitView`, a list, a scroll view, or any container that might make part of the view inaccessible.
+{: .doc-callout .doc-callout--important}
 
 ## The camera: the problem the simulator didn't show
 
@@ -280,7 +286,8 @@ The solution was not to calculate angles by hand. It was to use `AVCaptureDevice
 
 `AVCaptureDevice.RotationCoordinator` monitors the physical orientation of a capture device and provides adjustment angles to keep images level, relative to gravity.
 
-The API has existed since iOS 17, so it isn't exclusive to Duo; what changes is that here it becomes the central piece.
+> **Note:** `AVCaptureDevice.RotationCoordinator` has existed since iOS 17, so it isn't exclusive to Duo; what changes is that here it becomes the central piece.
+{: .doc-callout .doc-callout--note}
 
 The coordinator publishes two angles:
 
@@ -406,7 +413,10 @@ That callback recreates the coordinator with the layer already installed. On a D
 
 ## What the simulator doesn't tell you
 
-The simulator is useful for validating layouts, sizes, bars, and poses. The camera requires a physical device. Our test list looked something like this:
+> **Important:** The simulator is useful for validating layouts, sizes, bars, and poses, but the camera needs to be tested on a physical device.
+{: .doc-callout .doc-callout--important}
+
+Our test list looked something like this:
 
 - Close, open, and leave the Duo partially folded with the camera active.
 - Rotate in every pose: portrait, landscape, tent, and laptop.

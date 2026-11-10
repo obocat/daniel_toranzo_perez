@@ -190,6 +190,26 @@ Content in English.
 </div>
 ```
 
+### Note and Important callouts
+
+Use a blockquote followed by a Kramdown block IAL. The label is styled
+automatically:
+
+```markdown
+> **Nota:** Texto de la nota.
+{: .doc-callout .doc-callout--note}
+
+> **Importante:** Texto del aviso.
+{: .doc-callout .doc-callout--important}
+```
+
+The article script also recognises blockquotes that start with `Nota:`,
+`Note:`, `Importante:`, or `Important:`, but the explicit classes keep the
+intent visible in the Markdown source.
+
+Fenced code blocks get a language label and a copy button automatically. No
+extra markup is needed.
+
 Notes:
 
 - `title_en` and `description_en` are required by the content check.
