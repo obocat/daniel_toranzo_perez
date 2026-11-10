@@ -1,0 +1,43 @@
+<div class="tool-field">
+  <label class="tool-field-label" for="json-input">
+    <span class="lang-es">JSON</span>
+    <span class="lang-en">JSON</span>
+  </label>
+  <textarea class="tool-input tool-textarea" id="json-input" rows="10" spellcheck="false" autocomplete="off" autocapitalize="off">{
+  "id": 42,
+  "user_name": "daniel",
+  "is_active": true,
+  "profile": {
+    "avatar_url": "https://example.com/avatar.png",
+    "followers": 128
+  },
+  "items": [
+    { "id": 1, "title": "Hello" }
+  ]
+}</textarea>
+</div>
+
+<div class="tool-actions">
+  <button type="button" class="tool-button" id="json-convert">
+    <span class="lang-es">Convertir</span>
+    <span class="lang-en">Convert</span>
+  </button>
+</div>
+
+<p class="tool-error" id="json-error" role="alert" hidden></p>
+
+<div class="tool-output">
+  <div class="tool-output-header">
+    <span class="tool-output-label">Swift</span>
+    <button type="button" class="tool-copy" data-copy-target="json-output" data-copied-es="Copiado" data-copied-en="Copied" data-error-es="Copia manualmente" data-error-en="Copy manually">
+      <span class="tool-copy-label lang-es">Copiar</span>
+      <span class="tool-copy-label lang-en">Copy</span>
+    </button>
+  </div>
+  <pre class="tool-code tool-code-scroll" id="json-output">—</pre>
+</div>
+
+<ul class="tool-warnings" id="json-warnings"></ul>
+
+<p class="tool-note lang-es">Los tipos se generan a partir de las claves. Renombra <code>Root</code> y los tipos anidados si tu modelo usa otros nombres.</p>
+<p class="tool-note lang-en">Types are generated from the keys. Rename <code>Root</code> and nested types if your model uses different names.</p>

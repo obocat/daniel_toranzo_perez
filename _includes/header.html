@@ -13,6 +13,10 @@
     <div class="header-actions">
       {% include icon-links.html %}
 
+      <a class="icon-link header-tools-link no-print{% if page.url contains '/tools' %} is-active{% endif %}" href="{{ '/tools/' | relative_url }}" aria-label="Herramientas / Tools" title="Herramientas / Tools">
+        {% include icons/icon-tools.html %}
+      </a>
+
       <a class="icon-link header-blog-link no-print{% if page.url contains '/blog' %} is-active{% endif %}" href="{{ '/blog/' | relative_url }}" aria-label="Blog" title="Blog">
         {% include icons/icon-blog.html %}
       </a>

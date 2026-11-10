@@ -1,0 +1,67 @@
+<div class="color-controls">
+  <label class="tool-field" for="color-hex">
+    <span class="tool-field-label">HEX</span>
+    <input class="tool-input" id="color-hex" type="text" value="#0071E3" spellcheck="false" autocomplete="off" autocapitalize="off" maxlength="9">
+  </label>
+  <input class="color-picker" id="color-picker" type="color" value="#0071e3" aria-label="Selector de color / Color picker">
+</div>
+<p class="tool-error" id="color-error" role="alert" hidden></p>
+
+<div class="color-swatches">
+  <div class="color-swatch" id="color-swatch-srgb"><span class="color-swatch-label">sRGB</span></div>
+  <div class="color-swatch" id="color-swatch-p3"><span class="color-swatch-label">Display P3</span></div>
+</div>
+
+<div class="color-output-list">
+  <div class="color-output-row">
+    <span class="color-output-label">HEX</span>
+    <code class="color-output-code" id="color-hex-output">#0071E3</code>
+    <button type="button" class="tool-copy" data-copy-target="color-hex-output" data-copied-es="Copiado" data-copied-en="Copied" data-error-es="Copia manualmente" data-error-en="Copy manually">
+      <span class="tool-copy-label lang-es">Copiar</span>
+      <span class="tool-copy-label lang-en">Copy</span>
+    </button>
+  </div>
+  <div class="color-output-row">
+    <span class="color-output-label">RGB</span>
+    <code class="color-output-code" id="color-rgb-output">0, 113, 227</code>
+    <button type="button" class="tool-copy" data-copy-target="color-rgb-output" data-copied-es="Copiado" data-copied-en="Copied" data-error-es="Copia manualmente" data-error-en="Copy manually">
+      <span class="tool-copy-label lang-es">Copiar</span>
+      <span class="tool-copy-label lang-en">Copy</span>
+    </button>
+  </div>
+  <div class="color-output-row">
+    <span class="color-output-label">UIColor</span>
+    <code class="color-output-code" id="color-uicolor-output">UIColor(red: 0.0000, green: 0.4431, blue: 0.8902, alpha: 1.0000)</code>
+    <button type="button" class="tool-copy" data-copy-target="color-uicolor-output" data-copied-es="Copiado" data-copied-en="Copied" data-error-es="Copia manualmente" data-error-en="Copy manually">
+      <span class="tool-copy-label lang-es">Copiar</span>
+      <span class="tool-copy-label lang-en">Copy</span>
+    </button>
+  </div>
+  <div class="color-output-row">
+    <span class="color-output-label">UIColor P3</span>
+    <code class="color-output-code" id="color-uicolor-p3-output">UIColor(displayP3Red: 0.1874, green: 0.4362, blue: 0.8603, alpha: 1.0000)</code>
+    <button type="button" class="tool-copy" data-copy-target="color-uicolor-p3-output" data-copied-es="Copiado" data-copied-en="Copied" data-error-es="Copia manualmente" data-error-en="Copy manually">
+      <span class="tool-copy-label lang-es">Copiar</span>
+      <span class="tool-copy-label lang-en">Copy</span>
+    </button>
+  </div>
+  <div class="color-output-row">
+    <span class="color-output-label">SwiftUI</span>
+    <code class="color-output-code" id="color-swiftui-output">Color(.sRGB, red: 0.0000, green: 0.4431, blue: 0.8902, opacity: 1.0000)</code>
+    <button type="button" class="tool-copy" data-copy-target="color-swiftui-output" data-copied-es="Copiado" data-copied-en="Copied" data-error-es="Copia manualmente" data-error-en="Copy manually">
+      <span class="tool-copy-label lang-es">Copiar</span>
+      <span class="tool-copy-label lang-en">Copy</span>
+    </button>
+  </div>
+  <div class="color-output-row">
+    <span class="color-output-label">SwiftUI P3</span>
+    <code class="color-output-code" id="color-swiftui-p3-output">Color(.displayP3, red: 0.1874, green: 0.4362, blue: 0.8603, opacity: 1.0000)</code>
+    <button type="button" class="tool-copy" data-copy-target="color-swiftui-p3-output" data-copied-es="Copiado" data-copied-en="Copied" data-error-es="Copia manualmente" data-error-en="Copy manually">
+      <span class="tool-copy-label lang-es">Copiar</span>
+      <span class="tool-copy-label lang-en">Copy</span>
+    </button>
+  </div>
+</div>
+
+<p class="tool-note lang-es">Un HEX de 8 dígitos se interpreta como <code>#RRGGBBAA</code>. Si tu diseño parte de un color P3, introduce sus componentes directamente en Swift en lugar de convertirlos desde HEX.</p>
+<p class="tool-note lang-en">An 8-digit HEX value is interpreted as <code>#RRGGBBAA</code>. If your design starts from a P3 color, enter its components directly in Swift instead of converting from HEX.</p>
