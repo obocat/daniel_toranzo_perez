@@ -33,6 +33,9 @@ extension View {
 
 La intención es buena: aplicar un modificador solo cuando se cumple una condición, sin repetir un `if` en cada vista. Compila, es cómodo y parece inocuo. Pero no lo es del todo.
 
+> **Importante:** El problema no es que `applyIf` no compile, sino que cada `if` crea dos ramas con identidad propia. Al alternar la condición, SwiftUI puede destruir el estado de la vista y convertir una animación continua en una transición.
+{: .doc-callout .doc-callout--important}
+
 ## Lo que realmente construye ViewBuilder
 
 `@ViewBuilder` no es solo azúcar sintáctico para elegir una vista u otra. Es un result builder: transforma el cuerpo de la función en una estructura de tipos.
@@ -61,7 +64,8 @@ _ConditionalContent<
 >
 ```
 
-No deberíamos usar `_ConditionalContent` directamente; lo importante es entender que el `if` no se evalúa como una simple condición dentro de un mismo modificador. La vista resultante tiene dos identidades estructurales posibles.
+> **Nota:** No uses `_ConditionalContent` directamente; es un tipo interno de SwiftUI. Lo importante es entender que el `if` no se evalúa como una condición dentro de un mismo modificador: la vista resultante tiene dos identidades estructurales posibles.
+{: .doc-callout .doc-callout--note}
 
 ## Identidad estructural, no solo valores
 
@@ -239,6 +243,9 @@ extension View {
 
 The intention is good: apply a modifier only when a condition holds, without repeating an `if` in every view. It compiles, it is convenient, and it looks harmless. But it isn't entirely harmless.
 
+> **Important:** The problem is not that `applyIf` fails to compile, but that every `if` creates two branches with their own identity. When the condition flips, SwiftUI can destroy the view's state and turn a continuous animation into a transition.
+{: .doc-callout .doc-callout--important}
+
 ## What ViewBuilder actually builds
 
 `@ViewBuilder` is not just syntactic sugar for choosing one view or another. It is a result builder: it transforms the function body into a type structure.
@@ -267,7 +274,8 @@ _ConditionalContent<
 >
 ```
 
-We shouldn't use `_ConditionalContent` directly; what matters is understanding that the `if` is not evaluated as a simple condition inside a single modifier. The resulting view has two possible structural identities.
+> **Note:** Don't use `_ConditionalContent` directly; it is an internal SwiftUI type. What matters is understanding that the `if` is not evaluated as a condition inside a single modifier: the resulting view has two possible structural identities.
+{: .doc-callout .doc-callout--note}
 
 ## Structural identity, not just values
 
