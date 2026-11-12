@@ -71,7 +71,7 @@ _ConditionalContent<
 
 SwiftUI distingue entre el valor de una vista y su identidad en la jerarquía. La identidad estructural depende del tipo y de la posición de la vista en el árbol. Un `if/else` dentro de un `ViewBuilder` crea dos posiciones distintas: la rama verdadera y la falsa.
 
-Cuando `condition` cambia, SwiftUI no está cambiando el parámetro de un mismo modificador. Está eliminando una rama e insertando la otra. Si hay una animación, el resultado habitual es una transición —por ejemplo, un fade— en lugar de una interpolación entre los dos valores.
+Cuando `condition` cambia, SwiftUI no está cambiando el parámetro de un mismo modificador. Está eliminando una rama e insertando la otra. Si hay una animación, el resultado es una transición —por ejemplo, un fade— en lugar de una interpolación entre los dos valores.
 
 Eso también afecta al estado. SwiftUI asocia `@State`, `@StateObject`, `@FocusState` y `@GestureState` al ciclo de vida y a la identidad de la vista. Si la vista cambia de rama, su almacenamiento desaparece y vuelve a inicializarse.
 
@@ -170,7 +170,7 @@ extension View {
 }
 ```
 
-El tipo `ModifiedContent<MyView, ConditionalBackground>` no cambia; el `Bool` es solo un parámetro. La identidad se mantiene y el modificador puede seguir aplicándose siempre.
+El tipo `ModifiedContent<MyView, ConditionalBackground>` no cambia; el `Bool` es solo un parámetro. La identidad se mantiene y el modificador se sigue aplicando siempre.
 
 ## Cuándo sí usar un if
 
@@ -186,9 +186,9 @@ También conviene evitar `AnyView` como supuesta solución: borra el tipo, pero 
 
 ## Conclusión
 
-`applyIf` es cómodo, pero esconde una decisión de arquitectura: cada `if` en un `ViewBuilder` crea dos ramas con identidad propia. Eso reinicia el estado de la vista que cambia de rama y puede convertir animaciones continuas en transiciones.
+`applyIf` es cómodo, pero esconde una decisión de arquitectura: cada `if` en un `ViewBuilder` crea dos ramas con identidad propia. Eso reinicia el estado de la vista que cambia de rama.
 
-Antes de añadir un helper condicional, merece la pena preguntarse si las dos ramas son realmente dos vistas distintas o la misma vista con una configuración diferente. Si es lo segundo, mantener el tipo estable suele ser la opción más predecible.
+Antes de añadir un helper condicional, merece la pena preguntarse si las dos ramas son realmente dos vistas distintas o la misma vista con una configuración diferente. Si es lo segundo, mantener el tipo estable es la opción más predecible.
 
 ## Referencias
 
@@ -259,7 +259,7 @@ _ConditionalContent<
 
 SwiftUI distinguishes between a view's value and its identity in the hierarchy. Structural identity depends on the view's type and position in the tree. An `if/else` inside a `ViewBuilder` creates two different positions: the true branch and the false branch.
 
-When `condition` changes, SwiftUI is not changing the parameter of a single modifier. It is removing one branch and inserting the other. If there is an animation, the usual result is a transition —a fade, for example— instead of an interpolation between the two values.
+When `condition` changes, SwiftUI is not changing the parameter of a single modifier. It is removing one branch and inserting the other. If there is an animation, the result is a transition —a fade, for example— instead of an interpolation between the two values.
 
 This also affects state. SwiftUI associates `@State`, `@StateObject`, `@FocusState`, and `@GestureState` with the view's lifetime and identity. If the view changes branches, its storage disappears and is initialized again.
 
@@ -358,7 +358,7 @@ extension View {
 }
 ```
 
-The type `ModifiedContent<MyView, ConditionalBackground>` doesn't change; the `Bool` is just a parameter. Identity is preserved and the modifier can remain applied at all times.
+The type `ModifiedContent<MyView, ConditionalBackground>` doesn't change; the `Bool` is just a parameter. Identity is preserved and the modifier remains applied at all times.
 
 ## When an if is the right tool
 
@@ -374,9 +374,9 @@ It's also worth avoiding `AnyView` as an alleged fix: it erases the type, but it
 
 ## Conclusion
 
-`applyIf` is convenient, but it hides an architectural decision: every `if` in a `ViewBuilder` creates two branches with their own identity. That resets the state of the view that changes branches and can turn continuous animations into transitions.
+`applyIf` is convenient, but it hides an architectural decision: every `if` in a `ViewBuilder` creates two branches with their own identity. That resets the state of the view that changes branches.
 
-Before adding a conditional helper, it's worth asking whether the two branches are really two different views or the same view with a different configuration. If it's the latter, keeping the type stable is usually the more predictable option.
+Before adding a conditional helper, it's worth asking whether the two branches are really two different views or the same view with a different configuration. If it's the latter, keeping the type stable is the more predictable option.
 
 ## References
 
