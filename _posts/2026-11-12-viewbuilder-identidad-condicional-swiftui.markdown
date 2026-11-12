@@ -2,8 +2,8 @@
 title: "ViewBuilder y applyIf: el coste oculto de una condición en SwiftUI"
 title_en: "ViewBuilder and applyIf: the hidden cost of a condition in SwiftUI"
 date: 2026-11-12 00:00:00
-description: "Por qué un if dentro de @ViewBuilder cambia la identidad estructural de la vista y puede reiniciar su estado."
-description_en: "Why an if inside @ViewBuilder changes the view's structural identity and can reset its state."
+description: "Por qué un if dentro de @ViewBuilder cambia la identidad estructural de la vista y reinicia su estado."
+description_en: "Why an if inside @ViewBuilder changes the view's structural identity and resets its state."
 lang: es
 tags: [iOS, SwiftUI, ViewBuilder, State, Architecture]
 categories: blog
@@ -31,9 +31,9 @@ extension View {
 }
 ```
 
-La intención es buena: aplicar un modificador solo cuando se cumple una condición, sin repetir un `if` en cada vista. Compila, es cómodo y parece inocuo. Pero no lo es del todo.
+La intención es buena: aplicar un modificador solo cuando se cumple una condición. Compila, es cómodo y parece inocuo. Pero no lo es del todo.
 
-> **Importante:** El problema no es que `applyIf` no compile, sino que cada `if` crea dos ramas con identidad propia. Al alternar la condición, SwiftUI puede destruir el estado de la vista y convertir una animación continua en una transición.
+> **Importante:** El problema no es que `applyIf` no compile, sino que cada `if` crea dos ramas con identidad propia. Al alternar la condición, SwiftUI destruye el estado de la vista.
 {: .doc-callout .doc-callout--important}
 
 ## Lo que realmente construye ViewBuilder
@@ -59,21 +59,21 @@ _ConditionalContent<Content, Self>
 
 ```swift
 _ConditionalContent<
-    ModifiedContent<MyView, _BackgroundModifier<Color>>,
+    ModifiedContent<MyView, _BackgroundStyleModifier<Color>>,
     MyView
 >
 ```
 
-> **Nota:** No uses `_ConditionalContent` directamente; es un tipo interno de SwiftUI. Lo importante es entender que el `if` no se evalúa como una condición dentro de un mismo modificador: la vista resultante tiene dos identidades estructurales posibles.
+> **Nota:** Lo importante es entender que el `if` no se evalúa como una condición dentro de un mismo modificador: la vista resultante tiene dos identidades estructurales posibles.
 {: .doc-callout .doc-callout--note}
 
 ## Identidad estructural, no solo valores
 
 SwiftUI distingue entre el valor de una vista y su identidad en la jerarquía. La identidad estructural depende del tipo y de la posición de la vista en el árbol. Un `if/else` dentro de un `ViewBuilder` crea dos posiciones distintas: la rama verdadera y la falsa.
 
-Cuando `condition` cambia, SwiftUI no está cambiando el parámetro de un mismo modificador. Está eliminando una rama e insertando la otra. Si hay una animación, el resultado habitual es una transición —por ejemplo, un fade— en lugar de una interpolación entre los dos valores.
+Cuando `condition` cambia, SwiftUI no está cambiando el parámetro de un mismo modificador. Está eliminando una rama e insertando la otra. Si hay una animación, el resultado es una transición —por ejemplo, un fade— en lugar de una interpolación entre los dos valores.
 
-Eso también afecta al estado. SwiftUI asocia `@State`, `@StateObject`, `@FocusState` y `@GestureState` al ciclo de vida y a la identidad de la vista. Si la vista cambia de rama, su almacenamiento puede desaparecer y volver a inicializarse.
+Eso también afecta al estado. SwiftUI asocia `@State`, `@StateObject`, `@FocusState` y `@GestureState` al ciclo de vida y a la identidad de la vista. Si la vista cambia de rama, su almacenamiento desaparece y vuelve a inicializarse.
 
 Con el helper definido arriba, el ejemplo se puede probar directamente en un `#Preview`:
 
@@ -131,29 +131,9 @@ struct SamplePreview: View {
 }
 ```
 
-Al alternar `isEnabled`, el `TextField` puede perder el texto que el usuario había escrito. Lo mismo puede ocurrir con un `@StateObject` que se cree dentro de la vista condicional. No es que SwiftUI borre el estado porque sí: para SwiftUI, la vista ha cambiado de posición en el árbol.
+Al alternar `isEnabled`, el `TextField` pierde el texto que el usuario había escrito. Lo mismo ocurre con un `@StateObject` que se cree dentro de la vista condicional. No es que SwiftUI borre el estado porque sí: para SwiftUI, la vista ha cambiado de posición en el árbol.
 
 Hay un matiz importante: si el estado vive en un padre que no cambia de identidad, sobrevive. El problema afecta al estado que pertenece a la vista que cambia de rama.
-
-## El caso de las animaciones
-
-El mismo mecanismo explica por qué `applyIf` puede romper una animación que debería ser continua:
-
-```swift
-Rectangle()
-    .applyIf(isExpanded) {
-        $0.frame(width: 200)
-    }
-```
-
-frente a:
-
-```swift
-Rectangle()
-    .frame(width: isExpanded ? 200 : 100)
-```
-
-La primera versión cambia de tipo y de rama; la segunda mantiene el mismo modificador y solo cambia un valor. SwiftUI puede interpolar la segunda; la primera se resuelve como una transición.
 
 ## Cómo mantener la identidad
 
@@ -166,7 +146,7 @@ MyView()
     .background(isEnabled ? Color.red : Color.clear)
 
 MyView()
-    .frame(width: isEnabled ? 200 : nil)
+    .frame(width: isEnabled ? 200 : 100)
 
 MyView()
     .opacity(isEnabled ? 1 : 0)
@@ -190,9 +170,8 @@ extension View {
 }
 ```
 
-El tipo `ModifiedContent<MyView, ConditionalBackground>` no cambia; el `Bool` es solo un parámetro. La identidad se mantiene y el modificador puede seguir aplicándose siempre.
-
-Si el modificador no ofrece una forma condicional, otra opción es construir un pequeño `ViewModifier` específico que reciba el valor y decida dentro de `body(content:)`.
+> **Nota:** El tipo `ModifiedContent<MyView, ConditionalBackground>` no cambia; el `Bool` es solo un parámetro. La identidad se mantiene y el modificador se sigue aplicando siempre.
+{: .doc-callout .doc-callout--note}
 
 ## Cuándo sí usar un if
 
@@ -204,13 +183,11 @@ La clave es elegir conscientemente:
 - Si quieres cambiar solo una propiedad de la misma vista, mantén la identidad y pasa el valor al modificador.
 - Si el estado debe sobrevivir a un cambio estructural, súbelo a un padre estable o a un modelo que no se destruya.
 
-También conviene evitar `AnyView` como supuesta solución: borra el tipo, pero no conserva la identidad estructural y puede añadir coste. No es un atajo gratis.
-
 ## Conclusión
 
-`applyIf` es cómodo, pero esconde una decisión de arquitectura: cada `if` en un `ViewBuilder` crea dos ramas con identidad propia. Eso puede reiniciar estado y convertir animaciones continuas en transiciones.
+`applyIf` es cómodo, pero esconde una decisión de arquitectura: cada `if` en un `ViewBuilder` crea dos ramas con identidad propia. Eso reinicia el estado de la vista que cambia de rama.
 
-Antes de añadir un helper condicional, merece la pena preguntarse si las dos ramas son realmente dos vistas distintas o la misma vista con una configuración diferente. Si es lo segundo, mantener el tipo estable suele ser la opción más predecible.
+Antes de añadir un helper condicional, merece la pena preguntarse si las dos ramas son realmente dos vistas distintas o la misma vista con una configuración diferente. Si es lo segundo, mantener el tipo estable es la opción más predecible.
 
 ## Referencias
 
@@ -241,9 +218,9 @@ extension View {
 }
 ```
 
-The intention is good: apply a modifier only when a condition holds, without repeating an `if` in every view. It compiles, it is convenient, and it looks harmless. But it isn't entirely harmless.
+The intention is good: apply a modifier only when a condition holds. It compiles, it is convenient, and it looks harmless. But it isn't entirely harmless.
 
-> **Important:** The problem is not that `applyIf` fails to compile, but that every `if` creates two branches with their own identity. When the condition flips, SwiftUI can destroy the view's state and turn a continuous animation into a transition.
+> **Important:** The problem is not that `applyIf` fails to compile, but that every `if` creates two branches with their own identity. When the condition flips, SwiftUI destroys the view's state.
 {: .doc-callout .doc-callout--important}
 
 ## What ViewBuilder actually builds
@@ -269,21 +246,21 @@ _ConditionalContent<Content, Self>
 
 ```swift
 _ConditionalContent<
-    ModifiedContent<MyView, _BackgroundModifier<Color>>,
+    ModifiedContent<MyView, _BackgroundStyleModifier<Color>>,
     MyView
 >
 ```
 
-> **Note:** Don't use `_ConditionalContent` directly; it is an internal SwiftUI type. What matters is understanding that the `if` is not evaluated as a condition inside a single modifier: the resulting view has two possible structural identities.
+> **Note:** What matters is understanding that the `if` is not evaluated as a condition inside a single modifier: the resulting view has two possible structural identities.
 {: .doc-callout .doc-callout--note}
 
 ## Structural identity, not just values
 
 SwiftUI distinguishes between a view's value and its identity in the hierarchy. Structural identity depends on the view's type and position in the tree. An `if/else` inside a `ViewBuilder` creates two different positions: the true branch and the false branch.
 
-When `condition` changes, SwiftUI is not changing the parameter of a single modifier. It is removing one branch and inserting the other. If there is an animation, the usual result is a transition —a fade, for example— instead of an interpolation between the two values.
+When `condition` changes, SwiftUI is not changing the parameter of a single modifier. It is removing one branch and inserting the other. If there is an animation, the result is a transition —a fade, for example— instead of an interpolation between the two values.
 
-This also affects state. SwiftUI associates `@State`, `@StateObject`, `@FocusState`, and `@GestureState` with the view's lifetime and identity. If the view changes branches, its storage may disappear and be initialized again.
+This also affects state. SwiftUI associates `@State`, `@StateObject`, `@FocusState`, and `@GestureState` with the view's lifetime and identity. If the view changes branches, its storage disappears and is initialized again.
 
 With the helper defined above, the example can be tested directly in a `#Preview`:
 
@@ -341,29 +318,9 @@ struct SamplePreview: View {
 }
 ```
 
-Toggling `isEnabled` can make the `TextField` lose the text the user had typed. The same can happen with a `@StateObject` created inside the conditional view. It's not that SwiftUI clears state for no reason: from its perspective, the view has moved to a different position in the tree.
+Toggling `isEnabled` makes the `TextField` lose the text the user had typed. The same happens with a `@StateObject` created inside the conditional view. It's not that SwiftUI clears state for no reason: from its perspective, the view has moved to a different position in the tree.
 
 There is an important nuance: if the state lives in a parent whose identity doesn't change, it survives. The problem affects state owned by the view that changes branches.
-
-## The animation case
-
-The same mechanism explains why `applyIf` can break an animation that should be continuous:
-
-```swift
-Rectangle()
-    .applyIf(isExpanded) {
-        $0.frame(width: 200)
-    }
-```
-
-versus:
-
-```swift
-Rectangle()
-    .frame(width: isExpanded ? 200 : 100)
-```
-
-The first version changes type and branch; the second keeps the same modifier and only changes a value. SwiftUI can interpolate the second one; the first resolves as a transition.
 
 ## How to preserve identity
 
@@ -376,7 +333,7 @@ MyView()
     .background(isEnabled ? Color.red : Color.clear)
 
 MyView()
-    .frame(width: isEnabled ? 200 : nil)
+    .frame(width: isEnabled ? 200 : 100)
 
 MyView()
     .opacity(isEnabled ? 1 : 0)
@@ -400,9 +357,8 @@ extension View {
 }
 ```
 
-The type `ModifiedContent<MyView, ConditionalBackground>` doesn't change; the `Bool` is just a parameter. Identity is preserved and the modifier can remain applied at all times.
-
-If the modifier doesn't offer a conditional form, another option is to build a small purpose-specific `ViewModifier` that receives the value and makes the decision inside `body(content:)`.
+> **Note:** The type `ModifiedContent<MyView, ConditionalBackground>` doesn't change; the `Bool` is just a parameter. Identity is preserved and the modifier remains applied at all times.
+{: .doc-callout .doc-callout--note}
 
 ## When an if is the right tool
 
@@ -414,13 +370,11 @@ The key is to choose deliberately:
 - If you want to change only a property of the same view, preserve identity and pass the value to the modifier.
 - If state must survive a structural change, lift it to a stable parent or to a model that isn't destroyed.
 
-It's also worth avoiding `AnyView` as an alleged fix: it erases the type, but it doesn't preserve structural identity and can add cost. It isn't a free shortcut.
-
 ## Conclusion
 
-`applyIf` is convenient, but it hides an architectural decision: every `if` in a `ViewBuilder` creates two branches with their own identity. That can reset state and turn continuous animations into transitions.
+`applyIf` is convenient, but it hides an architectural decision: every `if` in a `ViewBuilder` creates two branches with their own identity. That resets the state of the view that changes branches.
 
-Before adding a conditional helper, it's worth asking whether the two branches are really two different views or the same view with a different configuration. If it's the latter, keeping the type stable is usually the more predictable option.
+Before adding a conditional helper, it's worth asking whether the two branches are really two different views or the same view with a different configuration. If it's the latter, keeping the type stable is the more predictable option.
 
 ## References
 
