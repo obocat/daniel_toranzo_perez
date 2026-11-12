@@ -31,7 +31,7 @@ extension View {
 }
 ```
 
-La intención es buena: aplicar un modificador solo cuando se cumple una condición, sin repetir un `if` en cada vista. Compila, es cómodo y parece inocuo. Pero no lo es del todo.
+La intención es buena: aplicar un modificador solo cuando se cumple una condición. Compila, es cómodo y parece inocuo. Pero no lo es del todo.
 
 > **Importante:** El problema no es que `applyIf` no compile, sino que cada `if` crea dos ramas con identidad propia. Al alternar la condición, SwiftUI destruye el estado de la vista.
 {: .doc-callout .doc-callout--important}
@@ -218,7 +218,7 @@ extension View {
 }
 ```
 
-The intention is good: apply a modifier only when a condition holds, without repeating an `if` in every view. It compiles, it is convenient, and it looks harmless. But it isn't entirely harmless.
+The intention is good: apply a modifier only when a condition holds. It compiles, it is convenient, and it looks harmless. But it isn't entirely harmless.
 
 > **Important:** The problem is not that `applyIf` fails to compile, but that every `if` creates two branches with their own identity. When the condition flips, SwiftUI destroys the view's state.
 {: .doc-callout .doc-callout--important}
