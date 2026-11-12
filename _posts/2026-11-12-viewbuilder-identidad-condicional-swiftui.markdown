@@ -182,8 +182,6 @@ La clave es elegir conscientemente:
 - Si quieres cambiar solo una propiedad de la misma vista, mantén la identidad y pasa el valor al modificador.
 - Si el estado debe sobrevivir a un cambio estructural, súbelo a un padre estable o a un modelo que no se destruya.
 
-También conviene evitar `AnyView` como supuesta solución: borra el tipo, pero no conserva la identidad estructural y puede añadir coste. No es un atajo gratis.
-
 ## Conclusión
 
 `applyIf` es cómodo, pero esconde una decisión de arquitectura: cada `if` en un `ViewBuilder` crea dos ramas con identidad propia. Eso reinicia el estado de la vista que cambia de rama.
@@ -369,8 +367,6 @@ The key is to choose deliberately:
 - If you want to change the structure, use `if/else` and accept that identity changes.
 - If you want to change only a property of the same view, preserve identity and pass the value to the modifier.
 - If state must survive a structural change, lift it to a stable parent or to a model that isn't destroyed.
-
-It's also worth avoiding `AnyView` as an alleged fix: it erases the type, but it doesn't preserve structural identity and can add cost. It isn't a free shortcut.
 
 ## Conclusion
 
