@@ -170,7 +170,8 @@ extension View {
 }
 ```
 
-El tipo `ModifiedContent<MyView, ConditionalBackground>` no cambia; el `Bool` es solo un parámetro. La identidad se mantiene y el modificador se sigue aplicando siempre.
+> **Nota:** El tipo `ModifiedContent<MyView, ConditionalBackground>` no cambia; el `Bool` es solo un parámetro. La identidad se mantiene y el modificador se sigue aplicando siempre.
+{: .doc-callout .doc-callout--note}
 
 ## Cuándo sí usar un if
 
@@ -356,7 +357,8 @@ extension View {
 }
 ```
 
-The type `ModifiedContent<MyView, ConditionalBackground>` doesn't change; the `Bool` is just a parameter. Identity is preserved and the modifier remains applied at all times.
+> **Note:** The type `ModifiedContent<MyView, ConditionalBackground>` doesn't change; the `Bool` is just a parameter. Identity is preserved and the modifier remains applied at all times.
+{: .doc-callout .doc-callout--note}
 
 ## When an if is the right tool
 
