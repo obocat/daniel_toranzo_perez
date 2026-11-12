@@ -73,7 +73,7 @@ SwiftUI distingue entre el valor de una vista y su identidad en la jerarquía. L
 
 Cuando `condition` cambia, SwiftUI no está cambiando el parámetro de un mismo modificador. Está eliminando una rama e insertando la otra. Si hay una animación, el resultado habitual es una transición —por ejemplo, un fade— en lugar de una interpolación entre los dos valores.
 
-Eso también afecta al estado. SwiftUI asocia `@State`, `@StateObject`, `@FocusState` y `@GestureState` al ciclo de vida y a la identidad de la vista. Si la vista cambia de rama, su almacenamiento puede desaparecer y volver a inicializarse.
+Eso también afecta al estado. SwiftUI asocia `@State`, `@StateObject`, `@FocusState` y `@GestureState` al ciclo de vida y a la identidad de la vista. Si la vista cambia de rama, su almacenamiento desaparece y vuelve a inicializarse.
 
 Con el helper definido arriba, el ejemplo se puede probar directamente en un `#Preview`:
 
@@ -131,7 +131,7 @@ struct SamplePreview: View {
 }
 ```
 
-Al alternar `isEnabled`, el `TextField` puede perder el texto que el usuario había escrito. Lo mismo puede ocurrir con un `@StateObject` que se cree dentro de la vista condicional. No es que SwiftUI borre el estado porque sí: para SwiftUI, la vista ha cambiado de posición en el árbol.
+Al alternar `isEnabled`, el `TextField` pierde el texto que el usuario había escrito. Lo mismo ocurre con un `@StateObject` que se cree dentro de la vista condicional. No es que SwiftUI borre el estado porque sí: para SwiftUI, la vista ha cambiado de posición en el árbol.
 
 Hay un matiz importante: si el estado vive en un padre que no cambia de identidad, sobrevive. El problema afecta al estado que pertenece a la vista que cambia de rama.
 
@@ -186,7 +186,7 @@ También conviene evitar `AnyView` como supuesta solución: borra el tipo, pero 
 
 ## Conclusión
 
-`applyIf` es cómodo, pero esconde una decisión de arquitectura: cada `if` en un `ViewBuilder` crea dos ramas con identidad propia. Eso puede reiniciar estado y convertir animaciones continuas en transiciones.
+`applyIf` es cómodo, pero esconde una decisión de arquitectura: cada `if` en un `ViewBuilder` crea dos ramas con identidad propia. Eso reinicia el estado de la vista que cambia de rama y puede convertir animaciones continuas en transiciones.
 
 Antes de añadir un helper condicional, merece la pena preguntarse si las dos ramas son realmente dos vistas distintas o la misma vista con una configuración diferente. Si es lo segundo, mantener el tipo estable suele ser la opción más predecible.
 
@@ -261,7 +261,7 @@ SwiftUI distinguishes between a view's value and its identity in the hierarchy. 
 
 When `condition` changes, SwiftUI is not changing the parameter of a single modifier. It is removing one branch and inserting the other. If there is an animation, the usual result is a transition —a fade, for example— instead of an interpolation between the two values.
 
-This also affects state. SwiftUI associates `@State`, `@StateObject`, `@FocusState`, and `@GestureState` with the view's lifetime and identity. If the view changes branches, its storage may disappear and be initialized again.
+This also affects state. SwiftUI associates `@State`, `@StateObject`, `@FocusState`, and `@GestureState` with the view's lifetime and identity. If the view changes branches, its storage disappears and is initialized again.
 
 With the helper defined above, the example can be tested directly in a `#Preview`:
 
@@ -319,7 +319,7 @@ struct SamplePreview: View {
 }
 ```
 
-Toggling `isEnabled` can make the `TextField` lose the text the user had typed. The same can happen with a `@StateObject` created inside the conditional view. It's not that SwiftUI clears state for no reason: from its perspective, the view has moved to a different position in the tree.
+Toggling `isEnabled` makes the `TextField` lose the text the user had typed. The same happens with a `@StateObject` created inside the conditional view. It's not that SwiftUI clears state for no reason: from its perspective, the view has moved to a different position in the tree.
 
 There is an important nuance: if the state lives in a parent whose identity doesn't change, it survives. The problem affects state owned by the view that changes branches.
 
@@ -374,7 +374,7 @@ It's also worth avoiding `AnyView` as an alleged fix: it erases the type, but it
 
 ## Conclusion
 
-`applyIf` is convenient, but it hides an architectural decision: every `if` in a `ViewBuilder` creates two branches with their own identity. That can reset state and turn continuous animations into transitions.
+`applyIf` is convenient, but it hides an architectural decision: every `if` in a `ViewBuilder` creates two branches with their own identity. That resets the state of the view that changes branches and can turn continuous animations into transitions.
 
 Before adding a conditional helper, it's worth asking whether the two branches are really two different views or the same view with a different configuration. If it's the latter, keeping the type stable is usually the more predictable option.
 
