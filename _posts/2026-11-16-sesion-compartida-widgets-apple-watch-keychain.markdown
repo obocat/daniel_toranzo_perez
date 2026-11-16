@@ -218,8 +218,6 @@ Para una app companion, es la opción más directa. La app del iPhone envía la 
 
 Usa `updateApplicationContext` para mantener el último estado y `sendMessage` para entregarlo cuanto antes si el reloj está accesible. Activa `WCSession` lo antes posible y trátala como un canal con entrega diferida: el sistema decide cuándo despertar al reloj. Para una sesión que cambia poco, el contexto suele bastar; para una acción interactiva, `sendMessage` reduce la espera.
 
-El receptor debe decodificar el payload fuera del main actor y aplicar el cambio en `@MainActor`. Si el reloj no tiene la app instalada, no envíes nada.
-
 ### Opción 2: iCloud Keychain
 
 Si necesitas que la sesión llegue al Watch sin una app companion, o quieres cubrir Family Setup, Apple plantea la sincronización de iCloud Keychain como opción. Conviene probarlo en un dispositivo real antes de depender de ello, sobre todo en Family Setup. El cambio clave es guardar el item con `kSecAttrSynchronizable` a `true`:
@@ -536,8 +534,6 @@ In practice, you have two viable strategies.
 For a companion app, this is the most direct option. The iPhone app sends the session to the watch, and the Watch app stores it in its Keychain. It does not depend on iCloud Keychain, and it lets you decide when and what to send.
 
 Use `updateApplicationContext` to keep the latest state and `sendMessage` to deliver it sooner when the watch is reachable. Activate `WCSession` as early as possible and treat it as a channel with deferred delivery: the system decides when to wake the watch. For a session that changes infrequently, the context is usually enough; for an interactive action, `sendMessage` reduces the wait.
-
-The receiver should decode the payload off the main actor and apply the change on `@MainActor`. If the watch app is not installed, do not send anything.
 
 ### Option 2: iCloud Keychain
 
