@@ -2,13 +2,13 @@
 title: "AttributedString: formato, enlaces y VoiceOver en SwiftUI"
 title_en: "AttributedString: formatting, links, and VoiceOver in SwiftUI"
 date: 2026-11-19 09:00:00
-description: "Cómo dar formato a un texto con AttributedString, gestionar enlaces con OpenURLAction y hacer que VoiceOver los reconozca como enlaces."
-description_en: "How to format text with AttributedString, handle links with OpenURLAction, and make VoiceOver recognize them as links."
+description: "Cómo dar formato a un texto con AttributedString, gestionar enlaces con OpenURLAction y hacer que VoiceOver los reconozca como enlaces, con una nota sobre la accesibilidad exigida en la UE."
+description_en: "How to format text with AttributedString, handle links with OpenURLAction, and make VoiceOver recognize them as links, with a note on EU accessibility requirements."
 lang: es
 tags: [iOS, SwiftUI, AttributedString, Accessibility, VoiceOver]
 categories: blog
 layout: blog
-reading_time: 7
+reading_time: 9
 ---
 
 <div class="lang-es" lang="es" markdown="1">
@@ -130,6 +130,16 @@ El texto del enlace también importa. «Aquí» o «más información» no dicen
 
 Prueba con el rotor de enlaces, no solo leyendo el párrafo de arriba abajo. En el simulador, activa VoiceOver o usa Accessibility Inspector. Comprueba que cada enlace aparece en el rotor, que el foco no se queda atrapado y que el orden coincide con el texto.
 
+## Accesibilidad: cumplir y, sobre todo, no obligar a reaprender
+
+La accesibilidad tampoco es solo una decisión de producto. La European Accessibility Act (EAA), la Directiva (UE) 2019/882, se aplica desde el 28 de junio de 2025. Si tu app entra en su ámbito —por ejemplo, porque ofrece o da acceso a comercio electrónico, banca, transporte de pasajeros, comunicaciones electrónicas o contenidos audiovisuales—, la accesibilidad pasa a ser un requisito legal, no un extra. Cada Estado miembro debe establecer sanciones efectivas, proporcionadas y disuasorias; la cuantía concreta depende de su transposición nacional. No todas las apps están cubiertas y hay exenciones, así que conviene revisar el ámbito antes de convertir esto en una promesa legal.
+
+Pero el argumento práctico es anterior a la norma. Una persona que ya usa VoiceOver en su iPhone no debería aprender un modelo de interacción nuevo para tu app. Si los enlaces se comportan como enlaces, los botones como botones y los encabezados como encabezados, esa persona llega con parte del trabajo hecho. La app se siente predecible, el aprendizaje inicial es más corto y el soporte recibe menos preguntas del tipo «¿por qué esto no se puede activar?».
+
+Eso no significa que la accesibilidad sea gratis. Significa que gran parte del valor está en usar las convenciones que el sistema ya ofrece, en lugar de inventar gestos o etiquetas que solo funcionan en tu pantalla. El rotor de enlaces, el foco y los rasgos de accesibilidad son infraestructura compartida. Cuanto más se respetan, menos tiene que aprender quien ya conoce VoiceOver.
+
+La accesibilidad también reduce el riesgo de que una función exista solo para quien ve la pantalla. Un enlace que solo es azul, un botón que solo responde a un tap o un estado que solo se comunica por color son deuda de accesibilidad. La norma europea pone fecha y consecuencias; las personas usuarias ponen la prueba real.
+
 ## La decisión práctica
 
 | Necesito | Uso |
@@ -150,6 +160,8 @@ El formato no es decoración. Un enlace es una promesa de navegación; si solo l
 - [openURL](https://developer.apple.com/documentation/swiftui/environmentvalues/openurl)
 - [VoiceOver](https://developer.apple.com/documentation/accessibility/voiceover)
 - [Accessibility Inspector](https://developer.apple.com/documentation/accessibility/accessibility-inspector)
+- [European Accessibility Act (EAA)](https://commission.europa.eu/strategy-and-policy/policies/justice-and-fundamental-rights/disability/european-accessibility-act-eaa_en)
+- [Directive (EU) 2019/882](https://eur-lex.europa.eu/eli/dir/2019/882/oj/eng)
 
 </div>
 
@@ -272,6 +284,16 @@ Link text matters too. “Here” or “more information” says nothing out of 
 
 Test with the links rotor, not just by reading the paragraph from top to bottom. In the simulator, turn on VoiceOver or use Accessibility Inspector. Check that each link appears in the rotor, that focus does not get trapped, and that the order matches the text.
 
+## Accessibility: comply, but do not force people to relearn
+
+Accessibility is not only a product decision. The European Accessibility Act (EAA), Directive (EU) 2019/882, has applied since 28 June 2025. If your app falls within its scope — for example, because it provides or gives access to e-commerce, banking, passenger transport, electronic communications, or audiovisual media — accessibility becomes a legal requirement, not an extra. Each Member State must set effective, proportionate, and dissuasive penalties; the actual amount depends on its national transposition. Not every app is covered, and there are exemptions, so check the scope before turning this into a legal promise.
+
+The practical argument comes before the law, though. Someone who already uses VoiceOver on their iPhone should not have to learn a new interaction model for your app. If links behave like links, buttons like buttons, and headings like headings, that person arrives with part of the work already done. The app feels predictable, initial learning is shorter, and support gets fewer “why can’t I activate this?” questions.
+
+That does not mean accessibility is free. It means much of the value comes from using the conventions the system already provides instead of inventing gestures or labels that only work on your screen. The links rotor, focus, and accessibility traits are shared infrastructure. The more you respect them, the less someone who already knows VoiceOver has to learn.
+
+Accessibility also reduces the risk of a feature existing only for people who can see the screen. A link that is only blue, a button that only responds to a tap, or a state communicated only by color is accessibility debt. European law adds a date and consequences; users add the real test.
+
 ## The practical decision
 
 | I need | I use |
@@ -292,5 +314,7 @@ Formatting is not decoration. A link is a navigation promise; if it only looks l
 - [openURL](https://developer.apple.com/documentation/swiftui/environmentvalues/openurl)
 - [VoiceOver](https://developer.apple.com/documentation/accessibility/voiceover)
 - [Accessibility Inspector](https://developer.apple.com/documentation/accessibility/accessibility-inspector)
+- [European Accessibility Act (EAA)](https://commission.europa.eu/strategy-and-policy/policies/justice-and-fundamental-rights/disability/european-accessibility-act-eaa_en)
+- [Directive (EU) 2019/882](https://eur-lex.europa.eu/eli/dir/2019/882/oj/eng)
 
 </div>
