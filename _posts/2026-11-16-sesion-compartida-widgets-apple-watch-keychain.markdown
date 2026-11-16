@@ -277,6 +277,7 @@ import Combine
 import Foundation
 import WatchConnectivity
 
+@MainActor
 final class WatchSessionReceiver: NSObject, ObservableObject, WCSessionDelegate {
     @Published private(set) var session: Session?
     private let connectivity = WCSession.default
@@ -287,29 +288,35 @@ final class WatchSessionReceiver: NSObject, ObservableObject, WCSessionDelegate 
         connectivity.activate()
     }
 
-    func session(
+    nonisolated func session(
         _ session: WCSession,
         activationDidCompleteWith activationState: WCSessionActivationState,
         error: Error?
     ) {
-        apply(session.receivedApplicationContext)
+        Task { @MainActor in
+            self.apply(session.receivedApplicationContext)
+        }
     }
 
-    func session(
+    nonisolated func session(
         _ session: WCSession,
         didReceiveApplicationContext applicationContext: [String: Any]
     ) {
-        apply(applicationContext)
+        Task { @MainActor in
+            self.apply(applicationContext)
+        }
     }
 
-    func session(_ session: WCSession, didReceiveMessage message: [String: Any]) {
-        apply(message)
+    nonisolated func session(_ session: WCSession, didReceiveMessage message: [String: Any]) {
+        Task { @MainActor in
+            self.apply(message)
+        }
     }
 
     private func apply(_ payload: [String: Any]) {
         if payload["signedOut"] as? Bool == true {
             try? SharedSessionStore.delete()
-            DispatchQueue.main.async { self.session = nil }
+            session = nil
             return
         }
 
@@ -319,7 +326,7 @@ final class WatchSessionReceiver: NSObject, ObservableObject, WCSessionDelegate 
         }
 
         try? SharedSessionStore.save(decoded)
-        DispatchQueue.main.async { self.session = decoded }
+        session = decoded
     }
 }
 ```
@@ -369,7 +376,7 @@ Con estas piezas, el ciclo de vida queda bastante limpio. Después de un login c
 2. Recarga los timelines del widget.
 3. Envía la sesión al Watch si existe una app companion.
 
-Cuando renueves el token, actualiza el item y repite los pasos 2 y 3. Cuando el usuario cierre sesión, borra el item, recarga los widgets y envía un mensaje de cierre al reloj.
+Cuando renueves el token, actualiza el item y repite los pasos 2 y 3. Cuando el usuario cierre sesión, borra el item, recarga los widgets y envía un mensaje al Apple Watch.
 
 ```swift
 import WidgetKit
@@ -389,20 +396,7 @@ struct SessionCoordinator {
 }
 ```
 
-Hay una regla que ahorra muchos problemas: **un solo proceso renueva el token**. Si la app, el widget y el reloj intentan refrescar a la vez, puedes rotar el token varias veces y dejar a alguno con una credencial invalidada. En una app companion, la app del iPhone renueva y distribuye. Si el Watch es independiente, necesitas una estrategia de refresco en servidor que tolere concurrencia o que el reloj pida el refresco a la app.
-
-## Errores comunes
-
-Si algo falla, empieza por estos códigos:
-
-- `errSecMissingEntitlement` (`-34018`): el access group no está en los entitlements de todos los targets o la firma no lo incluye. Revisa la capability y el provisioning profile.
-- `errSecInteractionNotAllowed` (`-25308`): el item no es accesible en ese momento, normalmente por la clase de accesibilidad o porque el dispositivo está bloqueado. Para widgets, revisa `AfterFirstUnlock`.
-- `errSecItemNotFound` en el widget: puede que el item se guardara sin `kSecAttrAccessGroup`, que el grupo sea distinto o que el widget esté leyendo otro servicio/cuenta.
-- `errSecDuplicateItem`: suele aparecer al migrar datos o al cambiar el access group. Ten un camino de migración que lea el item antiguo, lo guarde en el nuevo y borre el anterior.
-- Guardar el token en `UserDefaults` compartido: funciona, pero no es seguro. Usa el Keychain para secretos y el App Group solo para datos no sensibles.
-
-> **Nota:** Prueba esto en un dispositivo real. Los previews y el simulador pueden ayudarte, pero los entitlements, la firma y la sesión de WatchConnectivity se comportan de forma más realista en hardware.
-{: .doc-callout .doc-callout--note}
+Hay una regla que ahorra muchos problemas: **un solo proceso renueva el token**. Si la app, el widget y el reloj intentan refrescar a la vez, puedes rotar el token varias veces y dejar a alguno con una credencial invalidada. En una app companion, la app del iPhone renueva y distribuye.
 
 ## La decisión práctica
 
@@ -691,6 +685,7 @@ import Combine
 import Foundation
 import WatchConnectivity
 
+@MainActor
 final class WatchSessionReceiver: NSObject, ObservableObject, WCSessionDelegate {
     @Published private(set) var session: Session?
     private let connectivity = WCSession.default
@@ -701,29 +696,35 @@ final class WatchSessionReceiver: NSObject, ObservableObject, WCSessionDelegate 
         connectivity.activate()
     }
 
-    func session(
+    nonisolated func session(
         _ session: WCSession,
         activationDidCompleteWith activationState: WCSessionActivationState,
         error: Error?
     ) {
-        apply(session.receivedApplicationContext)
+        Task { @MainActor in
+            self.apply(session.receivedApplicationContext)
+        }
     }
 
-    func session(
+    nonisolated func session(
         _ session: WCSession,
         didReceiveApplicationContext applicationContext: [String: Any]
     ) {
-        apply(applicationContext)
+        Task { @MainActor in
+            self.apply(applicationContext)
+        }
     }
 
-    func session(_ session: WCSession, didReceiveMessage message: [String: Any]) {
-        apply(message)
+    nonisolated func session(_ session: WCSession, didReceiveMessage message: [String: Any]) {
+        Task { @MainActor in
+            self.apply(message)
+        }
     }
 
     private func apply(_ payload: [String: Any]) {
         if payload["signedOut"] as? Bool == true {
             try? SharedSessionStore.delete()
-            DispatchQueue.main.async { self.session = nil }
+            session = nil
             return
         }
 
@@ -733,7 +734,7 @@ final class WatchSessionReceiver: NSObject, ObservableObject, WCSessionDelegate 
         }
 
         try? SharedSessionStore.save(decoded)
-        DispatchQueue.main.async { self.session = decoded }
+        session = decoded
     }
 }
 ```
@@ -783,7 +784,7 @@ With these pieces, the lifecycle is fairly clean. After a successful sign-in:
 2. Reload the widget timelines.
 3. Send the session to the Watch if a companion app exists.
 
-When you renew the token, update the item and repeat steps 2 and 3. When the user signs out, delete the item, reload the widgets, and send a sign-out message to the watch.
+When you renew the token, update the item and repeat steps 2 and 3. When the user signs out, delete the item, reload the widgets, and send a message to the Apple Watch.
 
 ```swift
 import WidgetKit
@@ -803,20 +804,7 @@ struct SessionCoordinator {
 }
 ```
 
-One rule saves a lot of trouble: **a single process refreshes the token**. If the app, the widget, and the watch all try to refresh at the same time, you can rotate the token several times and leave one of them with an invalid credential. In a companion app, the iPhone app refreshes and distributes. If the Watch is independent, you need a server-side refresh strategy that tolerates concurrency, or the watch must ask the app to refresh.
-
-## Common errors
-
-If something fails, start with these codes:
-
-- `errSecMissingEntitlement` (`-34018`): the access group is not in every target’s entitlements or the signature does not include it. Check the capability and the provisioning profile.
-- `errSecInteractionNotAllowed` (`-25308`): the item is not accessible at that moment, usually because of the accessibility class or because the device is locked. For widgets, check `AfterFirstUnlock`.
-- `errSecItemNotFound` in the widget: the item may have been saved without `kSecAttrAccessGroup`, the group may be different, or the widget may be reading another service/account.
-- `errSecDuplicateItem`: this usually appears during migration or after changing the access group. Keep a migration path that reads the old item, writes it to the new group, and deletes the old one.
-- Storing the token in shared `UserDefaults`: it works, but it is not secure. Use Keychain for secrets and the App Group only for non-sensitive data.
-
-> **Note:** Test this on a real device. Previews and the simulator can help, but entitlements, code signing, and WatchConnectivity behave more realistically on hardware.
-{: .doc-callout .doc-callout--note}
+One rule saves a lot of trouble: **a single process refreshes the token**. If the app, the widget, and the watch all try to refresh at the same time, you can rotate the token several times and leave one of them with an invalid credential. In a companion app, the iPhone app refreshes and distributes.
 
 ## The practical decision
 
