@@ -56,7 +56,7 @@ enum SessionStoreError: Error {
 }
 ```
 
-El `refreshToken` no está en este modelo. La app lo guarda en un Keychain privado y no lo comparte con el widget ni con el reloj. Este `Session` solo lleva el token de acceso, que es lo que necesitan para pintar datos y hablar con la API. Si el reloj necesita refrescar por su cuenta, dale un token específico para el reloj; no le pases el de refresco.
+En este ejemplo, el `refreshToken` no está en el modelo compartido. La app lo guarda en un Keychain privado y el widget y el reloj solo reciben el token de acceso, que es lo que necesitan para pintar datos y hablar con la API. Es la opción de mínimo privilegio, no una prohibición absoluta: si prefieres que el reloj refresque por su cuenta, puedes compartir el mismo refresh token. En ese caso, no lo pongas en `applicationContext`; envíalo con `sendMessage` y guárdalo en el Keychain del reloj. El logout debe revocar el refresh token en el servidor siempre, compartas el token o no.
 
 Ese tipo y el store que viene después tienen que estar disponibles en la app y en la extensión. Puedes compartirlos con un framework interno o añadir los mismos archivos a los dos targets.
 
@@ -157,7 +157,7 @@ Dos detalles marcan la diferencia:
 > **Importante:** Para un widget, `kSecAttrAccessibleWhenUnlocked` no es una buena opción. Si la extensión se ejecuta con el dispositivo bloqueado, la lectura puede fallar con `errSecInteractionNotAllowed`. Usa una clase accesible después del primer desbloqueo y no dependas de que el usuario tenga la pantalla desbloqueada.
 {: .doc-callout .doc-callout--important}
 
-El otro detalle es de seguridad: este `Session` solo contiene el token de acceso. El `refreshToken` se queda en un Keychain privado de la app, así que ni el widget ni el reloj lo reciben. Si el reloj necesita refrescar por su cuenta, usa un token específico para él.
+El otro detalle es de seguridad: este `Session` solo contiene el token de acceso. El `refreshToken` se queda en un Keychain privado de la app. Si el reloj necesita refrescar por su cuenta, puedes compartir el mismo refresh token, pero envíalo solo por `sendMessage`, guárdalo en el Keychain del reloj y revócalo en el servidor al cerrar sesión.
 
 ## El widget lee, la app refresca
 
@@ -319,7 +319,7 @@ final class SessionBridge: NSObject, WCSessionDelegate {
 
 `SessionBridge` guarda la última sesión pendiente si `WCSession` aún no está activa y la reintenta en `activationDidCompleteWith`. Si el usuario cierra sesión antes de que la sesión esté activa, el cierre pendiente gana. `isWatchAppInstalled` evita enviar a un reloj donde la app no está instalada.
 
-`updateApplicationContext` guarda un único contexto y lo reemplaza cuando llega uno nuevo. El sistema conserva ese contexto y lo deja disponible para la contraparte; no es un canal efímero como `sendMessage`. Apple no detalla dónde lo almacena, pero trátalo como persistente y no metas el `refreshToken`: en este ejemplo solo viaja el access token. Aun así, el access token sigue siendo una credencial: usa uno de corta vida y revócalo al cerrar sesión. Es ideal para una sesión: no te interesa una cola de tokens antiguos, sino el estado más reciente. `sendMessage` solo funciona cuando el otro lado está accesible; si no lo está, el contexto sigue siendo el mecanismo de respaldo. Si necesitas eventos ordenados, `transferUserInfo` los encola y los entrega en orden; para el estado actual de la sesión, `updateApplicationContext` es la opción más adecuada.
+`updateApplicationContext` guarda un único contexto y lo reemplaza cuando llega uno nuevo. El sistema conserva ese contexto y lo deja disponible para la contraparte; no es un canal efímero como `sendMessage`. Apple no detalla dónde lo almacena, pero trátalo como persistente y no metas el `refreshToken` del iPhone: en este ejemplo solo viaja el access token. Aun así, el access token sigue siendo una credencial: usa uno de corta vida y revoca el refresh token al cerrar sesión. Es ideal para una sesión: no te interesa una cola de tokens antiguos, sino el estado más reciente. `sendMessage` solo funciona cuando el otro lado está accesible; si no lo está, el contexto sigue siendo el mecanismo de respaldo. Si necesitas eventos ordenados, `transferUserInfo` los encola y los entrega en orden; para el estado actual de la sesión, `updateApplicationContext` es la opción más adecuada.
 
 En el Watch, recibe el contexto y guárdalo en el Keychain del reloj:
 
@@ -435,12 +435,28 @@ Lo bueno es que no necesitas mantener una sesión de WatchConnectivity ni que el
 - No está disponible en todas las regiones.
 - La sincronización no es inmediata; depende de red, batería y condiciones del sistema.
 - No puedes usar `ThisDeviceOnly`, porque precisamente quieres que el item salga del dispositivo.
-- Estás sincronizando un access token con todos los dispositivos de la cuenta. Aun así, es una credencial: usa tokens de corta vida y revócalos al cerrar sesión. No sincronices el `refreshToken`.
+- Estás sincronizando un access token con todos los dispositivos de la cuenta. Aun así, es una credencial: usa tokens de corta vida y revoca el refresh token al cerrar sesión. No sincronices el `refreshToken` del iPhone; si el reloj necesita refrescar por su cuenta, usa WatchConnectivity y `sendMessage`, no iCloud Keychain.
 
 > **Importante:** `ThisDeviceOnly` e iCloud Keychain son incompatibles para este caso. Si necesitas sincronización, la accesibilidad debe permitirla; si necesitas que el token no salga del dispositivo, usa WatchConnectivity.
 {: .doc-callout .doc-callout--important}
 
+### Si compartes el mismo refresh token
+
+No hacen falta tokens por dispositivo. Puedes dar al reloj el mismo refresh token que usa el iPhone. La revocación en servidor es obligatoria en cualquier logout, compartas el token o no; si lo compartes, además es lo que corta el acceso del reloj. Dicho eso, cuida estos puntos:
+
+- **No lo persistas en `applicationContext`:** ese contexto puede sobrevivir en el dispositivo. Envía el refresh token con `sendMessage` y guárdalo en el Keychain del reloj. El `applicationContext` puede seguir llevando solo el access token.
+- **Asume la ventana de exposición:** si el token se filtra antes del logout, el servidor lo aceptará hasta que lo revoques. La revocación reduce la ventana, no la elimina.
+- **Rota el token y detecta la reutilización:** si el mismo refresh token se usa en iPhone y reloj, una rotación mal llevada puede invalidar al otro. Decide qué proceso renueva y cómo se propaga el token nuevo.
+- **El access token ya emitido sigue vivo hasta que caduque:** la revocación del refresh token impide renovar, pero no invalida automáticamente el access token. Usa access tokens cortos o una lista de revocación.
+
+Al cerrar sesión, revoca el refresh token en el servidor, borra los tokens locales del iPhone, el widget y el reloj, y envía el mensaje de cierre al reloj. Si el refresh token se comparte, la revocación en servidor es lo que impide que el reloj siga renovando.
+
+El código de arriba mantiene el refresh token fuera del `Session` compartido para que el caso base sea el más restrictivo. Si adoptas esta variante, añade el refresh token al payload de `sendMessage` y al store del reloj; no lo añadas al payload de `updateApplicationContext`.
+
 ## Login, refresco y logout
+
+> **Importante:** Revocar el refresh token en el servidor no es opcional. Borrarlo del iPhone, del widget o del reloj no lo invalida. Si el refresh token sigue vivo, cualquiera que lo tenga puede seguir renovando la sesión. Hazlo siempre, compartas el token con el reloj o no.
+{: .doc-callout .doc-callout--important}
 
 Con estas piezas, el ciclo de vida queda bastante limpio. Después de un login correcto:
 
@@ -448,7 +464,7 @@ Con estas piezas, el ciclo de vida queda bastante limpio. Después de un login c
 2. Recarga los timelines del widget.
 3. Envía la sesión al Watch si existe una app companion.
 
-Cuando renueves el token, actualiza el item y repite los pasos 2 y 3. Cuando el usuario cierre sesión, borra el item, recarga los widgets y envía un mensaje al Apple Watch.
+Cuando renueves el token, actualiza el item y repite los pasos 2 y 3. Cuando el usuario cierre sesión, revoca el refresh token en el servidor, borra el item, recarga los widgets y envía un mensaje al Apple Watch. Si el reloj comparte el mismo refresh token, la revocación en servidor también lo cubre.
 
 ```swift
 import WidgetKit
@@ -461,6 +477,7 @@ struct SessionCoordinator {
     }
 
     func didSignOut() {
+        // Revoca el refresh token en el servidor.
         try? SharedSessionStore.delete()
         WidgetCenter.shared.reloadAllTimelines()
         SessionBridge.shared.sendSignedOut()
@@ -470,6 +487,8 @@ struct SessionCoordinator {
 
 Hay una regla que ahorra muchos problemas: **un solo proceso renueva el token**. Si la app, el widget y el reloj intentan refrescar a la vez, puedes rotar el token varias veces y dejar a alguno con una credencial invalidada. En una app companion, la app del iPhone renueva y distribuye.
 
+La revocación del refresh token impide renovar, pero no invalida automáticamente el access token que ya está en circulación. Para cerrar esa ventana, usa access tokens cortos o una lista de revocación en el servidor.
+
 ## La decisión práctica
 
 Si tu app tiene widget y una app companion para Apple Watch, yo empezaría por esta combinación:
@@ -478,6 +497,7 @@ Si tu app tiene widget y una app companion para Apple Watch, yo empezaría por e
 - Keychain access group en watchOS para la app del reloj y sus extensiones.
 - WatchConnectivity para llevar la sesión del iPhone al Watch.
 - iCloud Keychain solo si necesitas sincronización sin companion o Family Setup, asumiendo sus límites y probándolo en hardware.
+- Revocación en servidor del refresh token al cerrar sesión, siempre, aunque el reloj use el mismo token.
 
 Keychain compartido no lo resuelve todo por sí solo. Es una pieza excelente para compartir secretos dentro del mismo dispositivo. Para cruzar de un dispositivo a otro, la sesión se transfiere o se sincroniza, y cada opción tiene un coste distinto en seguridad, latencia y complejidad.
 
@@ -486,6 +506,7 @@ Keychain compartido no lo resuelve todo por sí solo. Es una pieza excelente par
 - [Sharing access to keychain items among a collection of apps](https://developer.apple.com/documentation/security/sharing-access-to-keychain-items-among-a-collection-of-apps)
 - [Keychain Services](https://developer.apple.com/documentation/security/keychain-services)
 - [kSecAttrSynchronizable](https://developer.apple.com/documentation/security/ksecattrsynchronizable)
+- [OAuth 2.0 Token Revocation (RFC 7009)](https://www.rfc-editor.org/rfc/rfc7009)
 - [WCSession](https://developer.apple.com/documentation/watchconnectivity/wcsession)
 - [WidgetKit](https://developer.apple.com/documentation/widgetkit)
 - [There and back again: Data transfer on Apple Watch](https://developer.apple.com/videos/play/wwdc2021/10003/)
@@ -537,7 +558,7 @@ enum SessionStoreError: Error {
 }
 ```
 
-The `refreshToken` is not part of this model. The app keeps it in a private Keychain and does not share it with the widget or the watch. This `Session` only carries the access token, which is what they need to render data and talk to the API. If the watch needs to refresh on its own, give it a watch-specific token; do not hand it the refresh token.
+In this example, the `refreshToken` is not part of the shared model. The app keeps it in a private Keychain, and the widget and watch only receive the access token, which is what they need to render data and talk to the API. That is the least-privilege option, not an absolute prohibition: if you prefer the watch to refresh on its own, you can share the same refresh token. In that case, do not put it in `applicationContext`; send it with `sendMessage` and store it in the watch's Keychain. Sign-out must always revoke the refresh token on the server, whether or not you share it.
 
 That type and the store below need to be available to the app and the widget. You can share them through an internal framework or add the same files to both targets.
 
@@ -638,7 +659,7 @@ Two details make the difference:
 > **Important:** For a widget, `kSecAttrAccessibleWhenUnlocked` is not a good choice. If the extension runs while the device is locked, the read can fail with `errSecInteractionNotAllowed`. Use an accessibility class that works after the first unlock and do not depend on the screen being unlocked.
 {: .doc-callout .doc-callout--important}
 
-The other detail is about security: this `Session` only contains the access token. The `refreshToken` stays in an app-private Keychain, so neither the widget nor the watch receives it. If the watch needs to refresh on its own, use a watch-specific token.
+The other detail is about security: this `Session` only contains the access token. The `refreshToken` stays in an app-private Keychain. If the watch needs to refresh on its own, you can share the same refresh token, but send it only over `sendMessage`, store it in the watch's Keychain, and revoke it on the server at sign-out.
 
 ## The widget reads, the app refreshes
 
@@ -800,7 +821,7 @@ final class SessionBridge: NSObject, WCSessionDelegate {
 
 `SessionBridge` keeps the latest pending session if `WCSession` is not active yet and retries it in `activationDidCompleteWith`. If the user signs out before the session becomes active, the pending sign-out wins. `isWatchAppInstalled` avoids sending to a watch where the app is not installed.
 
-`updateApplicationContext` stores a single context and replaces it when a new one arrives. The system keeps that context and makes it available to the counterpart; it is not an ephemeral channel like `sendMessage`. Apple does not document where it stores it, but treat it as persistent and do not put the `refreshToken` in it: in this example, only the access token travels. Even so, the access token is still a credential: keep it short-lived and revoke it on sign-out. That is ideal for a session: you do not want a queue of old tokens, you want the latest state. `sendMessage` only works when the other side is reachable; if it is not, the context remains the fallback. If you need ordered events, `transferUserInfo` queues and delivers them in order; for the current session state, `updateApplicationContext` is the better fit.
+`updateApplicationContext` stores a single context and replaces it when a new one arrives. The system keeps that context and makes it available to the counterpart; it is not an ephemeral channel like `sendMessage`. Apple does not document where it stores it, but treat it as persistent and do not put the iPhone's `refreshToken` in it: in this example, only the access token travels. Even so, the access token is still a credential: keep it short-lived and revoke the refresh token on sign-out. That is ideal for a session: you do not want a queue of old tokens, you want the latest state. `sendMessage` only works when the other side is reachable; if it is not, the context remains the fallback. If you need ordered events, `transferUserInfo` queues and delivers them in order; for the current session state, `updateApplicationContext` is the better fit.
 
 On the Watch, receive the context and store it in the watch’s Keychain:
 
@@ -916,12 +937,28 @@ The upside is that you do not need to maintain a WatchConnectivity session or ke
 - It is not available in every region.
 - Synchronization is not immediate; it depends on network, battery, and system conditions.
 - You cannot use `ThisDeviceOnly`, because the whole point is to let the item leave the device.
-- You are syncing an access token to every device on the account. It is still a credential: use short-lived tokens and revoke them on sign-out. Do not sync the `refreshToken`.
+- You are syncing an access token to every device on the account. It is still a credential: use short-lived tokens and revoke the refresh token on sign-out. Do not sync the iPhone's `refreshToken`; if the watch needs to refresh on its own, use WatchConnectivity and `sendMessage`, not iCloud Keychain.
 
 > **Important:** `ThisDeviceOnly` and iCloud Keychain are incompatible for this use case. If you need synchronization, accessibility must allow it; if you need the token to stay on the device, use WatchConnectivity.
 {: .doc-callout .doc-callout--important}
 
+### If you share the same refresh token
+
+You do not need per-device tokens. You can give the watch the same refresh token the iPhone uses. Server-side revocation is mandatory on every sign-out, whether or not you share the token; if you share it, it is also what cuts off the watch's access. That said, mind these points:
+
+- **Do not persist it in `applicationContext`:** that context can survive on the device. Send the refresh token with `sendMessage` and store it in the watch's Keychain. `applicationContext` can still carry only the access token.
+- **Accept the exposure window:** if the token leaks before logout, the server will accept it until you revoke it. Revocation narrows the window; it does not eliminate it.
+- **Rotate the token and detect reuse:** if the same refresh token is used on the iPhone and the watch, a mishandled rotation can invalidate the other. Decide which process refreshes and how the new token propagates.
+- **An access token already issued remains valid until it expires:** revoking the refresh token stops renewal, but it does not automatically invalidate the access token. Use short-lived access tokens or a revocation list.
+
+On sign-out, revoke the refresh token on the server, delete the local tokens on the iPhone, widget, and watch, and send the sign-out message to the watch. If the refresh token is shared, server-side revocation is what prevents the watch from continuing to renew.
+
+The code above keeps the refresh token out of the shared `Session` so the baseline is the most restrictive case. If you adopt this variant, add the refresh token to the `sendMessage` payload and the watch store; do not add it to the `updateApplicationContext` payload.
+
 ## Sign-in, refresh, and sign-out
+
+> **Important:** Revoking the refresh token on the server is not optional. Deleting it from the iPhone, the widget, or the watch does not invalidate it. If the refresh token is still alive, anyone who has it can keep renewing the session. Do it every time, whether or not you share the token with the watch.
+{: .doc-callout .doc-callout--important}
 
 With these pieces, the lifecycle is fairly clean. After a successful sign-in:
 
@@ -929,7 +966,7 @@ With these pieces, the lifecycle is fairly clean. After a successful sign-in:
 2. Reload the widget timelines.
 3. Send the session to the Watch if a companion app exists.
 
-When you renew the token, update the item and repeat steps 2 and 3. When the user signs out, delete the item, reload the widgets, and send a message to the Apple Watch.
+When you renew the token, update the item and repeat steps 2 and 3. When the user signs out, revoke the refresh token on the server, delete the item, reload the widgets, and send a message to the Apple Watch. If the watch shares the same refresh token, the server-side revocation covers it too.
 
 ```swift
 import WidgetKit
@@ -951,6 +988,8 @@ struct SessionCoordinator {
 
 One rule saves a lot of trouble: **a single process refreshes the token**. If the app, the widget, and the watch all try to refresh at the same time, you can rotate the token several times and leave one of them with an invalid credential. In a companion app, the iPhone app refreshes and distributes.
 
+Revoking the refresh token stops renewal, but it does not automatically invalidate an access token already in circulation. To close that window, use short-lived access tokens or a server-side revocation list.
+
 ## The practical decision
 
 If your app has a widget and an Apple Watch companion app, I would start with this combination:
@@ -959,6 +998,7 @@ If your app has a widget and an Apple Watch companion app, I would start with th
 - A watchOS Keychain access group for the Watch app and its extensions.
 - WatchConnectivity to move the session from iPhone to Watch.
 - iCloud Keychain only if you need synchronization without a companion or for Family Setup, accepting its limits and testing it on hardware.
+- Server-side refresh token revocation on sign-out, always, even if the watch uses the same token.
 
 Shared Keychain does not solve everything by itself. It is an excellent piece for sharing secrets on the same device. To cross from one device to another, the session is transferred or synchronized, and each option has a different cost in security, latency, and complexity.
 
@@ -967,6 +1007,7 @@ Shared Keychain does not solve everything by itself. It is an excellent piece fo
 - [Sharing access to keychain items among a collection of apps](https://developer.apple.com/documentation/security/sharing-access-to-keychain-items-among-a-collection-of-apps)
 - [Keychain Services](https://developer.apple.com/documentation/security/keychain-services)
 - [kSecAttrSynchronizable](https://developer.apple.com/documentation/security/ksecattrsynchronizable)
+- [OAuth 2.0 Token Revocation (RFC 7009)](https://www.rfc-editor.org/rfc/rfc7009)
 - [WCSession](https://developer.apple.com/documentation/watchconnectivity/wcsession)
 - [WidgetKit](https://developer.apple.com/documentation/widgetkit)
 - [There and back again: Data transfer on Apple Watch](https://developer.apple.com/videos/play/wwdc2021/10003/)
