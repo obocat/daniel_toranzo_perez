@@ -51,12 +51,13 @@ func printUsage() {
       --output <ruta>       Carpeta de salida. Por defecto: tmp/article-images
       --width <píxeles>     Ancho del lienzo. Por defecto: 1400
       --background <hex>    Color de fondo, por ejemplo F5F5F7. Usa "transparent" para fondo transparente.
-      --frame <ruta>        Marco PNG opcional. Si lo usas, también necesitas --screen.
-      --screen x,y,w,h      Zona de pantalla dentro del marco, en píxeles del PNG del marco.
+      --frame <ruta>        Marco PNG de Apple (Product Bezels). La pantalla debe ser transparente o blanca.
+      --screen x,y,w,h      Zona de pantalla dentro del marco. Si se omite, se detecta automáticamente.
       --help                Muestra esta ayuda.
 
     Ejemplos:
       swift script/mockup-device.swift --input capturas --output tmp/attributedstring
+      swift script/mockup-device.swift --input captura.png --frame iphone-15-pro.png --output tmp/attributedstring
       swift script/mockup-device.swift --input captura.png --frame iphone.png --screen 120,240,900,1950
     """)
 }
@@ -116,9 +117,6 @@ func parseOptions() throws -> Options {
 
     guard let input else {
         throw ScriptError.usage("Falta --input. Usa --help para ver los ejemplos.")
-    }
-    if frame != nil && screen == nil {
-        throw ScriptError.usage("--frame requiere --screen x,y,w,h.")
     }
 
     return Options(input: input, output: output, width: width, background: background, frame: frame, screen: screen)
@@ -199,6 +197,137 @@ func drawAspectFill(_ image: NSImage, in rect: CGRect) {
         height: drawn.height
     )
     drawImage(image, in: target)
+}
+
+func bitmapRepresentation(of image: NSImage) -> NSBitmapImageRep? {
+    if let rep = image.representations
+        .compactMap({ $0 as? NSBitmapImageRep })
+        .max(by: { $0.pixelsWide * $0.pixelsHigh < $1.pixelsWide * $1.pixelsHigh }) {
+        return rep
+    }
+    guard let data = image.tiffRepresentation else { return nil }
+    return NSBitmapImageRep(data: data)
+}
+
+func detectScreen(in frame: NSImage) throws -> CGRect {
+    guard let rep = bitmapRepresentation(of: frame) else {
+        throw ScriptError.usage("No se pudo leer el marco para detectar la pantalla.")
+    }
+
+    let width = rep.pixelsWide
+    let height = rep.pixelsHigh
+    guard width > 200, height > 200 else {
+        throw ScriptError.usage("El marco es demasiado pequeño para detectar la pantalla.")
+    }
+
+    func isScreenPixel(_ x: Int, _ y: Int) -> Bool {
+        guard let color = rep.colorAt(x: x, y: y) else { return false }
+        if color.alphaComponent < 0.1 {
+            return true
+        }
+        return color.alphaComponent > 0.5
+            && color.redComponent > 0.97
+            && color.greenComponent > 0.97
+            && color.blueComponent > 0.97
+    }
+
+    let midX = width / 2
+    let midY = height / 2
+    guard isScreenPixel(midX, midY) else {
+        throw ScriptError.usage(
+            "No se pudo detectar la pantalla. Usa --screen x,y,w,h o un PNG de Apple con la pantalla transparente."
+        )
+    }
+
+    var left = midX
+    while left > 0 && isScreenPixel(left - 1, midY) {
+        left -= 1
+    }
+    var right = midX
+    while right < width - 1 && isScreenPixel(right + 1, midY) {
+        right += 1
+    }
+
+    let column = width / 4
+    guard isScreenPixel(column, midY) else {
+        throw ScriptError.usage("No se pudo detectar la altura de la pantalla. Usa --screen x,y,w,h.")
+    }
+    var top = midY
+    while top > 0 && isScreenPixel(column, top - 1) {
+        top -= 1
+    }
+    var bottom = midY
+    while bottom < height - 1 && isScreenPixel(column, bottom + 1) {
+        bottom += 1
+    }
+
+    let screen = CGRect(
+        x: left,
+        y: top,
+        width: right - left + 1,
+        height: bottom - top + 1
+    )
+    guard screen.width > 100, screen.height > 100 else {
+        throw ScriptError.usage("La pantalla detectada es demasiado pequeña. Usa --screen x,y,w,h.")
+    }
+    return screen
+}
+
+func screenIsTransparent(_ frame: NSImage, screen: CGRect) -> Bool {
+    guard let rep = bitmapRepresentation(of: frame),
+          let color = rep.colorAt(x: Int(screen.midX), y: Int(screen.midY)) else {
+        return true
+    }
+    return color.alphaComponent < 0.5
+}
+
+func frameWithTransparentScreen(_ frame: NSImage, screen: CGRect) -> NSImage {
+    guard let cgImage = frame.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+        return frame
+    }
+
+    let width = cgImage.width
+    let height = cgImage.height
+    guard let rep = NSBitmapImageRep(
+        bitmapDataPlanes: nil,
+        pixelsWide: width,
+        pixelsHigh: height,
+        bitsPerSample: 8,
+        samplesPerPixel: 4,
+        hasAlpha: true,
+        isPlanar: false,
+        colorSpaceName: .deviceRGB,
+        bytesPerRow: 0,
+        bitsPerPixel: 0
+    ), let context = NSGraphicsContext(bitmapImageRep: rep) else {
+        return frame
+    }
+
+    NSGraphicsContext.saveGraphicsState()
+    NSGraphicsContext.current = context
+    context.cgContext.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
+    NSGraphicsContext.restoreGraphicsState()
+
+    guard let data = rep.bitmapData else { return frame }
+    let minX = max(0, Int(screen.minX))
+    let maxX = min(width, Int(screen.maxX))
+    let minY = max(0, Int(screen.minY))
+    let maxY = min(height, Int(screen.maxY))
+    for y in minY..<maxY {
+        let row = y * rep.bytesPerRow
+        for x in minX..<maxX {
+            let index = row + x * 4
+            let alpha = data[index + 3]
+            let isWhite = data[index] > 245 && data[index + 1] > 245 && data[index + 2] > 245
+            if alpha > 127 && isWhite {
+                data[index + 3] = 0
+            }
+        }
+    }
+
+    let result = NSImage(size: CGSize(width: width, height: height))
+    result.addRepresentation(rep)
+    return result
 }
 
 func drawRoundedRect(_ rect: CGRect, radius: CGFloat, color: NSColor) {
@@ -395,7 +524,10 @@ func drawCustomFrame(
     drawAspectFill(screenshot, in: screenRect)
     NSGraphicsContext.restoreGraphicsState()
 
-    drawImage(frame, in: frameRect)
+    let overlay = screenIsTransparent(frame, screen: screen)
+        ? frame
+        : frameWithTransparentScreen(frame, screen: screen)
+    drawImage(overlay, in: frameRect)
 
     NSGraphicsContext.restoreGraphicsState()
 
@@ -414,6 +546,7 @@ func main() throws {
 
     try FileManager.default.createDirectory(at: options.output, withIntermediateDirectories: true)
     let frame = try options.frame.map(loadImage)
+    let screen = try frame.map { try options.screen ?? detectScreen(in: $0) }
     var generated: [URL] = []
 
     for file in files {
@@ -421,7 +554,7 @@ func main() throws {
         let base = file.deletingPathExtension().lastPathComponent
         let destination = options.output.appendingPathComponent("\(base)-device.png")
 
-        if let frame, let screen = options.screen {
+        if let frame, let screen {
             try drawCustomFrame(
                 screenshot: screenshot,
                 frame: frame,
