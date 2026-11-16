@@ -128,16 +128,6 @@ Las tres convierten el párrafo en una sola parada. Visualmente sigue pareciendo
 
 El texto del enlace también importa. «Aquí» o «más información» no dicen nada fuera de contexto. «Guía de AttributedString» sí. VoiceOver permite recorrer los enlaces con el rotor; si todos se llaman «aquí», el rotor es inútil.
 
-Si tienes un encabezado visual, añade también la semántica:
-
-```swift
-import SwiftUI
-
-Text("Enlaces")
-    .font(.headline)
-    .accessibilityAddTraits(.isHeader)
-```
-
 Prueba con el rotor de enlaces, no solo leyendo el párrafo de arriba abajo. En el simulador, activa VoiceOver o usa Accessibility Inspector. Comprueba que cada enlace aparece en el rotor, que el foco no se queda atrapado y que el orden coincide con el texto.
 
 ## La decisión práctica
@@ -279,16 +269,6 @@ There are three common ways to break it:
 All three collapse the paragraph into a single stop. It still looks like a link; to VoiceOver, it is no longer one.
 
 Link text matters too. “Here” or “more information” says nothing out of context. “AttributedString guide” does. VoiceOver lets people move through links with the rotor; if every link is called “here”, the rotor is useless.
-
-If you have a visual heading, add the semantics too:
-
-```swift
-import SwiftUI
-
-Text("Links")
-    .font(.headline)
-    .accessibilityAddTraits(.isHeader)
-```
 
 Test with the links rotor, not just by reading the paragraph from top to bottom. In the simulator, turn on VoiceOver or use Accessibility Inspector. Check that each link appears in the rotor, that focus does not get trapped, and that the order matches the text.
 
