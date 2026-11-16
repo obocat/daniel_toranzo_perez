@@ -136,7 +136,7 @@ La accesibilidad tampoco es solo una decisión de producto. La Ley Europea de Ac
 
 Pero el argumento práctico es anterior a la norma. Una persona que ya usa VoiceOver en su iPhone no debería aprender un modelo de interacción nuevo para tu app. Si los enlaces se comportan como enlaces, los botones como botones y los encabezados como encabezados, esa persona llega con parte del trabajo hecho. La app se siente predecible, el aprendizaje inicial es más corto y el soporte recibe menos preguntas del tipo «¿por qué esto no se puede activar?».
 
-Eso no significa que la accesibilidad sea gratis. Significa que gran parte del valor está en usar las convenciones que el sistema ya ofrece, en lugar de inventar gestos o etiquetas que solo funcionan en tu pantalla. El rotor de enlaces, el foco y los rasgos de accesibilidad son infraestructura compartida. Cuanto más se respetan, menos tiene que aprender quien ya conoce VoiceOver.
+Eso no significa que la accesibilidad sea gratis. Significa que gran parte del valor está en usar las convenciones que el sistema ya ofrece, en lugar de inventar gestos o etiquetas que solo funcionan en tu pantalla. El rotor de enlaces, el foco, etcétera, son infraestructura compartida. Cuanto más se respetan, menos tiene que aprender quien ya conoce VoiceOver.
 
 La accesibilidad también reduce el riesgo de que una función exista solo para quien ve la pantalla. Un enlace que solo es azul, un botón que solo responde a un tap o un estado que solo se comunica por color son deuda de accesibilidad.
 
@@ -290,7 +290,7 @@ Accessibility is not only a product decision. The European Accessibility Act (EA
 
 The practical argument comes before the law, though. Someone who already uses VoiceOver on their iPhone should not have to learn a new interaction model for your app. If links behave like links, buttons like buttons, and headings like headings, that person arrives with part of the work already done. The app feels predictable, initial learning is shorter, and support gets fewer “why can’t I activate this?” questions.
 
-That does not mean accessibility is free. It means much of the value comes from using the conventions the system already provides instead of inventing gestures or labels that only work on your screen. The links rotor, focus, and accessibility traits are shared infrastructure. The more you respect them, the less someone who already knows VoiceOver has to learn.
+That does not mean accessibility is free. It means much of the value comes from using the conventions the system already provides instead of inventing gestures or labels that only work on your screen. The links rotor, focus, etc. are shared infrastructure. The more you respect them, the less someone who already knows VoiceOver has to learn.
 
 Accessibility also reduces the risk of a feature existing only for people who can see the screen. A link that is only blue, a button that only responds to a tap, or a state communicated only by color is accessibility debt.
 
