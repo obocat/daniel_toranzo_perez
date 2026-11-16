@@ -70,7 +70,7 @@ vanilla JavaScript provides the language switch and UI interactions.
 │   ├── tool-json-codable.js # JSON-to-Codable conversion
 │   ├── tool-springs.js      # SwiftUI spring visualizer
 │   └── tool-gradients.js    # SwiftUI gradient animator
-├── script/                  # Content validation
+├── script/                  # Content validation and local mockups
 ├── images/                  # Avatar, project images, social card
 ├── index.html               # CV page
 └── CNAME                    # Custom domain
@@ -220,6 +220,15 @@ Notes:
 - The latest three posts are shown on the CV home page. Set
   `resume_section_blog: false` in `_config.yml` to hide that section.
 - The blog archive is available at `/blog/` and is grouped by year.
+
+### Article images
+
+Article images are not committed. Generate device mockups locally with
+`script/mockup-device.swift`, using an Apple product bezel with a transparent
+screen cutout and `--background transparent`. Upload the resulting PNGs to
+ImgBB and embed the direct URLs in `figure.post-figure`, one per language. See
+the article-image section in [`AGENTS.md`](AGENTS.md) for the full workflow and
+validation commands.
 
 For the complete issue, branch, validation, and pull-request workflow, see
 [`AGENTS.md`](AGENTS.md).

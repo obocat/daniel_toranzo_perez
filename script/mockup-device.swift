@@ -10,7 +10,8 @@ import Foundation
 //   swift script/mockup-device.swift --input shot.png --output tmp/article-images
 //
 // The generated PNGs are not uploaded anywhere. Upload them manually to
-// image2url.com (or any host) and paste the resulting URLs into the article.
+// ImgBB (or any host with direct image URLs) and paste the resulting URLs
+// into the article.
 
 struct Options {
     var input: URL
@@ -57,7 +58,7 @@ func printUsage() {
 
     Ejemplos:
       swift script/mockup-device.swift --input capturas --output tmp/attributedstring
-      swift script/mockup-device.swift --input captura.png --frame iphone-15-pro.png --output tmp/attributedstring
+      swift script/mockup-device.swift --input captura.png --frame iphone-15-pro.png --output tmp/attributedstring --background transparent
       swift script/mockup-device.swift --input captura.png --frame iphone.png --screen 120,240,900,1950
     """)
 }
@@ -593,7 +594,7 @@ func main() throws {
 
     print("")
     print("Listo. Revisa \(options.output.path)/preview.html")
-    print("Sube los PNG a https://www.image2url.com/es y pega las URLs en el artículo.")
+    print("Sube los PNG a ImgBB (https://imgbb.com/) y pega las URLs directas en el artículo.")
     print("Las imágenes generadas no se suben a GitHub.")
 }
 

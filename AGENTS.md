@@ -14,6 +14,8 @@ design, SEO, or validation.
 - Keep the site bilingual (Spanish/English) and test both languages.
 - Keep the Apple-inspired visual language, responsive layout, and dark mode.
 - Do not reference the original CV template in user-facing content.
+- Do not commit article screenshots, generated mockups, or device-bezel PNGs.
+  Keep them in `tmp/` and host the final images externally.
 - Prefer small, focused changes. Do not reformat unrelated files.
 
 ## Repository facts
@@ -27,6 +29,7 @@ design, SEO, or validation.
 - Blog permalink: `/blog/:year/:month/:day/:title/`.
 - Live site: `https://www.obocat.com`.
 - Content validation: `ruby script/check_bilingual_content.rb`.
+- Device mockups: `script/mockup-device.swift` (local only; outputs to `tmp/`).
 
 ## Article workflow
 
@@ -139,7 +142,71 @@ Rules:
 - Verify technical claims against Apple documentation or a reproducible test.
   Add nuance instead of overstating a behavior.
 
-### 7. Validate
+### 7. Article images
+
+Do not commit screenshots, device frames, or generated mockups. Keep the source
+images, the Apple bezel, and the output under `tmp/`. `tmp/` is ignored by Git.
+
+1. Capture one screenshot per language. Put them in a temporary folder such as
+   `tmp/article-snapshots/`.
+2. Get an Apple product bezel PNG with a transparent screen cutout from Apple
+   Design Resources ("Product Bezels"). Keep it in `tmp/frames/`; do not commit
+   it. The bezel artwork has its own Apple license even though the site code is
+   open source.
+3. Generate the mockups:
+
+   ```bash
+   swift script/mockup-device.swift \
+     --input tmp/article-snapshots \
+     --frame tmp/frames/iphone-15-pro-natural-titanium.png \
+     --output tmp/article-images \
+     --width 1600 \
+     --background transparent
+   ```
+
+   The script detects the screen rectangle automatically. If detection fails or
+   the cutout is unusual, pass `--screen x,y,w,h` in bezel pixels. Use
+   `--background transparent` unless the article needs a solid background.
+
+4. Inspect `tmp/article-images/preview.html`. Confirm the PNG has an alpha
+   channel:
+
+   ```bash
+   sips -g hasAlpha tmp/article-images/slug-es-device.png
+   ```
+
+5. Upload the final PNGs to a free host that provides direct image URLs.
+   ImgBB is the current default. Prefer a service that also gives a deletion
+   URL. Do not commit the images or attach them to GitHub issues.
+6. Copy the direct image URL (for ImgBB, the `i.ibb.co/...` URL, not the
+   viewer page) and verify it before editing the article:
+
+   ```bash
+   curl -L -o /tmp/check.png -w '%{http_code} %{content_type}\n' '<url>'
+   shasum -a 256 tmp/article-images/slug-es-device.png /tmp/check.png
+   ```
+
+7. Add one figure per language, with localized `alt` text and caption:
+
+   ```html
+   <figure class="post-figure">
+     <img src="https://i.ibb.co/.../slug-es-device.png" alt="...">
+     <figcaption>...</figcaption>
+   </figure>
+   ```
+
+   Use the Spanish image inside `.lang-es` and the English image inside
+   `.lang-en`. Keep the caption accurate: do not claim a device model that the
+   bezel does not represent.
+
+8. Rebuild and confirm both URLs appear in the generated page:
+
+   ```bash
+   bundle exec jekyll build --future
+   grep -n 'i.ibb.co' _site/blog/YYYY/MM/DD/slug/index.html
+   ```
+
+### 8. Validate
 
 Run the same checks as CI:
 
@@ -163,7 +230,7 @@ bundle exec sass --sourcemap=auto css/main.scss css/main.css
 
 Then rebuild. Always commit the compiled `css/main.css` when SCSS changes.
 
-### 8. Commit, push, and open a pull request
+### 9. Commit, push, and open a pull request
 
 Use an English commit message with the issue number:
 
@@ -186,7 +253,7 @@ After the PR check finishes, comment on the issue with:
 - Check result.
 - Publication date, if applicable.
 
-### 9. Definition of done
+### 10. Definition of done
 
 - [ ] Issue exists and is linked from the PR.
 - [ ] Branch and commit include the issue number.
@@ -197,6 +264,9 @@ After the PR check finishes, comment on the issue with:
 - [ ] Local validation passes.
 - [ ] `bundle exec jekyll build --future` passes.
 - [ ] The generated post and sitemap entry exist.
+- [ ] Article images are hosted externally with direct URLs and are not committed.
+- [ ] Figure URLs return HTTP 200 and match the local PNG checksums.
+- [ ] Figures include localized `alt` text and captions.
 - [ ] The PR check is green.
 - [ ] The issue has the PR/commit/check comment.
 
