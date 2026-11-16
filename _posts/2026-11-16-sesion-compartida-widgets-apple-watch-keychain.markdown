@@ -13,7 +13,7 @@ reading_time: 12
 
 <div class="lang-es" lang="es" markdown="1">
 
-La escena se repite: alguien inicia sesión en la app, abre el widget y se encuentra con un «Inicia sesión». Levanta la muñeca y el reloj tampoco sabe quién es. La tentación es guardar el token en un `UserDefaults` compartido y seguir adelante. Es cómodo, pero también es una mala idea: un token es una credencial y merece el mismo trato que una contraseña.
+La escena se repite: alguien inicia sesión en la app, abre el widget y se encuentra con un «Inicia sesión». Levanta la muñeca y en el Apple Watch, más de lo mismo. La tentación es guardar el token en un `UserDefaults` compartido y seguir adelante. Es cómodo, pero también es una mala idea: un token es una credencial y merece el mismo trato que una contraseña.
 
 Keychain compartido ayuda, pero solo hasta cierto punto. Piensa en dos escenarios que se parecen y no son iguales: compartir un secreto **dentro del mismo dispositivo** y moverlo **de un dispositivo a otro**. Si los mezclas, acabas esperando magia del Keychain.
 
@@ -332,7 +332,7 @@ Keychain compartido no lo resuelve todo por sí solo. Es una pieza excelente par
 
 <div class="lang-en" lang="en" markdown="1">
 
-The scene is familiar: someone signs in to the app, opens the widget, and finds a “Sign in” message. They raise their wrist and the watch does not know who they are either. The tempting fix is to put the token in shared `UserDefaults` and move on. It is convenient, but it is also a bad idea: a token is a credential and deserves the same care as a password.
+The scene is familiar: someone signs in to the app, opens the widget, and finds a “Sign in” message. They raise their wrist and, on Apple Watch, it is the same story. The tempting fix is to put the token in shared `UserDefaults` and move on. It is convenient, but it is also a bad idea: a token is a credential and deserves the same care as a password.
 
 Shared Keychain helps, but only up to a point. Think of two scenarios that look alike and are not: sharing a secret **on the same device** and moving it **from one device to another**. Mix them up and you end up expecting magic from Keychain.
 
