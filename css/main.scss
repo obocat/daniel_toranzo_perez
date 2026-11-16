@@ -1690,6 +1690,26 @@ html[data-lang='en'] .lang-switch-thumb {
   border-radius: var(--radius-sm);
 }
 
+.post-content figure.post-figure {
+  margin: 2.5rem 0;
+  text-align: center;
+}
+
+.post-content figure.post-figure img {
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.post-content figure.post-figure figcaption {
+  max-width: 560px;
+  margin: 0.85rem auto 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.45;
+  text-wrap: balance;
+}
+
 .post-content hr {
   margin: 2.5rem 0;
   border: 0;
