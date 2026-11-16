@@ -1,7 +1,7 @@
 ---
 title: "AttributedString: formato, enlaces y VoiceOver en SwiftUI"
 title_en: "AttributedString: formatting, links, and VoiceOver in SwiftUI"
-date: 2026-11-16 09:00:00
+date: 2026-11-19 09:00:00
 description: "Cómo dar formato a un texto con AttributedString, gestionar enlaces con OpenURLAction y hacer que VoiceOver los reconozca como enlaces."
 description_en: "How to format text with AttributedString, handle links with OpenURLAction, and make VoiceOver recognize them as links."
 lang: es
