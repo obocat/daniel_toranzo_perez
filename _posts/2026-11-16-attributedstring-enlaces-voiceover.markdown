@@ -58,8 +58,8 @@ struct ArticleText: View {
 El atributo que no es negociable es `.link`. El subrayado y el color ayudan a verlo, pero no lo convierten en un enlace. Si quitas `.link` y dejas solo el color azul, tendrás texto bonito y ningún enlace.
 
 <figure class="post-figure">
-  <img src="https://files.catbox.moe/wr6ii3.png" alt="Captura de la app de ejemplo con el título AttributedString, texto formateado y un enlace subrayado.">
-  <figcaption>Una vista de ejemplo con formato semántico y un enlace real, montada sobre un marco de iPhone 15 Pro.</figcaption>
+  <img src="https://files.catbox.moe/kb9lfz.png" alt="Captura de la app de ejemplo con el título AttributedString, texto formateado y un enlace subrayado.">
+  <figcaption>Una vista de ejemplo con formato semántico y un enlace real, en un iPhone 15 Pro.</figcaption>
 </figure>
 
 ## Markdown como punto de partida
@@ -244,8 +244,8 @@ struct ArticleText: View {
 The non-negotiable attribute is `.link`. Underline and color help people see it, but they do not make it a link. Remove `.link` and keep the blue color, and you have pretty text with no link at all.
 
 <figure class="post-figure">
-  <img src="https://files.catbox.moe/w18tdo.png" alt="Screenshot of the sample app with the AttributedString title, formatted text, and an underlined link.">
-  <figcaption>An example view with semantic formatting and a real link, mounted in an iPhone 15 Pro frame.</figcaption>
+  <img src="https://files.catbox.moe/mhs86w.png" alt="Screenshot of the sample app with the AttributedString title, formatted text, and an underlined link.">
+  <figcaption>An example view with semantic formatting and a real link, on an iPhone 15 Pro.</figcaption>
 </figure>
 
 ## Markdown as a starting point
