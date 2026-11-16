@@ -216,192 +216,9 @@ En la práctica, tienes dos estrategias válidas.
 
 Para una app companion, es la opción más directa. La app del iPhone envía la sesión al reloj y la app del Watch la guarda en su Keychain. No depende de iCloud Keychain y te deja decidir cuándo se envía y qué se envía.
 
-En el iPhone, puedes usar `updateApplicationContext` para mantener el último estado y `sendMessage` para entregarlo cuanto antes si el reloj está accesible:
+Usa `updateApplicationContext` para mantener el último estado y `sendMessage` para entregarlo cuanto antes si el reloj está accesible. Activa `WCSession` lo antes posible y trátala como un canal con entrega diferida: el sistema decide cuándo despertar al reloj. Para una sesión que cambia poco, el contexto suele bastar; para una acción interactiva, `sendMessage` reduce la espera.
 
-```swift
-import Foundation
-import WatchConnectivity
-
-final class SessionBridge: NSObject, WCSessionDelegate {
-    static let shared = SessionBridge()
-    private let connectivity = WCSession.default
-    private let lock = NSLock()
-    private var pendingSession: Session?
-    private var pendingSignedOut = false
-
-    func activate() {
-        guard WCSession.isSupported() else { return }
-        connectivity.delegate = self
-        connectivity.activate()
-    }
-
-    func send(_ value: Session) {
-        lock.lock()
-        guard connectivity.activationState == .activated else {
-            pendingSession = value
-            pendingSignedOut = false
-            lock.unlock()
-            activate()
-            return
-        }
-        lock.unlock()
-
-        guard connectivity.isWatchAppInstalled,
-              let data = try? JSONEncoder().encode(value) else { return }
-
-        lock.lock()
-        pendingSession = nil
-        pendingSignedOut = false
-        lock.unlock()
-
-        let payload: [String: Any] = ["session": data]
-        try? connectivity.updateApplicationContext(payload)
-
-        if connectivity.isReachable {
-            connectivity.sendMessage(payload, replyHandler: nil)
-        }
-    }
-
-    func sendSignedOut() {
-        lock.lock()
-        guard connectivity.activationState == .activated else {
-            pendingSession = nil
-            pendingSignedOut = true
-            lock.unlock()
-            activate()
-            return
-        }
-        lock.unlock()
-
-        lock.lock()
-        pendingSession = nil
-        pendingSignedOut = false
-        lock.unlock()
-
-        let payload: [String: Any] = ["signedOut": true]
-        try? connectivity.updateApplicationContext(payload)
-
-        if connectivity.isReachable {
-            connectivity.sendMessage(payload, replyHandler: nil)
-        }
-    }
-
-    func session(
-        _ session: WCSession,
-        activationDidCompleteWith activationState: WCSessionActivationState,
-        error: Error?
-    ) {
-        guard activationState == .activated else { return }
-
-        lock.lock()
-        let pending = pendingSession
-        let signedOut = pendingSignedOut
-        pendingSession = nil
-        pendingSignedOut = false
-        lock.unlock()
-
-        if signedOut {
-            sendSignedOut()
-        } else if let pending {
-            send(pending)
-        }
-    }
-
-    #if os(iOS)
-    func sessionDidBecomeInactive(_ session: WCSession) {}
-
-    func sessionDidDeactivate(_ session: WCSession) {
-        session.activate()
-    }
-    #endif
-}
-```
-
-`SessionBridge` guarda la última sesión pendiente si `WCSession` aún no está activa y la reintenta en `activationDidCompleteWith`. Si el usuario cierra sesión antes de que la sesión esté activa, el cierre pendiente gana. `isWatchAppInstalled` evita enviar a un reloj donde la app no está instalada.
-
-`updateApplicationContext` guarda un único contexto y lo reemplaza cuando llega uno nuevo. El sistema conserva ese contexto y lo deja disponible para la contraparte; no es un canal efímero como `sendMessage`. Apple no detalla dónde lo almacena, pero trátalo como persistente y no metas el `refreshToken` del iPhone: en este ejemplo solo viaja el access token. Aun así, el access token sigue siendo una credencial: usa uno de corta vida y revoca el refresh token al cerrar sesión. Es ideal para una sesión: no te interesa una cola de tokens antiguos, sino el estado más reciente. `sendMessage` solo funciona cuando el otro lado está accesible; si no lo está, el contexto sigue siendo el mecanismo de respaldo. Si necesitas eventos ordenados, `transferUserInfo` los encola y los entrega en orden; para el estado actual de la sesión, `updateApplicationContext` es la opción más adecuada.
-
-En el Watch, recibe el contexto y guárdalo en el Keychain del reloj:
-
-```swift
-import Combine
-import Foundation
-import WatchConnectivity
-
-@MainActor
-final class WatchSessionReceiver: NSObject, ObservableObject, WCSessionDelegate {
-    @Published private(set) var session: Session?
-    private let connectivity = WCSession.default
-
-    private struct Update: Sendable {
-        let session: Session?
-        let signedOut: Bool
-    }
-
-    func activate() {
-        guard WCSession.isSupported() else { return }
-        connectivity.delegate = self
-        connectivity.activate()
-    }
-
-    nonisolated func session(
-        _ session: WCSession,
-        activationDidCompleteWith activationState: WCSessionActivationState,
-        error: Error?
-    ) {
-        guard let update = Self.update(from: session.receivedApplicationContext) else { return }
-        Task { @MainActor in
-            self.apply(update)
-        }
-    }
-
-    nonisolated func session(
-        _ session: WCSession,
-        didReceiveApplicationContext applicationContext: [String: Any]
-    ) {
-        guard let update = Self.update(from: applicationContext) else { return }
-        Task { @MainActor in
-            self.apply(update)
-        }
-    }
-
-    nonisolated func session(_ session: WCSession, didReceiveMessage message: [String: Any]) {
-        guard let update = Self.update(from: message) else { return }
-        Task { @MainActor in
-            self.apply(update)
-        }
-    }
-
-    private nonisolated static func update(from payload: [String: Any]) -> Update? {
-        if payload["signedOut"] as? Bool == true {
-            return Update(session: nil, signedOut: true)
-        }
-
-        guard let data = payload["session"] as? Data,
-              let decoded = try? JSONDecoder().decode(Session.self, from: data) else {
-            return nil
-        }
-
-        return Update(session: decoded, signedOut: false)
-    }
-
-    private func apply(_ update: Update) {
-        if update.signedOut {
-            try? SharedSessionStore.delete()
-            session = nil
-            return
-        }
-
-        guard let decoded = update.session else { return }
-        try? SharedSessionStore.save(decoded)
-        session = decoded
-    }
-}
-```
-
-El receptor decodifica el payload fuera del main actor y solo cruza a `@MainActor` con un valor `Sendable`. Así evitas capturar `[String: Any]` dentro del `Task` y el código aguanta las comprobaciones estrictas de Swift 6.
-
-Activa `WCSession` lo antes posible, idealmente al arrancar la app o la extensión. Las entregas en segundo plano no son instantáneas: el sistema decide cuándo tiene sentido despertar al reloj. Para una sesión que cambia poco, `updateApplicationContext` suele ser suficiente. Para una acción interactiva con el reloj delante, `sendMessage` reduce la espera.
+El receptor debe decodificar el payload fuera del main actor y aplicar el cambio en `@MainActor`. Si el reloj no tiene la app instalada, no envíes nada.
 
 ### Opción 2: iCloud Keychain
 
@@ -435,7 +252,7 @@ Lo bueno es que no necesitas mantener una sesión de WatchConnectivity ni que el
 - No está disponible en todas las regiones.
 - La sincronización no es inmediata; depende de red, batería y condiciones del sistema.
 - No puedes usar `ThisDeviceOnly`, porque precisamente quieres que el item salga del dispositivo.
-- Estás sincronizando un access token con todos los dispositivos de la cuenta. Aun así, es una credencial: usa tokens de corta vida y revoca el refresh token al cerrar sesión. No sincronices el `refreshToken` del iPhone; si el reloj necesita refrescar por su cuenta, usa WatchConnectivity y `sendMessage`, no iCloud Keychain.
+- Estás sincronizando un access token con todos los dispositivos de la cuenta.
 
 > **Importante:** `ThisDeviceOnly` e iCloud Keychain son incompatibles para este caso. Si necesitas sincronización, la accesibilidad debe permitirla; si necesitas que el token no salga del dispositivo, usa WatchConnectivity.
 {: .doc-callout .doc-callout--important}
@@ -451,7 +268,7 @@ No hacen falta tokens por dispositivo. Puedes dar al reloj el mismo refresh toke
 
 Al cerrar sesión, revoca el refresh token en el servidor, borra los tokens locales del iPhone, el widget y el reloj, y envía el mensaje de cierre al reloj. Si el refresh token se comparte, la revocación en servidor es lo que impide que el reloj siga renovando.
 
-El código de arriba mantiene el refresh token fuera del `Session` compartido para que el caso base sea el más restrictivo. Si adoptas esta variante, añade el refresh token al payload de `sendMessage` y al store del reloj; no lo añadas al payload de `updateApplicationContext`.
+El modelo `Session` de arriba mantiene el refresh token fuera del objeto compartido para que el caso base sea el más restrictivo. Si adoptas esta variante, añade el refresh token al payload de `sendMessage` y al store del reloj; no lo añadas al payload de `updateApplicationContext`.
 
 ## Login, refresco y logout
 
@@ -473,14 +290,14 @@ struct SessionCoordinator {
     func didSignIn(_ session: Session) {
         try? SharedSessionStore.save(session)
         WidgetCenter.shared.reloadAllTimelines()
-        SessionBridge.shared.send(session)
+        // Envía la sesión al Watch con WatchConnectivity.
     }
 
     func didSignOut() {
         // Revoca el refresh token en el servidor.
         try? SharedSessionStore.delete()
         WidgetCenter.shared.reloadAllTimelines()
-        SessionBridge.shared.sendSignedOut()
+        // Envía el cierre de sesión al Watch con WatchConnectivity.
     }
 }
 ```
@@ -496,8 +313,8 @@ Si tu app tiene widget y una app companion para Apple Watch, yo empezaría por e
 - Keychain access group para la app y el widget en el iPhone.
 - Keychain access group en watchOS para la app del reloj y sus extensiones.
 - WatchConnectivity para llevar la sesión del iPhone al Watch.
-- iCloud Keychain solo si necesitas sincronización sin companion o Family Setup, asumiendo sus límites y probándolo en hardware.
-- Revocación en servidor del refresh token al cerrar sesión, siempre, aunque el reloj use el mismo token.
+- iCloud Keychain solo si necesitas sincronización sin companion o Family Setup, asumiendo sus límites.
+- Revocación en servidor del refresh token al cerrar sesión.
 
 Keychain compartido no lo resuelve todo por sí solo. Es una pieza excelente para compartir secretos dentro del mismo dispositivo. Para cruzar de un dispositivo a otro, la sesión se transfiere o se sincroniza, y cada opción tiene un coste distinto en seguridad, latencia y complejidad.
 
@@ -718,192 +535,9 @@ In practice, you have two viable strategies.
 
 For a companion app, this is the most direct option. The iPhone app sends the session to the watch, and the Watch app stores it in its Keychain. It does not depend on iCloud Keychain, and it lets you decide when and what to send.
 
-On iPhone, you can use `updateApplicationContext` to keep the latest state and `sendMessage` to deliver it sooner when the watch is reachable:
+Use `updateApplicationContext` to keep the latest state and `sendMessage` to deliver it sooner when the watch is reachable. Activate `WCSession` as early as possible and treat it as a channel with deferred delivery: the system decides when to wake the watch. For a session that changes infrequently, the context is usually enough; for an interactive action, `sendMessage` reduces the wait.
 
-```swift
-import Foundation
-import WatchConnectivity
-
-final class SessionBridge: NSObject, WCSessionDelegate {
-    static let shared = SessionBridge()
-    private let connectivity = WCSession.default
-    private let lock = NSLock()
-    private var pendingSession: Session?
-    private var pendingSignedOut = false
-
-    func activate() {
-        guard WCSession.isSupported() else { return }
-        connectivity.delegate = self
-        connectivity.activate()
-    }
-
-    func send(_ value: Session) {
-        lock.lock()
-        guard connectivity.activationState == .activated else {
-            pendingSession = value
-            pendingSignedOut = false
-            lock.unlock()
-            activate()
-            return
-        }
-        lock.unlock()
-
-        guard connectivity.isWatchAppInstalled,
-              let data = try? JSONEncoder().encode(value) else { return }
-
-        lock.lock()
-        pendingSession = nil
-        pendingSignedOut = false
-        lock.unlock()
-
-        let payload: [String: Any] = ["session": data]
-        try? connectivity.updateApplicationContext(payload)
-
-        if connectivity.isReachable {
-            connectivity.sendMessage(payload, replyHandler: nil)
-        }
-    }
-
-    func sendSignedOut() {
-        lock.lock()
-        guard connectivity.activationState == .activated else {
-            pendingSession = nil
-            pendingSignedOut = true
-            lock.unlock()
-            activate()
-            return
-        }
-        lock.unlock()
-
-        lock.lock()
-        pendingSession = nil
-        pendingSignedOut = false
-        lock.unlock()
-
-        let payload: [String: Any] = ["signedOut": true]
-        try? connectivity.updateApplicationContext(payload)
-
-        if connectivity.isReachable {
-            connectivity.sendMessage(payload, replyHandler: nil)
-        }
-    }
-
-    func session(
-        _ session: WCSession,
-        activationDidCompleteWith activationState: WCSessionActivationState,
-        error: Error?
-    ) {
-        guard activationState == .activated else { return }
-
-        lock.lock()
-        let pending = pendingSession
-        let signedOut = pendingSignedOut
-        pendingSession = nil
-        pendingSignedOut = false
-        lock.unlock()
-
-        if signedOut {
-            sendSignedOut()
-        } else if let pending {
-            send(pending)
-        }
-    }
-
-    #if os(iOS)
-    func sessionDidBecomeInactive(_ session: WCSession) {}
-
-    func sessionDidDeactivate(_ session: WCSession) {
-        session.activate()
-    }
-    #endif
-}
-```
-
-`SessionBridge` keeps the latest pending session if `WCSession` is not active yet and retries it in `activationDidCompleteWith`. If the user signs out before the session becomes active, the pending sign-out wins. `isWatchAppInstalled` avoids sending to a watch where the app is not installed.
-
-`updateApplicationContext` stores a single context and replaces it when a new one arrives. The system keeps that context and makes it available to the counterpart; it is not an ephemeral channel like `sendMessage`. Apple does not document where it stores it, but treat it as persistent and do not put the iPhone's `refreshToken` in it: in this example, only the access token travels. Even so, the access token is still a credential: keep it short-lived and revoke the refresh token on sign-out. That is ideal for a session: you do not want a queue of old tokens, you want the latest state. `sendMessage` only works when the other side is reachable; if it is not, the context remains the fallback. If you need ordered events, `transferUserInfo` queues and delivers them in order; for the current session state, `updateApplicationContext` is the better fit.
-
-On the Watch, receive the context and store it in the watch’s Keychain:
-
-```swift
-import Combine
-import Foundation
-import WatchConnectivity
-
-@MainActor
-final class WatchSessionReceiver: NSObject, ObservableObject, WCSessionDelegate {
-    @Published private(set) var session: Session?
-    private let connectivity = WCSession.default
-
-    private struct Update: Sendable {
-        let session: Session?
-        let signedOut: Bool
-    }
-
-    func activate() {
-        guard WCSession.isSupported() else { return }
-        connectivity.delegate = self
-        connectivity.activate()
-    }
-
-    nonisolated func session(
-        _ session: WCSession,
-        activationDidCompleteWith activationState: WCSessionActivationState,
-        error: Error?
-    ) {
-        guard let update = Self.update(from: session.receivedApplicationContext) else { return }
-        Task { @MainActor in
-            self.apply(update)
-        }
-    }
-
-    nonisolated func session(
-        _ session: WCSession,
-        didReceiveApplicationContext applicationContext: [String: Any]
-    ) {
-        guard let update = Self.update(from: applicationContext) else { return }
-        Task { @MainActor in
-            self.apply(update)
-        }
-    }
-
-    nonisolated func session(_ session: WCSession, didReceiveMessage message: [String: Any]) {
-        guard let update = Self.update(from: message) else { return }
-        Task { @MainActor in
-            self.apply(update)
-        }
-    }
-
-    private nonisolated static func update(from payload: [String: Any]) -> Update? {
-        if payload["signedOut"] as? Bool == true {
-            return Update(session: nil, signedOut: true)
-        }
-
-        guard let data = payload["session"] as? Data,
-              let decoded = try? JSONDecoder().decode(Session.self, from: data) else {
-            return nil
-        }
-
-        return Update(session: decoded, signedOut: false)
-    }
-
-    private func apply(_ update: Update) {
-        if update.signedOut {
-            try? SharedSessionStore.delete()
-            session = nil
-            return
-        }
-
-        guard let decoded = update.session else { return }
-        try? SharedSessionStore.save(decoded)
-        session = decoded
-    }
-}
-```
-
-The receiver decodes the payload off the main actor and only crosses to `@MainActor` with a `Sendable` value. That avoids capturing `[String: Any]` inside the `Task` and keeps the code clean under Swift 6 strict concurrency.
-
-Activate `WCSession` as early as possible, ideally when the app or extension launches. Background delivery is not instant: the system decides when it makes sense to wake the watch. For a session that changes infrequently, `updateApplicationContext` is usually enough. For an interactive action with the watch in front of the user, `sendMessage` reduces the wait.
+The receiver should decode the payload off the main actor and apply the change on `@MainActor`. If the watch app is not installed, do not send anything.
 
 ### Option 2: iCloud Keychain
 
@@ -937,7 +571,7 @@ The upside is that you do not need to maintain a WatchConnectivity session or ke
 - It is not available in every region.
 - Synchronization is not immediate; it depends on network, battery, and system conditions.
 - You cannot use `ThisDeviceOnly`, because the whole point is to let the item leave the device.
-- You are syncing an access token to every device on the account. It is still a credential: use short-lived tokens and revoke the refresh token on sign-out. Do not sync the iPhone's `refreshToken`; if the watch needs to refresh on its own, use WatchConnectivity and `sendMessage`, not iCloud Keychain.
+- You are syncing an access token to every device on the account.
 
 > **Important:** `ThisDeviceOnly` and iCloud Keychain are incompatible for this use case. If you need synchronization, accessibility must allow it; if you need the token to stay on the device, use WatchConnectivity.
 {: .doc-callout .doc-callout--important}
@@ -953,7 +587,7 @@ You do not need per-device tokens. You can give the watch the same refresh token
 
 On sign-out, revoke the refresh token on the server, delete the local tokens on the iPhone, widget, and watch, and send the sign-out message to the watch. If the refresh token is shared, server-side revocation is what prevents the watch from continuing to renew.
 
-The code above keeps the refresh token out of the shared `Session` so the baseline is the most restrictive case. If you adopt this variant, add the refresh token to the `sendMessage` payload and the watch store; do not add it to the `updateApplicationContext` payload.
+The `Session` model above keeps the refresh token out of the shared object so the baseline is the most restrictive case. If you adopt this variant, add the refresh token to the `sendMessage` payload and the watch store; do not add it to the `updateApplicationContext` payload.
 
 ## Sign-in, refresh, and sign-out
 
@@ -975,13 +609,13 @@ struct SessionCoordinator {
     func didSignIn(_ session: Session) {
         try? SharedSessionStore.save(session)
         WidgetCenter.shared.reloadAllTimelines()
-        SessionBridge.shared.send(session)
+        // Send the session to the Watch with WatchConnectivity.
     }
 
     func didSignOut() {
         try? SharedSessionStore.delete()
         WidgetCenter.shared.reloadAllTimelines()
-        SessionBridge.shared.sendSignedOut()
+        // Send the sign-out to the Watch with WatchConnectivity.
     }
 }
 ```
@@ -997,8 +631,8 @@ If your app has a widget and an Apple Watch companion app, I would start with th
 - A Keychain access group for the app and the widget on iPhone.
 - A watchOS Keychain access group for the Watch app and its extensions.
 - WatchConnectivity to move the session from iPhone to Watch.
-- iCloud Keychain only if you need synchronization without a companion or for Family Setup, accepting its limits and testing it on hardware.
-- Server-side refresh token revocation on sign-out, always, even if the watch uses the same token.
+- iCloud Keychain only if you need synchronization without a companion or for Family Setup, accepting its limits.
+- Server-side refresh token revocation on sign-out.
 
 Shared Keychain does not solve everything by itself. It is an excellent piece for sharing secrets on the same device. To cross from one device to another, the session is transferred or synchronized, and each option has a different cost in security, latency, and complexity.
 
