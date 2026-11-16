@@ -138,7 +138,7 @@ Pero el argumento práctico es anterior a la norma. Una persona que ya usa Voice
 
 Eso no significa que la accesibilidad sea gratis. Significa que gran parte del valor está en usar las convenciones que el sistema ya ofrece, en lugar de inventar gestos o etiquetas que solo funcionan en tu pantalla. El rotor de enlaces, el foco y los rasgos de accesibilidad son infraestructura compartida. Cuanto más se respetan, menos tiene que aprender quien ya conoce VoiceOver.
 
-La accesibilidad también reduce el riesgo de que una función exista solo para quien ve la pantalla. Un enlace que solo es azul, un botón que solo responde a un tap o un estado que solo se comunica por color son deuda de accesibilidad. La norma europea pone fecha y consecuencias; las personas usuarias ponen la prueba real.
+La accesibilidad también reduce el riesgo de que una función exista solo para quien ve la pantalla. Un enlace que solo es azul, un botón que solo responde a un tap o un estado que solo se comunica por color son deuda de accesibilidad.
 
 ## La decisión práctica
 
@@ -292,7 +292,7 @@ The practical argument comes before the law, though. Someone who already uses Vo
 
 That does not mean accessibility is free. It means much of the value comes from using the conventions the system already provides instead of inventing gestures or labels that only work on your screen. The links rotor, focus, and accessibility traits are shared infrastructure. The more you respect them, the less someone who already knows VoiceOver has to learn.
 
-Accessibility also reduces the risk of a feature existing only for people who can see the screen. A link that is only blue, a button that only responds to a tap, or a state communicated only by color is accessibility debt. European law adds a date and consequences; users add the real test.
+Accessibility also reduces the risk of a feature existing only for people who can see the screen. A link that is only blue, a button that only responds to a tap, or a state communicated only by color is accessibility debt.
 
 ## The practical decision
 
