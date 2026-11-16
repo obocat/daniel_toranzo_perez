@@ -136,6 +136,8 @@ La accesibilidad tampoco es solo una decisión de producto. La Ley Europea de Ac
 
 Pero el argumento práctico es anterior a la norma. Una persona que ya usa VoiceOver en su iPhone no debería aprender un modelo de interacción nuevo para tu app. Si los enlaces se comportan como enlaces, los botones como botones y los encabezados como encabezados, esa persona llega con parte del trabajo hecho. La app se siente predecible, el aprendizaje inicial es más corto y el soporte recibe menos preguntas del tipo «¿por qué esto no se puede activar?».
 
+Hay un extra: una interfaz accesible también es una interfaz más legible para una máquina. Apple Intelligence y los agentes que interactúan con apps necesitan semántica: etiquetas, roles, valores y acciones. Si VoiceOver puede recorrer y activar tu app, es más probable que un agente de Apple Intelligence encuentre esos mismos puntos de entrada. No es una garantía —el comportamiento de Apple Intelligence no es un contrato de API—, pero una app que se explica bien a VoiceOver también se explica mejor a cualquier sistema que intente entenderla.
+
 Eso no significa que la accesibilidad sea gratis. Significa que gran parte del valor está en usar las convenciones que el sistema ya ofrece, en lugar de inventar gestos o etiquetas que solo funcionan en tu pantalla. El rotor de enlaces y el foco son infraestructura compartida. Cuanto más se respetan, menos tiene que aprender quien ya conoce VoiceOver.
 
 La accesibilidad también reduce el riesgo de que una función exista solo para quien ve la pantalla. Un enlace que solo es azul, un botón que solo responde a un tap o un estado que solo se comunica por color son deuda de accesibilidad.
@@ -162,6 +164,7 @@ El formato no es decoración. Un enlace es una promesa de navegación; si solo l
 - [Accessibility Inspector](https://developer.apple.com/documentation/accessibility/accessibility-inspector)
 - [European Accessibility Act (EAA)](https://commission.europa.eu/strategy-and-policy/policies/justice-and-fundamental-rights/disability/european-accessibility-act-eaa_en)
 - [Directive (EU) 2019/882](https://eur-lex.europa.eu/eli/dir/2019/882/oj/eng)
+- [Apple Intelligence](https://www.apple.com/apple-intelligence/)
 
 </div>
 
@@ -290,6 +293,8 @@ Accessibility is not only a product decision. The European Accessibility Act (EA
 
 The practical argument comes before the law, though. Someone who already uses VoiceOver on their iPhone should not have to learn a new interaction model for your app. If links behave like links, buttons like buttons, and headings like headings, that person arrives with part of the work already done. The app feels predictable, initial learning is shorter, and support gets fewer “why can’t I activate this?” questions.
 
+One more thing: an accessible interface is also a more machine-readable interface. Apple Intelligence and agents that interact with apps need semantics: labels, roles, values, and actions. If VoiceOver can navigate and activate your app, an Apple Intelligence agent is more likely to find those same entry points. It is not a guarantee —Apple Intelligence behavior is not an API contract— but an app that explains itself well to VoiceOver also explains itself better to any system trying to understand it.
+
 That does not mean accessibility is free. It means much of the value comes from using the conventions the system already provides instead of inventing gestures or labels that only work on your screen. The links rotor and focus are shared infrastructure. The more you respect them, the less someone who already knows VoiceOver has to learn.
 
 Accessibility also reduces the risk of a feature existing only for people who can see the screen. A link that is only blue, a button that only responds to a tap, or a state communicated only by color is accessibility debt.
@@ -316,5 +321,6 @@ Formatting is not decoration. A link is a navigation promise; if it only looks l
 - [Accessibility Inspector](https://developer.apple.com/documentation/accessibility/accessibility-inspector)
 - [European Accessibility Act (EAA)](https://commission.europa.eu/strategy-and-policy/policies/justice-and-fundamental-rights/disability/european-accessibility-act-eaa_en)
 - [Directive (EU) 2019/882](https://eur-lex.europa.eu/eli/dir/2019/882/oj/eng)
+- [Apple Intelligence](https://www.apple.com/apple-intelligence/)
 
 </div>
