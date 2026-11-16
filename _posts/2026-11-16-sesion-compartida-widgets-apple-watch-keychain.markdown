@@ -15,13 +15,13 @@ reading_time: 12
 
 La escena se repite: alguien inicia sesión en la app, abre el widget y se encuentra con un «Inicia sesión». Levanta la muñeca y el reloj tampoco sabe quién es. La tentación es guardar el token en un `UserDefaults` compartido y seguir adelante. Es cómodo, pero también es una mala idea: un token es una credencial y merece el mismo trato que una contraseña.
 
-Keychain compartido resuelve una parte importante del problema, pero no todo. Antes de escribir código conviene separar dos escenarios que se parecen pero no son iguales: compartir secretos **en el mismo dispositivo** y transportarlos **entre dispositivos**.
+Keychain compartido ayuda, pero solo hasta cierto punto. Piensa en dos escenarios que se parecen y no son iguales: compartir un secreto **dentro del mismo dispositivo** y moverlo **de un dispositivo a otro**. Si los mezclas, acabas esperando magia del Keychain.
 
 ## Dos problemas distintos
 
-La app y el widget viven en el mismo iPhone. Pueden compartir un item de Keychain si ambos tienen el mismo *access group*. Eso también sirve para la app del Watch y sus extensiones dentro del reloj.
+La app y el widget viven en el mismo iPhone. Si ambos targets declaran el mismo *access group*, pueden leer y escribir el mismo item de Keychain. En el reloj, la app del Watch y sus extensiones pueden hacer lo mismo.
 
-El iPhone y el Apple Watch son dispositivos diferentes. Un access group no sincroniza nada entre ellos. Para llevar la sesión al reloj hay dos caminos:
+El iPhone y el Apple Watch ya son otra historia. Son dispositivos distintos y un access group no sincroniza nada entre ellos. Para que la sesión llegue al reloj tienes dos caminos:
 
 | Necesidad | Mecanismo |
 | --- | --- |
@@ -32,11 +32,11 @@ El iPhone y el Apple Watch son dispositivos diferentes. Un access group no sincr
 > **Importante:** Un Keychain access group comparte items en el mismo dispositivo. No los sincroniza entre el iPhone y el Watch.
 {: .doc-callout .doc-callout--important}
 
-Esta distinción es la que evita la mitad de los errores. Si el widget no encuentra el token, normalmente hay un problema de entitlements o de access group. Si el Watch no lo encuentra, puede que estés esperando que el Keychain haga algo que no hace.
+Parece una diferencia menor, pero explica muchos fallos. Cuando el widget no encuentra el token, normalmente hay un entitlement mal puesto o un access group que no coincide. Cuando el que no lo encuentra es el Watch, a veces el código está bien: es que le estás pidiendo al Keychain algo que no puede hacer.
 
 ## El modelo de sesión
 
-Para el ejemplo basta con una estructura pequeña y `Codable`:
+Para el ejemplo nos basta con una estructura `Codable` pequeña:
 
 ```swift
 import Foundation
@@ -55,16 +55,16 @@ enum SessionStoreError: Error {
 }
 ```
 
-El `refreshToken` es el dato más sensible. Más adelante veremos que el widget no siempre necesita verlo. Si puedes separar el token de acceso del de refresco, mejor: el widget solo necesita el primero.
+El `refreshToken` es la joya de la corona. Más adelante veremos que el widget no lo necesita para pintar nada. Si puedes separar el token de acceso del de refresco, hazlo: al widget le basta con el primero.
 
-Ese tipo y el store que viene después tienen que compilarse en la app y en la extensión. Puedes usar un framework interno o añadir los mismos archivos a ambos targets.
+Ese tipo y el store que viene después tienen que estar disponibles en la app y en la extensión. Puedes compartirlos con un framework interno o añadir los mismos archivos a los dos targets.
 
 > **Nota:** El `UserDefaults` de un App Group es cómodo para un identificador de usuario, una fecha de última sincronización o un flag de onboarding. No es el sitio para tokens, credenciales ni secretos.
 {: .doc-callout .doc-callout--note}
 
 ## Keychain compartido entre la app y el widget
 
-El primer paso es habilitar **Keychain Sharing** en la app y en la extensión del widget. En Xcode, añade la capability a ambos targets y usa el mismo grupo. En los entitlements debería quedar algo así:
+Lo primero es habilitar **Keychain Sharing** en la app y en la extensión del widget. En Xcode, añade la capability a los dos targets y apunta al mismo grupo. En los entitlements debería quedar algo así:
 
 ```xml
 <key>keychain-access-groups</key>
@@ -73,7 +73,7 @@ El primer paso es habilitar **Keychain Sharing** en la app y en la extensión de
 </array>
 ```
 
-El valor real que usa el Keychain en tiempo de ejecución incluye el prefijo del equipo. Si tu Team ID es `ABCDE12345`, el grupo será `ABCDE12345.com.example.shared`. En el código puedes centralizarlo en una constante:
+Ojo con el valor que se usa en tiempo de ejecución: el Keychain añade el prefijo del equipo al grupo. Si tu Team ID es `ABCDE12345`, el grupo real es `ABCDE12345.com.example.shared`. En el código puedes centralizarlo en una constante:
 
 ```swift
 // Para que el ejemplo se lea de un tirón, guardamos la sesión completa.
@@ -148,7 +148,7 @@ struct SharedSessionStore {
 }
 ```
 
-Hay dos decisiones importantes en ese código:
+Dos detalles marcan la diferencia:
 
 - `kSecAttrAccessGroup` hace que la app y el widget lean el mismo item. Sin ese atributo, cada proceso busca en su propio espacio.
 - `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly` permite leer el token después del primer desbloqueo, que es lo que necesita un widget en segundo plano. `WhenUnlocked` falla cuando el dispositivo está bloqueado, y `ThisDeviceOnly` evita que el item se sincronice con iCloud.
@@ -156,11 +156,11 @@ Hay dos decisiones importantes en ese código:
 > **Importante:** Para un widget, `kSecAttrAccessibleWhenUnlocked` no es una buena opción. Si la extensión se ejecuta con el dispositivo bloqueado, la lectura puede fallar con `errSecInteractionNotAllowed`. Usa una clase accesible después del primer desbloqueo y no dependas de que el usuario tenga la pantalla desbloqueada.
 {: .doc-callout .doc-callout--important}
 
-La segunda decisión es de seguridad: ese `Session` contiene el `refreshToken`. Cualquier target que pertenezca al access group puede leerlo. Si el widget no necesita refrescar la sesión, lo más limpio es guardar el token de acceso en un grupo compartido y el de refresco en un grupo privado de la app. El widget solo recibe lo mínimo.
+El otro detalle es de seguridad: ese `Session` contiene el `refreshToken`, y cualquier target del access group puede leerlo. Si el widget no necesita refrescar la sesión, lo más limpio es guardar el token de acceso en un grupo compartido y el de refresco en un grupo privado de la app. Al widget le llega solo lo mínimo.
 
 ## El widget lee, la app refresca
 
-El widget no debería ser el encargado de renovar el token. Los timelines se ejecutan en momentos que no controlas, pueden solaparse y no tienen la misma experiencia de usuario que la app. Si el token caduca, el widget puede mostrar un estado firmado o datos en caché; la app es quien refresca y actualiza el Keychain.
+El widget no debería renovar el token. Los timelines se ejecutan cuando el sistema lo decide, pueden solaparse y no tienen una persona delante para resolver un login. Si el token caduca, el widget enseña un estado firmado o datos en caché; la app es la que refresca y actualiza el Keychain.
 
 Un provider sencillo puede leer la sesión compartida así:
 
@@ -193,7 +193,7 @@ struct SessionProvider: TimelineProvider {
 }
 ```
 
-Cuando la app inicia o cierra sesión, o cuando renueva el token, pide a WidgetKit que vuelva a cargar los timelines:
+Cuando la app inicia sesión, la cierra o renueva el token, pide a WidgetKit que vuelva a cargar los timelines:
 
 ```swift
 import WidgetKit
@@ -201,17 +201,17 @@ import WidgetKit
 WidgetCenter.shared.reloadAllTimelines()
 ```
 
-Ese detalle parece menor, pero evita la sensación de que el widget «no se entera» del login. El widget no recibe notificaciones mágicas del Keychain: hay que decirle que vuelva a leer.
+Parece un detalle menor, pero evita esa sensación de que el widget «no se entera» del login. El Keychain no avisa a nadie: si quieres que el widget se actualice, tienes que decírselo.
 
 ## Apple Watch: el Keychain no cruza solo
 
-La app del Watch tiene su propio Keychain. Puede compartirlo con sus extensiones y complicaciones usando un access group en watchOS, pero ese grupo no es el mismo almacén que el del iPhone. Aunque uses el mismo identificador en los entitlements, los items viven en dispositivos distintos.
+La app del Watch tiene su propio Keychain. Puede compartirlo con sus extensiones y complicaciones mediante un access group de watchOS, pero ese grupo no es el mismo almacén que el del iPhone. Aunque el identificador sea idéntico en los entitlements, los items viven en dispositivos distintos.
 
-Hay dos estrategias reales.
+En la práctica, tienes dos estrategias válidas.
 
 ### Opción 1: WatchConnectivity
 
-Es la opción más directa para una app companion. La app de iPhone envía la sesión al reloj y la app del Watch la guarda en su Keychain. Funciona sin depender de iCloud Keychain y te da control sobre cuándo se envía y qué se envía.
+Para una app companion, es la opción más directa. La app del iPhone envía la sesión al reloj y la app del Watch la guarda en su Keychain. No depende de iCloud Keychain y te deja decidir cuándo se envía y qué se envía.
 
 En el iPhone, puedes usar `updateApplicationContext` para mantener el último estado y `sendMessage` para entregarlo cuanto antes si el reloj está accesible:
 
@@ -328,7 +328,7 @@ Activa `WCSession` lo antes posible, idealmente al arrancar la app o la extensi�
 
 ### Opción 2: iCloud Keychain
 
-Si necesitas que la sesión llegue al Watch sin una app companion, o quieres cubrir Family Setup, puedes usar la sincronización de iCloud Keychain. La idea es guardar el item con `kSecAttrSynchronizable` a `true`:
+Si necesitas que la sesión llegue al Watch sin una app companion, o quieres cubrir Family Setup, tienes la sincronización de iCloud Keychain. El cambio clave es guardar el item con `kSecAttrSynchronizable` a `true`:
 
 ```swift
 private static var baseQuery: [String: Any] {
@@ -350,7 +350,7 @@ let attributes: [String: Any] = [
 
 También hay que añadir la capability de Keychain Sharing al target del Watch que vaya a leer el item. A partir de ahí, iCloud Keychain se encarga de sincronizarlo entre los dispositivos de la misma cuenta, cuando puede.
 
-Tiene ventajas claras: no necesitas mantener una sesión de WatchConnectivity ni que el iPhone esté cerca. Pero también tiene límites que conviene asumir desde el principio:
+Lo bueno es que no necesitas mantener una sesión de WatchConnectivity ni que el iPhone esté cerca. Pero hay límites que hay que asumir desde el principio:
 
 - El usuario puede desactivar iCloud Keychain.
 - No está disponible en todas las regiones.
@@ -363,7 +363,7 @@ Tiene ventajas claras: no necesitas mantener una sesión de WatchConnectivity ni
 
 ## Login, refresco y logout
 
-Con las piezas anteriores, el ciclo queda bastante claro. Después de un login correcto:
+Con estas piezas, el ciclo de vida queda bastante limpio. Después de un login correcto:
 
 1. Guarda la sesión en el Keychain compartido.
 2. Recarga los timelines del widget.
@@ -393,6 +393,8 @@ Hay una regla que ahorra muchos problemas: **un solo proceso renueva el token**.
 
 ## Errores comunes
 
+Si algo falla, empieza por estos códigos:
+
 - `errSecMissingEntitlement` (`-34018`): el access group no está en los entitlements de todos los targets o la firma no lo incluye. Revisa la capability y el provisioning profile.
 - `errSecInteractionNotAllowed` (`-25308`): el item no es accesible en ese momento, normalmente por la clase de accesibilidad o porque el dispositivo está bloqueado. Para widgets, revisa `AfterFirstUnlock`.
 - `errSecItemNotFound` en el widget: puede que el item se guardara sin `kSecAttrAccessGroup`, que el grupo sea distinto o que el widget esté leyendo otro servicio/cuenta.
@@ -404,14 +406,14 @@ Hay una regla que ahorra muchos problemas: **un solo proceso renueva el token**.
 
 ## La decisión práctica
 
-Si tu app tiene widget y una app companion para Apple Watch, la combinación más predecible es:
+Si tu app tiene widget y una app companion para Apple Watch, yo empezaría por esta combinación:
 
 - Keychain access group para la app y el widget en el iPhone.
 - Keychain access group en watchOS para la app del reloj y sus extensiones.
 - WatchConnectivity para llevar la sesión del iPhone al Watch.
 - iCloud Keychain solo si necesitas sincronización sin companion o Family Setup, asumiendo sus límites.
 
-Keychain compartido no es una varita mágica. Es una pieza muy buena para compartir secretos dentro del mismo dispositivo. Para cruzar de un dispositivo a otro, la sesión se transfiere o se sincroniza, y cada opción tiene un coste distinto en seguridad, latencia y complejidad.
+Keychain compartido no lo resuelve todo por sí solo. Es una pieza excelente para compartir secretos dentro del mismo dispositivo. Para cruzar de un dispositivo a otro, la sesión se transfiere o se sincroniza, y cada opción tiene un coste distinto en seguridad, latencia y complejidad.
 
 ## Referencias
 
@@ -427,13 +429,13 @@ Keychain compartido no es una varita mágica. Es una pieza muy buena para compar
 
 The scene is familiar: someone signs in to the app, opens the widget, and finds a “Sign in” message. They raise their wrist and the watch does not know who they are either. The tempting fix is to put the token in shared `UserDefaults` and move on. It is convenient, but it is also a bad idea: a token is a credential and deserves the same care as a password.
 
-Shared Keychain solves an important part of the problem, but not all of it. Before writing code, it helps to separate two scenarios that look similar but are not: sharing secrets **on the same device** and moving them **between devices**.
+Shared Keychain helps, but only up to a point. Think of two scenarios that look alike and are not: sharing a secret **on the same device** and moving it **from one device to another**. Mix them up and you end up expecting magic from Keychain.
 
 ## Two different problems
 
-The app and the widget live on the same iPhone. They can share a Keychain item if both targets use the same access group. The same idea applies to the Watch app and its extensions on the watch.
+The app and the widget run on the same iPhone. If both targets declare the same *access group*, they can read and write the same Keychain item. On the watch, the Watch app and its extensions can do the same.
 
-The iPhone and Apple Watch are different devices. An access group does not synchronize anything between them. There are two ways to get the session onto the watch:
+The iPhone and Apple Watch are a different story. They are separate devices, and an access group does not synchronize anything between them. To get the session onto the watch, you have two options:
 
 | Need | Mechanism |
 | --- | --- |
@@ -444,11 +446,11 @@ The iPhone and Apple Watch are different devices. An access group does not synch
 > **Important:** A Keychain access group shares items on the same device. It does not synchronize them between the iPhone and the Watch.
 {: .doc-callout .doc-callout--important}
 
-That distinction prevents half of the mistakes. If the widget cannot find the token, the usual culprit is an entitlement or access-group mismatch. If the Watch cannot find it, you may be expecting the Keychain to do something it does not do.
+It sounds like a small difference, but it explains a lot of failures. When the widget cannot find the token, it is usually a missing entitlement or an access group that does not match. When the Watch cannot find it, the code may be fine: you may be asking Keychain to do something it cannot do.
 
 ## The session model
 
-A small `Codable` structure is enough for the example:
+For this example, a small `Codable` structure is enough:
 
 ```swift
 import Foundation
@@ -467,16 +469,16 @@ enum SessionStoreError: Error {
 }
 ```
 
-The `refreshToken` is the most sensitive value. Later we will see that the widget does not always need to see it. If you can separate the access token from the refresh token, do it: the widget only needs the former.
+The `refreshToken` is the crown jewel. Later we will see that the widget does not need it to render anything. If you can separate the access token from the refresh token, do it: the widget only needs the former.
 
-That type and the store below must compile in both the app and the extension. You can use an internal framework or add the same files to both targets.
+That type and the store below need to be available to the app and the widget. You can share them through an internal framework or add the same files to both targets.
 
 > **Note:** An App Group’s `UserDefaults` is convenient for a user identifier, a last-sync date, or an onboarding flag. It is not the place for tokens, credentials, or secrets.
 {: .doc-callout .doc-callout--note}
 
 ## Shared Keychain between the app and the widget
 
-The first step is to enable **Keychain Sharing** in the app and in the widget extension. In Xcode, add the capability to both targets and use the same group. The entitlements should look roughly like this:
+Start by enabling **Keychain Sharing** in the app and the widget extension. In Xcode, add the capability to both targets and point them at the same group. The entitlements should look roughly like this:
 
 ```xml
 <key>keychain-access-groups</key>
@@ -485,7 +487,7 @@ The first step is to enable **Keychain Sharing** in the app and in the widget ex
 </array>
 ```
 
-The actual value used by Keychain at runtime includes the team prefix. If your Team ID is `ABCDE12345`, the group is `ABCDE12345.com.example.shared`. You can centralize it in a constant:
+Watch out for the value used at runtime: Keychain adds the team prefix to the group. If your Team ID is `ABCDE12345`, the real group is `ABCDE12345.com.example.shared`. You can centralize it in a constant:
 
 ```swift
 // To keep the example readable, we store the whole session.
@@ -560,7 +562,7 @@ struct SharedSessionStore {
 }
 ```
 
-Two decisions matter in that code:
+Two details make the difference:
 
 - `kSecAttrAccessGroup` makes the app and widget read the same item. Without it, each process searches its own space.
 - `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly` allows the token to be read after the first unlock, which is what a background widget needs. `WhenUnlocked` fails while the device is locked, and `ThisDeviceOnly` prevents the item from syncing to iCloud.
@@ -568,13 +570,13 @@ Two decisions matter in that code:
 > **Important:** For a widget, `kSecAttrAccessibleWhenUnlocked` is not a good choice. If the extension runs while the device is locked, the read can fail with `errSecInteractionNotAllowed`. Use an accessibility class that works after the first unlock and do not depend on the screen being unlocked.
 {: .doc-callout .doc-callout--important}
 
-The second decision is about security: that `Session` contains the `refreshToken`. Any target in the access group can read it. If the widget does not need to refresh the session, the cleaner design is to keep the access token in a shared group and the refresh token in an app-private group. The widget gets the minimum it needs.
+The other detail is about security: that `Session` contains the `refreshToken`, and any target in the access group can read it. If the widget does not need to refresh the session, the cleaner design is to keep the access token in a shared group and the refresh token in an app-private group. The widget gets only the minimum.
 
 ## The widget reads, the app refreshes
 
-The widget should not be responsible for refreshing the token. Timelines run at times you do not control, they can overlap, and they do not have the same user experience as the app. If the token expires, the widget can show a signed-out state or cached data; the app refreshes and updates the Keychain.
+The widget should not refresh the token. Timelines run when the system decides, they can overlap, and there is no person in front of them to handle a login. If the token expires, the widget shows a signed-out state or cached data; the app refreshes and updates Keychain.
 
-A simple provider can read the shared session like this:
+A simple provider can read the shared session:
 
 ```swift
 import WidgetKit
@@ -613,17 +615,17 @@ import WidgetKit
 WidgetCenter.shared.reloadAllTimelines()
 ```
 
-That small detail prevents the feeling that the widget “does not notice” the login. The widget does not receive magic notifications from Keychain: you have to tell it to read again.
+It looks like a small detail, but it prevents the feeling that the widget “does not notice” the login. Keychain does not notify anyone: if you want the widget to update, you have to tell it.
 
 ## Apple Watch: Keychain does not cross devices by itself
 
-The Watch app has its own Keychain. It can share it with its extensions and complications through a watchOS access group, but that group is not the same store as the iPhone’s. Even if you use the same identifier in the entitlements, the items live on different devices.
+The Watch app has its own Keychain. It can share it with its extensions and complications through a watchOS access group, but that group is not the same store as the iPhone’s. Even if the identifier is identical in the entitlements, the items live on different devices.
 
-There are two real strategies.
+In practice, you have two viable strategies.
 
 ### Option 1: WatchConnectivity
 
-This is the most direct option for a companion app. The iPhone app sends the session to the watch and the Watch app stores it in its Keychain. It works without relying on iCloud Keychain and gives you control over when and what you send.
+For a companion app, this is the most direct option. The iPhone app sends the session to the watch, and the Watch app stores it in its Keychain. It does not depend on iCloud Keychain, and it lets you decide when and what to send.
 
 On iPhone, you can use `updateApplicationContext` to keep the latest state and `sendMessage` to deliver it sooner when the watch is reachable:
 
@@ -740,7 +742,7 @@ Activate `WCSession` as early as possible, ideally when the app or extension lau
 
 ### Option 2: iCloud Keychain
 
-If you need the session to reach the Watch without a companion app, or you want to support Family Setup, you can use iCloud Keychain synchronization. The idea is to store the item with `kSecAttrSynchronizable` set to `true`:
+If you need the session to reach the Watch without a companion app, or you want to support Family Setup, iCloud Keychain synchronization is an option. The key change is to store the item with `kSecAttrSynchronizable` set to `true`:
 
 ```swift
 private static var baseQuery: [String: Any] {
@@ -762,7 +764,7 @@ let attributes: [String: Any] = [
 
 You also need to add the Keychain Sharing capability to the Watch target that will read the item. From there, iCloud Keychain syncs it across devices on the same account when it can.
 
-It has clear advantages: you do not need to maintain a WatchConnectivity session or keep the iPhone nearby. But it also has limits you should accept from the start:
+The upside is that you do not need to maintain a WatchConnectivity session or keep the iPhone nearby. But there are limits you should accept from the start:
 
 - The user can disable iCloud Keychain.
 - It is not available in every region.
@@ -775,7 +777,7 @@ It has clear advantages: you do not need to maintain a WatchConnectivity session
 
 ## Sign-in, refresh, and sign-out
 
-With the pieces above, the lifecycle is fairly clear. After a successful sign-in:
+With these pieces, the lifecycle is fairly clean. After a successful sign-in:
 
 1. Save the session in the shared Keychain.
 2. Reload the widget timelines.
@@ -805,6 +807,8 @@ One rule saves a lot of trouble: **a single process refreshes the token**. If th
 
 ## Common errors
 
+If something fails, start with these codes:
+
 - `errSecMissingEntitlement` (`-34018`): the access group is not in every target’s entitlements or the signature does not include it. Check the capability and the provisioning profile.
 - `errSecInteractionNotAllowed` (`-25308`): the item is not accessible at that moment, usually because of the accessibility class or because the device is locked. For widgets, check `AfterFirstUnlock`.
 - `errSecItemNotFound` in the widget: the item may have been saved without `kSecAttrAccessGroup`, the group may be different, or the widget may be reading another service/account.
@@ -816,14 +820,14 @@ One rule saves a lot of trouble: **a single process refreshes the token**. If th
 
 ## The practical decision
 
-If your app has a widget and an Apple Watch companion app, the most predictable combination is:
+If your app has a widget and an Apple Watch companion app, I would start with this combination:
 
 - A Keychain access group for the app and the widget on iPhone.
 - A watchOS Keychain access group for the Watch app and its extensions.
 - WatchConnectivity to move the session from iPhone to Watch.
 - iCloud Keychain only if you need synchronization without a companion or for Family Setup, accepting its limits.
 
-Shared Keychain is not a magic wand. It is a very good piece for sharing secrets on the same device. To cross from one device to another, the session is transferred or synchronized, and each option has a different cost in security, latency, and complexity.
+Shared Keychain does not solve everything by itself. It is an excellent piece for sharing secrets on the same device. To cross from one device to another, the session is transferred or synchronized, and each option has a different cost in security, latency, and complexity.
 
 ## References
 
