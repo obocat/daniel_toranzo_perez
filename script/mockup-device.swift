@@ -174,6 +174,18 @@ func pixelSize(of image: NSImage) -> CGSize {
     return CGSize(width: rep.pixelsWide, height: rep.pixelsHigh)
 }
 
+func drawImage(_ image: NSImage, in rect: CGRect) {
+    guard let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil),
+          let context = NSGraphicsContext.current?.cgContext else { return }
+
+    context.saveGState()
+    context.interpolationQuality = .high
+    context.translateBy(x: rect.minX, y: rect.maxY)
+    context.scaleBy(x: 1, y: -1)
+    context.draw(cgImage, in: CGRect(origin: .zero, size: rect.size))
+    context.restoreGState()
+}
+
 func drawAspectFill(_ image: NSImage, in rect: CGRect) {
     let source = pixelSize(of: image)
     guard source.width > 0, source.height > 0 else { return }
@@ -186,14 +198,7 @@ func drawAspectFill(_ image: NSImage, in rect: CGRect) {
         width: drawn.width,
         height: drawn.height
     )
-    image.draw(
-        in: target,
-        from: .zero,
-        operation: .sourceOver,
-        fraction: 1,
-        respectFlipped: true,
-        hints: [.interpolation: NSImageInterpolation.high]
-    )
+    drawImage(image, in: target)
 }
 
 func drawRoundedRect(_ rect: CGRect, radius: CGFloat, color: NSColor) {
@@ -390,14 +395,7 @@ func drawCustomFrame(
     drawAspectFill(screenshot, in: screenRect)
     NSGraphicsContext.restoreGraphicsState()
 
-    frame.draw(
-        in: frameRect,
-        from: .zero,
-        operation: .sourceOver,
-        fraction: 1,
-        respectFlipped: true,
-        hints: [.interpolation: NSImageInterpolation.high]
-    )
+    drawImage(frame, in: frameRect)
 
     NSGraphicsContext.restoreGraphicsState()
 
