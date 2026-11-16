@@ -51,6 +51,10 @@ struct ArticleText: View {
             .tint(.accentColor)
     }
 }
+
+#Preview {
+    ArticleText()
+}
 ```
 
 `inlinePresentationIntent` expresa la intención —énfasis fuerte, énfasis, código— y SwiftUI decide cómo representarla. Si necesitas una fuente concreta, puedes usar `.font`, pero para texto de lectura conviene partir de estilos semánticos como `.body` o `.headline` para que Dynamic Type siga funcionando.
@@ -207,6 +211,10 @@ struct ArticleText: View {
             .font(.body)
             .tint(.accentColor)
     }
+}
+
+#Preview {
+    ArticleText()
 }
 ```
 
