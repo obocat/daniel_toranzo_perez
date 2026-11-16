@@ -262,7 +262,6 @@ No hacen falta tokens por dispositivo. Puedes dar al reloj el mismo refresh toke
 - **No lo persistas en `applicationContext`:** ese contexto puede sobrevivir en el dispositivo. Envía el refresh token con `sendMessage` y guárdalo en el Keychain del reloj. El `applicationContext` puede seguir llevando solo el access token.
 - **Asume la ventana de exposición:** si el token se filtra antes del logout, el servidor lo aceptará hasta que lo revoques. La revocación reduce la ventana, no la elimina.
 - **Rota el token y detecta la reutilización:** si el mismo refresh token se usa en iPhone y reloj, una rotación mal llevada puede invalidar al otro. Decide qué proceso renueva y cómo se propaga el token nuevo.
-- **El access token ya emitido sigue vivo hasta que caduque:** la revocación del refresh token impide renovar, pero no invalida automáticamente el access token. Usa access tokens cortos o una lista de revocación.
 
 Al cerrar sesión, revoca el refresh token en el servidor, borra los tokens locales del iPhone, el widget y el reloj, y envía el mensaje de cierre al reloj. Si el refresh token se comparte, la revocación en servidor es lo que impide que el reloj siga renovando.
 
@@ -579,7 +578,6 @@ You do not need per-device tokens. You can give the watch the same refresh token
 - **Do not persist it in `applicationContext`:** that context can survive on the device. Send the refresh token with `sendMessage` and store it in the watch's Keychain. `applicationContext` can still carry only the access token.
 - **Accept the exposure window:** if the token leaks before logout, the server will accept it until you revoke it. Revocation narrows the window; it does not eliminate it.
 - **Rotate the token and detect reuse:** if the same refresh token is used on the iPhone and the watch, a mishandled rotation can invalidate the other. Decide which process refreshes and how the new token propagates.
-- **An access token already issued remains valid until it expires:** revoking the refresh token stops renewal, but it does not automatically invalidate the access token. Use short-lived access tokens or a revocation list.
 
 On sign-out, revoke the refresh token on the server, delete the local tokens on the iPhone, widget, and watch, and send the sign-out message to the watch. If the refresh token is shared, server-side revocation is what prevents the watch from continuing to renew.
 
