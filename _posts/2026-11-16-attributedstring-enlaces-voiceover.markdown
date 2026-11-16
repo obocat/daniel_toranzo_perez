@@ -1,6 +1,6 @@
 ---
-title: "AttributedString: formato, enlaces y VoiceOver sin pelearse con UIKit"
-title_en: "AttributedString: formatting, links, and VoiceOver without fighting UIKit"
+title: "AttributedString: formato, enlaces y VoiceOver en SwiftUI"
+title_en: "AttributedString: formatting, links, and VoiceOver in SwiftUI"
 date: 2026-11-16 09:00:00
 description: "Cómo dar formato a un texto con AttributedString, gestionar enlaces con OpenURLAction y hacer que VoiceOver los reconozca como enlaces."
 description_en: "How to format text with AttributedString, handle links with OpenURLAction, and make VoiceOver recognize them as links."
@@ -8,14 +8,14 @@ lang: es
 tags: [iOS, SwiftUI, AttributedString, Accessibility, VoiceOver]
 categories: blog
 layout: blog
-reading_time: 9
+reading_time: 7
 ---
 
 <div class="lang-es" lang="es" markdown="1">
 
 Un párrafo con una negrita, una cursiva, un fragmento de código y dos enlaces parece un problema resuelto. Hasta que toca que VoiceOver lo lea como lo que es: texto con énfasis y enlaces, no una sola frase plana.
 
-Durante años, hacer esto en UIKit fue un ejercicio de paciencia. `NSAttributedString` servía para pintar el texto, pero la interacción y la accesibilidad vivían en otra capa. `UILabel` ignoraba los enlaces; `UITextView` los mostraba, pero había que ajustar su comportamiento, interceptar las pulsaciones y comprobar que VoiceOver los anunciaba. Muchas apps acababan con un `onTapGesture` sobre el texto. Visualmente funcionaba; para VoiceOver, el enlace desaparecía.
+El problema no es solo pintar el texto. Un enlace tiene que seguir siéndolo cuando VoiceOver lo recorre, cuando cambia el tamaño de la letra o cuando el párrafo se combina con otros elementos. Si el formato vive solo en el color y el subrayado, la semántica se pierde.
 
 `AttributedString` no elimina toda la complejidad, pero junta las piezas en un solo valor. Y, sobre todo, permite que el formato tenga significado además de apariencia.
 
@@ -84,7 +84,7 @@ func makeMarkdown() throws -> AttributedString {
 
 ## Enlaces que se comportan como enlaces
 
-En SwiftUI, un `Text` con un `AttributedString` que contiene `.link` ya es interactivo. No necesitas un `UITapGestureRecognizer` ni calcular qué palabra se ha pulsado.
+En SwiftUI, un `Text` con un `AttributedString` que contiene `.link` ya es interactivo. No necesitas un gesto sobre el texto ni calcular qué palabra se ha pulsado.
 
 Si quieres decidir qué ocurre con algunos enlaces, usa `OpenURLAction`:
 
@@ -140,49 +140,6 @@ Text("Enlaces")
 
 Prueba con el rotor de enlaces, no solo leyendo el párrafo de arriba abajo. En el simulador, activa VoiceOver o usa Accessibility Inspector. Comprueba que cada enlace aparece en el rotor, que el foco no se queda atrapado y que el orden coincide con el texto.
 
-## El camino heredado: UILabel no es un enlace
-
-Si mantienes UIKit, el error clásico es poner un `NSAttributedString` con `.link` en un `UILabel`. El texto se pinta, pero el enlace no se puede pulsar y VoiceOver no lo trata como un enlace. `UILabel` no es interactivo.
-
-Para enlaces, usa un `UITextView` no editable y seleccionable:
-
-```swift
-import UIKit
-
-final class ArticleViewController: UIViewController {
-    private let textView = UITextView()
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        textView.isEditable = false
-        textView.isSelectable = true
-        textView.isScrollEnabled = false
-        textView.backgroundColor = .clear
-        textView.textContainerInset = .zero
-        textView.textContainer.lineFragmentPadding = 0
-        textView.adjustsFontForContentSizeCategory = true
-        textView.linkTextAttributes = [
-            .foregroundColor: UIColor.tintColor,
-            .underlineStyle: NSUnderlineStyle.single.rawValue
-        ]
-
-        let text = NSMutableAttributedString(string: "Lee la documentación de AttributedString.")
-        let range = (text.string as NSString).range(of: "documentación de AttributedString")
-        text.addAttribute(
-            .link,
-            value: URL(string: "https://developer.apple.com/documentation/foundation/attributedstring")!,
-            range: range
-        )
-        textView.attributedText = text
-    }
-}
-```
-
-El `UITextView` necesita `isSelectable = true` para que los enlaces respondan. `isEditable = false` evita que el usuario modifique el texto. Y `linkTextAttributes` solo cambia la apariencia: la semántica sigue viniendo de `.link`.
-
-Si necesitas interceptar la pulsación, implementa el delegate. En iOS 17 y posteriores, los métodos de text item sustituyen al antiguo `shouldInteractWith`. Sea cual sea la API, no sustituyas el enlace por un gesto sobre toda la vista.
-
 ## La decisión práctica
 
 | Necesito | Uso |
@@ -190,10 +147,19 @@ Si necesitas interceptar la pulsación, implementa el delegate. En iOS 17 y post
 | Varios enlaces dentro de un párrafo en SwiftUI | `AttributedString` + `Text` |
 | Decidir qué hace un enlace | `OpenURLAction` |
 | Un enlace suelto y aislado | `Link` |
-| Texto con enlaces en UIKit | `UITextView` |
 | Que VoiceOver lo reconozca | atributo `.link`, no color ni subrayado |
 
 El formato no es decoración. Un enlace es una promesa de navegación; si solo lo parece, la promesa se rompe para quien no lo ve. `AttributedString` no es solo una API más cómoda: es una forma de que el texto lleve su significado consigo.
+
+## Referencias
+
+- [AttributedString](https://developer.apple.com/documentation/foundation/attributedstring)
+- [AttributedString.MarkdownParsingOptions](https://developer.apple.com/documentation/foundation/attributedstring/markdownparsingoptions)
+- [Text](https://developer.apple.com/documentation/swiftui/text)
+- [OpenURLAction](https://developer.apple.com/documentation/swiftui/openurlaction)
+- [openURL](https://developer.apple.com/documentation/swiftui/environmentvalues/openurl)
+- [VoiceOver](https://developer.apple.com/documentation/accessibility/voiceover)
+- [Accessibility Inspector](https://developer.apple.com/documentation/accessibility/accessibility-inspector)
 
 </div>
 
@@ -201,7 +167,7 @@ El formato no es decoración. Un enlace es una promesa de navegación; si solo l
 
 A paragraph with bold, italic, a code fragment, and two links sounds like a solved problem. Then VoiceOver has to read it as what it is: text with emphasis and links, not one flat sentence.
 
-For years, doing this in UIKit took patience. `NSAttributedString` handled the appearance, but interaction and accessibility lived in another layer. `UILabel` ignored links; `UITextView` displayed them, but you had to tune its behavior, intercept taps, and check that VoiceOver announced them. Many apps ended up with an `onTapGesture` on the text. It worked visually; for VoiceOver, the link disappeared.
+The problem is not just painting the text. A link has to remain a link when VoiceOver moves through it, when the text size changes, or when the paragraph is combined with other elements. If formatting lives only in color and underline, the semantics get lost.
 
 `AttributedString` does not remove every sharp edge, but it brings the pieces into one value. More importantly, it lets formatting carry meaning, not just appearance.
 
@@ -270,7 +236,7 @@ func makeMarkdown() throws -> AttributedString {
 
 ## Links that behave like links
 
-In SwiftUI, a `Text` backed by an `AttributedString` with `.link` is already interactive. You do not need a `UITapGestureRecognizer` or code that works out which word was tapped.
+In SwiftUI, a `Text` backed by an `AttributedString` with `.link` is already interactive. You do not need a gesture on the text or code that works out which word was tapped.
 
 If you want to decide what happens to some links, use `OpenURLAction`:
 
@@ -326,49 +292,6 @@ Text("Links")
 
 Test with the links rotor, not just by reading the paragraph from top to bottom. In the simulator, turn on VoiceOver or use Accessibility Inspector. Check that each link appears in the rotor, that focus does not get trapped, and that the order matches the text.
 
-## The legacy path: UILabel is not a link
-
-If you still maintain UIKit, the classic mistake is putting an `NSAttributedString` with `.link` into a `UILabel`. The text renders, but the link cannot be tapped and VoiceOver does not treat it as a link. `UILabel` is not interactive.
-
-For links, use a non-editable, selectable `UITextView`:
-
-```swift
-import UIKit
-
-final class ArticleViewController: UIViewController {
-    private let textView = UITextView()
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        textView.isEditable = false
-        textView.isSelectable = true
-        textView.isScrollEnabled = false
-        textView.backgroundColor = .clear
-        textView.textContainerInset = .zero
-        textView.textContainer.lineFragmentPadding = 0
-        textView.adjustsFontForContentSizeCategory = true
-        textView.linkTextAttributes = [
-            .foregroundColor: UIColor.tintColor,
-            .underlineStyle: NSUnderlineStyle.single.rawValue
-        ]
-
-        let text = NSMutableAttributedString(string: "Read the AttributedString documentation.")
-        let range = (text.string as NSString).range(of: "AttributedString documentation")
-        text.addAttribute(
-            .link,
-            value: URL(string: "https://developer.apple.com/documentation/foundation/attributedstring")!,
-            range: range
-        )
-        textView.attributedText = text
-    }
-}
-```
-
-`UITextView` needs `isSelectable = true` for links to respond. `isEditable = false` keeps people from changing the text. And `linkTextAttributes` only changes appearance: the semantics still come from `.link`.
-
-If you need to intercept the tap, implement the delegate. On iOS 17 and later, the text item methods replace the old `shouldInteractWith`. Whatever API you use, do not replace the link with a gesture on the whole view.
-
 ## The practical decision
 
 | I need | I use |
@@ -376,9 +299,18 @@ If you need to intercept the tap, implement the delegate. On iOS 17 and later, t
 | Several links inside a SwiftUI paragraph | `AttributedString` + `Text` |
 | Decide what a link does | `OpenURLAction` |
 | A single, isolated link | `Link` |
-| Text with links in UIKit | `UITextView` |
 | VoiceOver to recognize it | the `.link` attribute, not color or underline |
 
 Formatting is not decoration. A link is a navigation promise; if it only looks like one, the promise breaks for people who cannot see it. `AttributedString` is not just a more convenient API: it is a way for text to carry its meaning with it.
+
+## References
+
+- [AttributedString](https://developer.apple.com/documentation/foundation/attributedstring)
+- [AttributedString.MarkdownParsingOptions](https://developer.apple.com/documentation/foundation/attributedstring/markdownparsingoptions)
+- [Text](https://developer.apple.com/documentation/swiftui/text)
+- [OpenURLAction](https://developer.apple.com/documentation/swiftui/openurlaction)
+- [openURL](https://developer.apple.com/documentation/swiftui/environmentvalues/openurl)
+- [VoiceOver](https://developer.apple.com/documentation/accessibility/voiceover)
+- [Accessibility Inspector](https://developer.apple.com/documentation/accessibility/accessibility-inspector)
 
 </div>
