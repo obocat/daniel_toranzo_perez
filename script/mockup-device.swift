@@ -9,9 +9,9 @@ import Foundation
 //   swift script/mockup-device.swift --input snapshots --output tmp/article-images
 //   swift script/mockup-device.swift --input shot.png --output tmp/article-images
 //
-// The generated PNGs are not uploaded anywhere. Upload them manually to
-// ImgBB (or any host with direct image URLs) and paste the resulting URLs
-// into the article.
+// The generated PNGs are not uploaded anywhere. Upload them to Cloudinary
+// with script/upload-cloudinary.sh and paste the resulting direct URLs into
+// the article.
 
 struct Options {
     var input: URL
@@ -594,7 +594,7 @@ func main() throws {
 
     print("")
     print("Listo. Revisa \(options.output.path)/preview.html")
-    print("Sube los PNG a ImgBB (https://imgbb.com/) y pega las URLs directas en el artículo.")
+    print("Sube los PNG a Cloudinary con script/upload-cloudinary.sh y pega las URLs directas en el artículo.")
     print("Las imágenes generadas no se suben a GitHub.")
 }
 

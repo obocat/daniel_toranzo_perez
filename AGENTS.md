@@ -175,22 +175,39 @@ images, the Apple bezel, and the output under `tmp/`. `tmp/` is ignored by Git.
    sips -g hasAlpha tmp/article-images/slug-es-device.png
    ```
 
-5. Upload the final PNGs to a free host that provides direct image URLs.
-   ImgBB is the current default. Prefer a service that also gives a deletion
-   URL. Do not commit the images or attach them to GitHub issues.
-6. Copy the direct image URL (for ImgBB, the `i.ibb.co/...` URL, not the
-   viewer page) and verify it before editing the article:
+5. Upload the final PNGs to Cloudinary with the signed upload script:
 
    ```bash
-   curl -L -o /tmp/check.png -w '%{http_code} %{content_type}\n' '<url>'
-   shasum -a 256 tmp/article-images/slug-es-device.png /tmp/check.png
+   export CLOUDINARY_CLOUD_NAME="..."
+   export CLOUDINARY_API_KEY="..."
+   printf "Cloudinary API Secret: "
+   read -r -s CLOUDINARY_API_SECRET
+   echo
+   export CLOUDINARY_API_SECRET
+
+   script/upload-cloudinary.sh \
+     tmp/article-images/slug-es-device.png \
+     tmp/article-images/slug-en-device.png
+   ```
+
+   The script prints one `secure_url` per file and stores them under
+   `blog/attributedstring` by default; pass `--folder` to change the folder.
+   Use a Cloudinary API key with create/upload permission. Never commit the API
+   secret. Cloudinary's free plan is enough for this site's article images. Do
+   not commit the images or attach them to GitHub issues.
+6. Copy each direct `res.cloudinary.com/...` URL printed by the script and
+   verify it before editing the article:
+
+   ```bash
+   curl -L -o tmp/check.png -w '%{http_code} %{content_type}\n' '<url>'
+   shasum -a 256 tmp/article-images/slug-es-device.png tmp/check.png
    ```
 
 7. Add one figure per language, with localized `alt` text and caption:
 
    ```html
    <figure class="post-figure">
-     <img src="https://i.ibb.co/.../slug-es-device.png" alt="...">
+     <img src="https://res.cloudinary.com/.../slug-es-device.png" alt="...">
      <figcaption>...</figcaption>
    </figure>
    ```
@@ -203,7 +220,7 @@ images, the Apple bezel, and the output under `tmp/`. `tmp/` is ignored by Git.
 
    ```bash
    bundle exec jekyll build --future
-   grep -n 'i.ibb.co' _site/blog/YYYY/MM/DD/slug/index.html
+   grep -n 'res.cloudinary.com' _site/blog/YYYY/MM/DD/slug/index.html
    ```
 
 ### 8. Validate

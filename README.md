@@ -226,8 +226,9 @@ Notes:
 Article images are not committed. Generate device mockups locally with
 `script/mockup-device.swift`, using an Apple product bezel with a transparent
 screen cutout and `--background transparent`. Upload the resulting PNGs to
-ImgBB and embed the direct URLs in `figure.post-figure`, one per language. See
-the article-image section in [`AGENTS.md`](AGENTS.md) for the full workflow and
+Cloudinary with `script/upload-cloudinary.sh` and embed the direct
+`res.cloudinary.com` URLs in `figure.post-figure`, one per language. See the
+article-image section in [`AGENTS.md`](AGENTS.md) for the full workflow and
 validation commands.
 
 For the complete issue, branch, validation, and pull-request workflow, see
