@@ -195,6 +195,11 @@ images, the Apple bezel, and the output under `tmp/`. `tmp/` is ignored by Git.
    Use a Cloudinary API key with create/upload permission. Never commit the API
    secret. Cloudinary's free plan is enough for this site's article images. Do
    not commit the images or attach them to GitHub issues.
+
+   When `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, and
+   `CLOUDINARY_API_SECRET` are available in the agent environment, the agent can
+   run this step, verify the URLs, and update the article directly; no manual
+   upload handoff is required.
 6. Copy each direct `res.cloudinary.com/...` URL printed by the script and
    verify it before editing the article:
 
