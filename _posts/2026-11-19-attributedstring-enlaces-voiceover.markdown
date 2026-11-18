@@ -8,7 +8,7 @@ lang: es
 tags: [iOS, SwiftUI, AttributedString, Accessibility, VoiceOver]
 categories: blog
 layout: blog
-reading_time: 9
+reading_time: 7
 ---
 
 <div class="lang-es" lang="es" markdown="1">
