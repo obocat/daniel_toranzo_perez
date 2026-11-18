@@ -82,7 +82,7 @@ func makeMarkdown() throws -> AttributedString {
 }
 ```
 
-`inlineOnlyPreservingWhitespace` interpreta el Markdown como texto en línea y conserva los saltos de línea. Es útil para párrafos que vienen de una API, una nota o un campo de texto, donde no quieres que un `#` se convierta en un título de pantalla.
+`inlineOnlyPreservingWhitespace` interpreta el Markdown como texto en línea y conserva los saltos de línea. Es útil para párrafos que vienen de una API, una nota o un campo de texto.
 
 `Text` también acepta Markdown directamente en un string. La diferencia es que `AttributedString` te deja el valor en la mano: puedes añadir atributos, cambiar un enlace, combinar varios fragmentos o pasarlo a otra capa antes de renderizarlo.
 
@@ -243,7 +243,7 @@ func makeMarkdown() throws -> AttributedString {
 }
 ```
 
-`inlineOnlyPreservingWhitespace` parses Markdown as inline text and preserves line breaks. It is useful for paragraphs that come from an API, a note, or a text field, where you do not want a `#` to become a screen title.
+`inlineOnlyPreservingWhitespace` parses Markdown as inline text and preserves line breaks. It is useful for paragraphs that come from an API, a note, or a text field.
 
 `Text` also accepts Markdown directly in a string. The difference is that `AttributedString` leaves the value in your hands: you can add attributes, replace a link, combine fragments, or pass it to another layer before rendering it.
 
