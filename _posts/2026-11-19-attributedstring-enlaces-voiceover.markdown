@@ -15,7 +15,7 @@ reading_time: 9
 
 Un párrafo con una negrita, una cursiva, un fragmento de código y dos enlaces parece un problema resuelto. Hasta que toca que VoiceOver lo lea como lo que es: texto con énfasis y enlaces, no una sola frase plana.
 
-El problema no es solo pintar el texto. Un enlace tiene que seguir siéndolo cuando VoiceOver lo recorre, cuando cambia el tamaño de la letra o cuando el párrafo se combina con otros elementos. Si el formato vive solo en el color y el subrayado, la semántica se pierde.
+El problema no es solo pintar el texto. Un enlace tiene que seguir siéndolo cuando VoiceOver lo descubre, cuando cambia el tamaño de la letra o cuando el párrafo se combina con otros elementos.
 
 `AttributedString` no elimina toda la complejidad, pero junta las piezas en un solo valor. Y, sobre todo, permite que el formato tenga significado además de apariencia.
 
@@ -176,7 +176,7 @@ El formato no es decoración. Un enlace es una promesa de navegación; si solo l
 
 A paragraph with bold, italic, a code fragment, and two links sounds like a solved problem. Then VoiceOver has to read it as what it is: text with emphasis and links, not one flat sentence.
 
-The problem is not just painting the text. A link has to remain a link when VoiceOver moves through it, when the text size changes, or when the paragraph is combined with other elements. If formatting lives only in color and underline, the semantics get lost.
+The problem is not just painting the text. A link has to remain a link when VoiceOver discovers it, when the text size changes, or when the paragraph is combined with other elements.
 
 `AttributedString` does not remove every sharp edge, but it brings the pieces into one value. More importantly, it lets formatting carry meaning, not just appearance.
 
