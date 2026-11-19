@@ -1237,7 +1237,6 @@ html[data-lang='en'] .lang-switch-thumb {
 
 .blog-search-clear:focus-visible,
 .blog-filter-reset:focus-visible,
-.blog-topic-mode-button:focus-visible,
 .blog-topic-group-button:focus-visible,
 .blog-topic-toggle:focus-visible,
 .blog-topic-input:focus-visible {
@@ -1247,19 +1246,8 @@ html[data-lang='en'] .lang-switch-thumb {
 
 .blog-filter-meta {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  min-height: 1.5rem;
-  margin-top: 0.7rem;
-}
-
-.blog-filter-count {
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  line-height: 1.5;
-  letter-spacing: 0.02em;
-  color: var(--text-tertiary);
+  justify-content: flex-end;
+  margin-top: 0.55rem;
 }
 
 .blog-filter-reset {
@@ -1338,48 +1326,6 @@ html[data-lang='en'] .lang-switch-thumb {
   color: var(--text-tertiary);
 }
 
-.blog-topic-mode {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  margin-top: 0.55rem;
-}
-
-.blog-topic-mode-label {
-  margin-right: 0.1rem;
-  font-family: var(--font);
-  font-size: 0.72rem;
-  line-height: 1.4;
-  color: var(--text-tertiary);
-}
-
-.blog-topic-mode-button {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.14rem 0.55rem;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background-color: var(--bg);
-  font-family: var(--mono);
-  font-size: 0.66rem;
-  line-height: 1.6;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-}
-
-.blog-topic-mode-button:hover {
-  border-color: var(--hairline);
-  color: var(--text);
-}
-
-.blog-topic-mode-button[aria-pressed='true'] {
-  border-color: var(--text);
-  background-color: var(--text);
-  color: var(--bg);
-}
-
 .blog-topic-tree {
   margin-top: 0.55rem;
 }
@@ -1395,6 +1341,10 @@ html[data-lang='en'] .lang-switch-thumb {
 
 .blog-topic-node {
   min-width: 0;
+}
+
+.blog-topic-list-root > .blog-topic-node + .blog-topic-node {
+  margin-top: 0.3rem;
 }
 
 .blog-topic-group-button {
@@ -1464,6 +1414,11 @@ html[data-lang='en'] .lang-switch-thumb {
 
 .blog-topic-label:hover {
   background-color: var(--bg-subtle-strong);
+  color: var(--text);
+}
+
+.blog-topic-label-root {
+  font-weight: 600;
   color: var(--text);
 }
 
@@ -3378,7 +3333,6 @@ summary:focus-visible,
   .blog-topic-toggle,
   .blog-topic-group-button svg,
   .blog-topic-toggle svg,
-  .blog-topic-mode-button,
   .blog-tag-summary::after,
   .post-nav-link,
   .tool-row-title,
@@ -3551,12 +3505,6 @@ summary:focus-visible,
   .blog-filter {
     margin-bottom: 1.75rem;
     padding: 0.8rem;
-  }
-
-  .blog-filter-meta {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 0.35rem;
   }
 
   .blog-search-input {

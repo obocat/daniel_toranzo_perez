@@ -7,14 +7,11 @@
   var input = document.querySelector('#blog-search-input');
   var clearButton = document.querySelector('[data-blog-search-clear]');
   var resetButton = document.querySelector('[data-blog-reset]');
+  var filterMeta = document.querySelector('[data-blog-filter-meta]');
   var emptyState = document.querySelector('[data-blog-empty]');
-  var countEs = document.querySelector('[data-blog-count-es]');
-  var countEn = document.querySelector('[data-blog-count-en]');
-  var tagDetails = document.querySelector('[data-blog-tag-details]');
   var tagCount = document.querySelector('[data-blog-tag-count]');
   var tagInputs = Array.prototype.slice.call(document.querySelectorAll('[data-blog-tag]'));
   var topicToggles = Array.prototype.slice.call(document.querySelectorAll('[data-blog-topic-toggle]'));
-  var matchButtons = Array.prototype.slice.call(document.querySelectorAll('[data-blog-match]'));
   var cards = Array.prototype.slice.call(document.querySelectorAll('[data-blog-card]'));
   var yearSections = Array.prototype.slice.call(document.querySelectorAll('[data-blog-year]'));
 
@@ -22,8 +19,7 @@
 
   var state = {
     query: '',
-    tags: [],
-    match: 'any'
+    tags: []
   };
 
   function normalize(value) {
@@ -75,20 +71,6 @@
     return '';
   }
 
-  function setCount(visible, total) {
-    if (countEs) {
-      countEs.textContent = visible === total
-        ? total + (total === 1 ? ' artículo' : ' artículos')
-        : visible + ' de ' + total + (total === 1 ? ' artículo' : ' artículos');
-    }
-
-    if (countEn) {
-      countEn.textContent = visible === total
-        ? total + (total === 1 ? ' article' : ' articles')
-        : visible + ' of ' + total + (total === 1 ? ' article' : ' articles');
-    }
-  }
-
   function setTopicSelections() {
     tagInputs.forEach(function (tagInput) {
       var selected = state.tags.indexOf(tagInput.value) !== -1;
@@ -108,14 +90,6 @@
     }
   }
 
-  function setMatchButtons() {
-    matchButtons.forEach(function (button) {
-      var value = button.getAttribute('data-blog-match') === 'all' ? 'all' : 'any';
-
-      button.setAttribute('aria-pressed', value === state.match ? 'true' : 'false');
-    });
-  }
-
   function updateUrl() {
     if (!window.history || !window.history.replaceState) return;
 
@@ -133,11 +107,7 @@
       params.append('tag', tag);
     });
 
-    if (state.match === 'all' && state.tags.length) {
-      params.set('match', 'all');
-    } else {
-      params.delete('match');
-    }
+    params.delete('match');
 
     var query = params.toString();
     var url = window.location.pathname + (query ? '?' + query : '') + window.location.hash;
@@ -156,20 +126,9 @@
       var matchesQuery = terms.every(function (term) {
         return item.search.indexOf(term) !== -1;
       });
-      var matchesTags;
-
-      if (!selectedTags.length) {
-        matchesTags = true;
-      } else if (state.match === 'all') {
-        matchesTags = selectedTags.every(function (tag) {
-          return item.tags.indexOf(tag) !== -1;
-        });
-      } else {
-        matchesTags = selectedTags.some(function (tag) {
-          return item.tags.indexOf(tag) !== -1;
-        });
-      }
-
+      var matchesTags = selectedTags.every(function (tag) {
+        return item.tags.indexOf(tag) !== -1;
+      });
       var show = matchesQuery && matchesTags;
 
       item.element.hidden = !show;
@@ -186,13 +145,14 @@
       section.hidden = count === 0;
     });
 
+    var hasFilters = Boolean(state.query || state.tags.length);
+
     if (emptyState) emptyState.hidden = visible !== 0;
     if (clearButton) clearButton.hidden = !state.query;
-    if (resetButton) resetButton.hidden = !(state.query || state.tags.length);
+    if (resetButton) resetButton.hidden = !hasFilters;
+    if (filterMeta) filterMeta.hidden = !hasFilters;
 
-    setCount(visible, items.length);
     setTopicSelections();
-    setMatchButtons();
     updateUrl();
   }
 
@@ -230,7 +190,6 @@
     var params = new URLSearchParams(window.location.search);
 
     state.query = params.get('q') || '';
-    state.match = params.get('match') === 'all' ? 'all' : 'any';
     state.tags = [];
     input.value = state.query;
 
@@ -276,7 +235,6 @@
   if (resetButton) {
     resetButton.addEventListener('click', function () {
       state.tags = [];
-      state.match = 'any';
       setQuery('');
       input.focus();
     });
@@ -306,18 +264,7 @@
     });
   });
 
-  matchButtons.forEach(function (button) {
-    button.addEventListener('click', function () {
-      state.match = button.getAttribute('data-blog-match') === 'all' ? 'all' : 'any';
-      applyFilters();
-    });
-  });
-
   document.addEventListener('cv:langchange', updatePlaceholder);
-
-  if (tagDetails && window.matchMedia && window.matchMedia('(min-width: 641px)').matches) {
-    tagDetails.open = true;
-  }
 
   readUrl();
 
@@ -328,10 +275,6 @@
       }
     });
   });
-
-  if (tagDetails && state.tags.length) {
-    tagDetails.open = true;
-  }
 
   updatePlaceholder();
   applyFilters();

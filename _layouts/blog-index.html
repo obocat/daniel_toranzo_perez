@@ -55,11 +55,7 @@
             </button>
           </div>
 
-          <div class="blog-filter-meta">
-            <p class="blog-filter-count" aria-live="polite" aria-atomic="true">
-              <span class="lang-es" data-blog-count-es></span>
-              <span class="lang-en" data-blog-count-en></span>
-            </p>
+          <div class="blog-filter-meta" data-blog-filter-meta hidden>
             <button type="button" class="blog-filter-reset" data-blog-reset hidden>
               <span class="lang-es">Limpiar filtros</span>
               <span class="lang-en">Clear filters</span>
@@ -73,21 +69,6 @@
               <span class="lang-en">Topics</span>
               <span class="blog-tag-count" data-blog-tag-count>{{ tag_count }}</span>
             </summary>
-
-            <div class="blog-topic-mode" role="group" aria-label="Coincidencia de temas / Topic matching">
-              <span class="blog-topic-mode-label">
-                <span class="lang-es">Coincidir con</span>
-                <span class="lang-en">Match</span>
-              </span>
-              <button type="button" class="blog-topic-mode-button" data-blog-match="any" aria-pressed="true">
-                <span class="lang-es">Cualquiera</span>
-                <span class="lang-en">Any</span>
-              </button>
-              <button type="button" class="blog-topic-mode-button" data-blog-match="all" aria-pressed="false">
-                <span class="lang-es">Todos</span>
-                <span class="lang-en">All</span>
-              </button>
-            </div>
 
             <div class="blog-topic-tree">
               {% include blog-topic-tree.html nodes=site.data.blog_topics level=0 %}
