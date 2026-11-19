@@ -29,6 +29,7 @@ design, SEO, or validation.
 - Blog permalink: `/blog/:year/:month/:day/:title/`.
 - Live site: `https://www.obocat.com`.
 - Content validation: `ruby script/check_bilingual_content.rb`.
+- Feed validation: `ruby script/check_feeds.rb` (requires a built `_site/`).
 - Device mockups: `script/mockup-device.swift` (local only; outputs to `tmp/`).
 
 ## Article workflow
@@ -235,6 +236,7 @@ Run the same checks as CI:
 ```bash
 ruby script/check_bilingual_content.rb
 bundle exec jekyll build --future
+ruby script/check_feeds.rb
 ```
 
 Check the generated page and sitemap:
@@ -285,6 +287,7 @@ After the PR check finishes, comment on the issue with:
 - [ ] Code examples compile or are explicitly marked as pseudo-code.
 - [ ] Local validation passes.
 - [ ] `bundle exec jekyll build --future` passes.
+- [ ] `ruby script/check_feeds.rb` passes after the build.
 - [ ] The generated post and sitemap entry exist.
 - [ ] Article images are hosted externally with direct URLs and are not committed.
 - [ ] Figure URLs return HTTP 200 and match the local PNG checksums.

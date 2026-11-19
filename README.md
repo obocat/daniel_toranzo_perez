@@ -20,6 +20,9 @@ vanilla JavaScript provides the language switch and UI interactions.
 - Blog with a yearly archive, tags, reading time, previous/next navigation, and
   per-post SEO metadata.
 - Separate Spanish and English RSS/Atom feeds at `/feed-es.xml` and `/feed-en.xml`.
+- Bilingual subscribe page at `/suscribirse/` with a single feed action that follows
+  the active language. On iPhone, the action opens the share sheet so the feed
+  can be sent to an installed RSS reader.
 - Browser-only iOS developer tools: APNs payload validator, JSON-to-Codable
   converter, SwiftUI spring visualizer, SwiftUI gradient animator,
   DateFormatter tester, and color converter, each on its own page.
@@ -48,13 +51,15 @@ vanilla JavaScript provides the language switch and UI interactions.
 │   ├── blog-index.html      # /blog/ listing
 │   ├── blog.html            # Individual article
 │   ├── tools.html           # /tools/ listing
-│   └── tool.html            # Individual developer tool
+│   ├── tool.html            # Individual developer tool
+│   └── subscribe.html       # /suscribirse/ page
 ├── _posts/                  # Blog articles
 ├── .github/workflows/       # Pull request checks
 ├── AGENTS.md                # Content and maintenance workflow for agents
 ├── blog/index.html          # Blog entry point
 ├── feed-es.xml              # Spanish Atom feed
 ├── feed-en.xml              # English Atom feed
+├── suscribirse/index.html   # Subscribe page
 ├── tools/
 │   ├── index.html           # Developer tools listing
 │   ├── apns/                # APNs payload builder and validator
@@ -68,6 +73,7 @@ vanilla JavaScript provides the language switch and UI interactions.
 │   └── main.css             # Compiled styles served by the site
 ├── js/
 │   ├── reveal.js            # Language switch and UI behaviour
+│   ├── subscribe.js         # Share-sheet action for the subscribe page
 │   ├── tools.js             # Shared developer tools behaviour
 │   ├── tool-apns.js         # APNs payload validation
 │   ├── tool-json-codable.js # JSON-to-Codable conversion
@@ -156,6 +162,20 @@ The script verifies that required `_en` fields exist in `_data/*.yml` and that
 every post has bilingual front matter plus non-empty `lang-es` and `lang-en`
 blocks. GitHub Actions runs the same check automatically on pull requests via
 `.github/workflows/validate-bilingual-content.yml`.
+
+### Feed validation
+
+Build the site, then check both Atom feeds and the subscribe page:
+
+```bash
+bundle exec jekyll build
+ruby script/check_feeds.rb
+```
+
+The script verifies that each feed is well-formed Atom, contains the entries
+for every generated post, keeps Spanish and English content separate, and stays
+out of the sitemap. It also checks the feed discovery links and the subscribe
+page. CI builds the site and runs this check on every pull request.
 
 ## Writing a blog post
 

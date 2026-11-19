@@ -1,0 +1,28 @@
+---
+layout: subscribe
+title: "Suscribirse al blog — Daniel Toranzo Pérez"
+heading: "Suscribirse"
+heading_en: "Subscribe"
+description: "Sigue el blog en tu lector RSS. El feed está disponible en español y en inglés, con los artículos completos."
+description_en: "Follow the blog in your RSS reader. The feed is available in Spanish and English, with full articles."
+permalink: /suscribirse/
+sitemap: true
+---
+
+<p class="subscribe-actions">
+  <a class="subscribe-button lang-es" href="{{ '/feed-es.xml' | relative_url }}" type="application/atom+xml" hreflang="es" data-subscribe-feed>
+    <span>Suscribirse al feed en español</span>
+  </a>
+  <a class="subscribe-button lang-en" href="{{ '/feed-en.xml' | relative_url }}" type="application/atom+xml" hreflang="en" data-subscribe-feed>
+    <span>Subscribe to the English feed</span>
+  </a>
+</p>
+
+<p class="subscribe-url">
+  <span class="subscribe-url-label">Feed</span>
+  <code class="lang-es">{{ '/feed-es.xml' | absolute_url }}</code>
+  <code class="lang-en">{{ '/feed-en.xml' | absolute_url }}</code>
+</p>
+
+<p class="subscribe-note lang-es">Funciona con NetNewsWire, Reeder, Unread, Feedly, Inoreader y la mayoría de lectores RSS. El feed está en formato Atom e incluye los artículos completos.</p>
+<p class="subscribe-note lang-en">Works with NetNewsWire, Reeder, Unread, Feedly, Inoreader, and most RSS readers. The feed uses Atom and includes full articles.</p>
