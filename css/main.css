@@ -70,6 +70,17 @@ body {
   text-rendering: optimizeLegibility;
   overflow-x: clip; }
 
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important; }
+
 /* Solo se muestra el idioma activo */
 html[data-lang='es'] .lang-en,
 html[data-lang='en'] .lang-es {
@@ -927,6 +938,213 @@ html[data-lang='en'] .lang-switch-thumb {
   line-height: 1.55;
   letter-spacing: -0.015em;
   color: var(--text-secondary); }
+
+/* Búsqueda y filtros del archivo */
+.blog-filter {
+  margin: 0 0 2.25rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-subtle); }
+
+.blog-filter[hidden],
+.blog-filter [hidden],
+.blog-card[hidden],
+.blog-year[hidden],
+.blog-empty[hidden] {
+  display: none !important; }
+
+.blog-search {
+  position: relative;
+  display: flex;
+  align-items: center; }
+
+.blog-search-icon {
+  position: absolute;
+  left: 0.95rem;
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  color: var(--text-tertiary);
+  pointer-events: none; }
+
+.blog-search-icon svg {
+  width: 100%;
+  height: 100%; }
+
+.blog-search-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.62rem 2.85rem 0.62rem 2.65rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background-color: var(--bg);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: var(--text);
+  appearance: none;
+  -webkit-appearance: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+
+.blog-search-input::placeholder {
+  color: var(--text-tertiary); }
+
+.blog-search-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft); }
+
+.blog-search-input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px; }
+
+.blog-search-input::-webkit-search-cancel-button {
+  appearance: none;
+  -webkit-appearance: none; }
+
+.blog-search-clear {
+  position: absolute;
+  right: 0.45rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background-color: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease; }
+
+.blog-search-clear svg {
+  width: 15px;
+  height: 15px; }
+
+.blog-search-clear:hover {
+  background-color: var(--bg-subtle-strong);
+  color: var(--text); }
+
+.blog-search-clear:focus-visible,
+.blog-filter-tag:focus-visible,
+.blog-filter-reset:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px; }
+
+.blog-filter-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 1.5rem;
+  margin-top: 0.7rem; }
+
+.blog-filter-count {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: var(--text-tertiary); }
+
+.blog-filter-reset {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  flex-shrink: 0;
+  padding: 0.2rem 0;
+  border: 0;
+  background: none;
+  font-family: var(--font);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--accent);
+  cursor: pointer; }
+
+.blog-filter-reset:hover {
+  color: var(--accent-hover); }
+
+.blog-tag-details {
+  margin-top: 0.8rem; }
+
+.blog-tag-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: fit-content;
+  min-height: 32px;
+  padding: 0.2rem 0;
+  font-family: var(--font);
+  font-size: 0.76rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  list-style: none;
+  cursor: pointer; }
+
+.blog-tag-summary::-webkit-details-marker {
+  display: none; }
+
+.blog-tag-summary::after {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-left: 0.1rem;
+  border-right: 1.5px solid var(--text-tertiary);
+  border-bottom: 1.5px solid var(--text-tertiary);
+  transform: rotate(45deg);
+  transition: transform 0.2s ease; }
+
+.blog-tag-details[open] .blog-tag-summary::after {
+  transform: rotate(-135deg); }
+
+.blog-tag-summary:hover {
+  color: var(--text); }
+
+.blog-tag-summary:focus-visible {
+  border-radius: 4px;
+  outline: 2px solid var(--accent);
+  outline-offset: 2px; }
+
+.blog-tag-count {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 400;
+  color: var(--text-tertiary); }
+
+.blog-tag-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.65rem; }
+
+.blog-filter-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.22rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background-color: var(--bg);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease; }
+
+.blog-filter-tag:hover {
+  border-color: var(--hairline);
+  color: var(--text); }
+
+.blog-filter-tag.is-active {
+  border-color: var(--text);
+  background-color: var(--text);
+  color: var(--bg); }
+
+.blog-filter-tag.is-active:hover {
+  color: var(--bg); }
 
 .blog-year + .blog-year {
   margin-top: 2.5rem; }
@@ -2493,6 +2711,10 @@ summary:focus-visible,
   .code-comment,
   .blog-card,
   .blog-card-title,
+  .blog-search-input,
+  .blog-search-clear,
+  .blog-filter-tag,
+  .blog-tag-summary::after,
   .post-nav-link,
   .tool-row-title,
   .tool-copy,
@@ -2614,6 +2836,18 @@ summary:focus-visible,
 
   .blog-hero h1 {
     font-size: clamp(2.25rem, 10vw, 3rem); }
+
+  .blog-filter {
+    margin-bottom: 1.75rem;
+    padding: 0.8rem; }
+
+  .blog-filter-meta {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.35rem; }
+
+  .blog-search-input {
+    font-size: 0.92rem; }
 
   .tools-hero {
     padding: 1.5rem 0 1.5rem; }
@@ -2935,7 +3169,8 @@ summary:focus-visible,
   .contact-actions,
   .section-toggle,
   .section-count,
-  .section-blog {
+  .section-blog,
+  .blog-filter {
     display: none !important; }
 
   .wrapper {
