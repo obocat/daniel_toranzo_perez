@@ -8,6 +8,7 @@ lang: es
 tags: [iOS, Swift]
 categories: blog
 layout: blog
+reading_time: 1
 ---
 
 <p class="lang-es" lang="es">Hola mundo. Este es el primer artículo del blog. Aquí iré compartiendo notas sobre desarrollo iOS, arquitectura y producto.</p>

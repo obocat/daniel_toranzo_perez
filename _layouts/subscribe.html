@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es" data-lang="es">
+  {% include head.html %}
+  <body class="blog-page subscribe-page">
+    {% include header.html %}
+
+    <div class="wrapper">
+      <main class="blog-main subscribe-main">
+        <header class="blog-hero">
+          <a class="blog-back" href="{{ '/blog/' | relative_url }}">
+            <span aria-hidden="true">←</span>
+            <span class="lang-es">Blog</span>
+            <span class="lang-en">Blog</span>
+          </a>
+
+          <h1>
+            <span class="lang-es">{{ page.heading | default: page.title }}</span>
+            <span class="lang-en">{{ page.heading_en | default: page.title_en | default: page.heading | default: page.title }}</span>
+          </h1>
+
+          <p class="blog-intro lang-es">{{ page.description }}</p>
+          <p class="blog-intro lang-en">{{ page.description_en | default: page.description }}</p>
+        </header>
+
+        {{ content }}
+
+        <footer class="blog-footer">
+          <a class="blog-more" href="{{ '/blog/' | relative_url }}">
+            <span aria-hidden="true">←</span>
+            <span class="lang-es">Volver al blog</span>
+            <span class="lang-en">Back to the blog</span>
+          </a>
+        </footer>
+      </main>
+    </div>
+
+    <script src="{{ '/js/reveal.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+    <script src="{{ '/js/subscribe.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+  </body>
+</html>
