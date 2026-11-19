@@ -9,28 +9,20 @@ permalink: /suscribirse/
 sitemap: true
 ---
 
-<div class="subscribe-card">
-  <p class="subscribe-copy lang-es">Añade esta URL a tu lector RSS. El botón abre el feed del idioma que tienes activo en la web.</p>
-  <p class="subscribe-copy lang-en">Add this URL to your RSS reader. The button opens the feed for the language currently active on the site.</p>
+<p class="subscribe-actions">
+  <a class="subscribe-button lang-es" href="{{ '/feed-es.xml' | relative_url }}" type="application/atom+xml" hreflang="es" data-subscribe-feed>
+    <span>Suscribirse al feed en español</span>
+  </a>
+  <a class="subscribe-button lang-en" href="{{ '/feed-en.xml' | relative_url }}" type="application/atom+xml" hreflang="en" data-subscribe-feed>
+    <span>Subscribe to the English feed</span>
+  </a>
+</p>
 
-  <p class="subscribe-actions">
-    <a class="subscribe-button lang-es" href="{{ '/feed-es.xml' | relative_url }}" type="application/atom+xml" hreflang="es" data-subscribe-feed>
-      <span>Suscribirse al feed en español</span>
-    </a>
-    <a class="subscribe-button lang-en" href="{{ '/feed-en.xml' | relative_url }}" type="application/atom+xml" hreflang="en" data-subscribe-feed>
-      <span>Subscribe to the English feed</span>
-    </a>
-  </p>
+<p class="subscribe-url">
+  <span class="subscribe-url-label">Feed</span>
+  <code class="lang-es">{{ '/feed-es.xml' | absolute_url }}</code>
+  <code class="lang-en">{{ '/feed-en.xml' | absolute_url }}</code>
+</p>
 
-  <div class="subscribe-url">
-    <span class="subscribe-url-label">
-      <span class="lang-es">URL del feed</span>
-      <span class="lang-en">Feed URL</span>
-    </span>
-    <code class="lang-es">{{ '/feed-es.xml' | absolute_url }}</code>
-    <code class="lang-en">{{ '/feed-en.xml' | absolute_url }}</code>
-  </div>
-
-  <p class="subscribe-note lang-es">Funciona con NetNewsWire, Reeder, Unread, Feedly, Inoreader y la mayoría de lectores RSS. El feed está en formato Atom e incluye los artículos completos.</p>
-  <p class="subscribe-note lang-en">Works with NetNewsWire, Reeder, Unread, Feedly, Inoreader, and most RSS readers. The feed uses Atom and includes full articles.</p>
-</div>
+<p class="subscribe-note lang-es">Funciona con NetNewsWire, Reeder, Unread, Feedly, Inoreader y la mayoría de lectores RSS. El feed está en formato Atom e incluye los artículos completos.</p>
+<p class="subscribe-note lang-en">Works with NetNewsWire, Reeder, Unread, Feedly, Inoreader, and most RSS readers. The feed uses Atom and includes full articles.</p>
