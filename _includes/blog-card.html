@@ -10,7 +10,14 @@
 {% assign post_excerpt_en = post.description_en | default: post_excerpt_es %}
 {% assign post_excerpt_en = post_excerpt_en | strip_html | strip_newlines | truncate: 200 %}
 
-<article class="blog-card">
+{% if include.filterable %}
+  {% assign card_description_es = post.description | default: post.excerpt %}
+  {% assign card_description_en = post.description_en | default: card_description_es %}
+  {% capture card_search_es %}{{ post.title }} {{ card_description_es }} {{ post.tags | join: ' ' }}{% endcapture %}
+  {% capture card_search_en %}{{ post.title_en | default: post.title }} {{ card_description_en }} {{ post.tags | join: ' ' }}{% endcapture %}
+{% endif %}
+
+<article class="blog-card"{% if include.filterable %} data-blog-card data-search-es="{{ card_search_es | strip_html | strip_newlines | escape }}" data-search-en="{{ card_search_en | strip_html | strip_newlines | escape }}" data-tags="{{ post.tags | jsonify | escape }}"{% endif %}>
   <a class="blog-card-link" href="{{ post.url | relative_url }}">
     <p class="blog-card-meta">
       <time datetime="{{ post.date | date_to_xmlschema }}" data-date="{{ post.date | date: '%Y-%m-%d' }}">{{ post.date | date: '%d.%m.%Y' }}</time>

@@ -1,0 +1,75 @@
+# Árbol de temas del blog.
+# Cada etiqueta usada en _posts debe aparecer una sola vez en este árbol.
+# Los nodos con `tag` son seleccionables; los nodos con `children` se pueden
+# plegar y desplegar. Los textos de grupo están en español e inglés. Las
+# etiquetas pueden incluir `label` y `label_en` para mostrarse localizadas.
+
+- title: Plataformas
+  title_en: Platforms
+  children:
+    - title: Sistemas operativos
+      title_en: Operating systems
+      children:
+        - tag: iOS
+        - tag: watchOS
+    - title: Dispositivos
+      title_en: Devices
+      children:
+        - tag: iPhone Duo
+    - title: Widgets
+      title_en: Widgets
+      children:
+        - tag: WidgetKit
+
+- tag: Swift
+
+- tag: SwiftUI
+  children:
+    - title: Vistas y estado
+      title_en: Views & state
+      children:
+        - tag: ViewBuilder
+        - tag: State
+    - title: Disposición de vistas
+      title_en: View layout
+      children:
+        - tag: Layout
+        - tag: ArrangementView
+    - title: Navegación y barras
+      title_en: Navigation & bars
+      children:
+        - tag: Toolbar
+          children:
+            - tag: Liquid Glass
+    - title: Texto e iconografía
+      title_en: Text & iconography
+      children:
+        - tag: AttributedString
+        - tag: SF Symbols
+
+- tag: Design
+  label: Diseño
+  label_en: Design
+
+- tag: Accessibility
+  label: Accesibilidad
+  label_en: Accessibility
+  children:
+    - tag: VoiceOver
+
+- title: Sistema
+  title_en: System
+  children:
+    - title: Medios
+      title_en: Media
+      children:
+        - tag: AVFoundation
+        - tag: Camera
+    - title: Seguridad
+      title_en: Security
+      children:
+        - tag: Security
+
+- tag: Architecture
+  label: Arquitectura
+  label_en: Architecture

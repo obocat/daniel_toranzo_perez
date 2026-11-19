@@ -15,22 +15,89 @@
         </header>
 
         {% if site.posts.size > 0 %}
+        {% capture all_tags_string %}{% for post in site.posts %}{% for tag in post.tags %}{{ tag }}|{% endfor %}{% endfor %}{% endcapture %}
+        {% assign all_tags = all_tags_string | split: "|" | uniq | sort_natural %}
+        {% assign tag_count = 0 %}
+        {% for tag in all_tags %}
+        {% if tag != "" %}{% assign tag_count = tag_count | plus: 1 %}{% endif %}
+        {% endfor %}
+
+        <div class="blog-filter" data-blog-filter hidden>
+          <div class="blog-search" role="search" aria-label="Buscar en el blog / Search the blog">
+            <span class="blog-search-icon" aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <circle cx="8.5" cy="8.5" r="5.25"></circle>
+                <path d="m12.5 12.5 4 4"></path>
+              </svg>
+            </span>
+            <label class="visually-hidden" for="blog-search-input">
+              <span class="lang-es">Buscar artículos</span>
+              <span class="lang-en">Search articles</span>
+            </label>
+            <input
+              id="blog-search-input"
+              class="blog-search-input"
+              type="search"
+              name="q"
+              placeholder="Buscar por título, tema o etiqueta…"
+              data-placeholder-es="Buscar por título, tema o etiqueta…"
+              data-placeholder-en="Search by title, topic, or tag…"
+              autocomplete="off"
+              spellcheck="false">
+            <button type="button" class="blog-search-clear" data-blog-search-clear hidden>
+              <span class="visually-hidden">
+                <span class="lang-es">Limpiar búsqueda</span>
+                <span class="lang-en">Clear search</span>
+              </span>
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+                <path d="m4 4 8 8M12 4l-8 8"></path>
+              </svg>
+            </button>
+          </div>
+
+          <div class="blog-filter-meta" data-blog-filter-meta hidden>
+            <button type="button" class="blog-filter-reset" data-blog-reset hidden>
+              <span class="lang-es">Limpiar filtros</span>
+              <span class="lang-en">Clear filters</span>
+            </button>
+          </div>
+
+          {% if tag_count > 0 %}
+          <details class="blog-tag-details" data-blog-tag-details>
+            <summary class="blog-tag-summary">
+              <span class="lang-es">Temas</span>
+              <span class="lang-en">Topics</span>
+              <span class="blog-tag-count" data-blog-tag-count>{{ tag_count }}</span>
+            </summary>
+
+            <div class="blog-topic-tree">
+              {% include blog-topic-tree.html nodes=site.data.blog_topics level=0 %}
+            </div>
+          </details>
+          {% endif %}
+        </div>
+
         {% assign posts_by_year = site.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
         <div class="blog-index">
           {% for year in posts_by_year %}
-          <section class="blog-year">
+          <section class="blog-year" data-blog-year>
             <div class="blog-year-header">
               <h2 class="blog-year-title">{{ year.name }}</h2>
-              <span class="blog-year-count">{{ year.items.size }}</span>
+              <span class="blog-year-count" data-blog-year-count>{{ year.items.size }}</span>
             </div>
             <div class="blog-list">
               {% for post in year.items %}
-              {% include blog-card.html post=post show_excerpt=true %}
+              {% include blog-card.html post=post show_excerpt=true filterable=true %}
               {% endfor %}
             </div>
           </section>
           {% endfor %}
         </div>
+
+        <p class="blog-empty" data-blog-empty role="status" hidden>
+          <span class="lang-es">No hay artículos que coincidan con tu búsqueda.</span>
+          <span class="lang-en">No articles match your search.</span>
+        </p>
         {% else %}
         <p class="blog-empty">
           <span class="lang-es">Todavía no hay artículos publicados. Vuelve pronto.</span>
@@ -49,5 +116,6 @@
     </div>
 
     <script src="{{ '/js/reveal.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+    <script src="{{ '/js/blog-index.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
   </body>
 </html>
