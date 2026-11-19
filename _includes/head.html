@@ -107,5 +107,7 @@
   {% endif %}
   <link rel="stylesheet" href="{{ '/css/main.css' | relative_url }}?v={{ site.time | date: '%s' }}">
   <link rel="canonical" href="{{ site.url }}{{ page.url | replace:'index.html','' }}">
+  <link rel="alternate" type="application/atom+xml" hreflang="es" title="{{ site.title | escape }} — Blog (ES)" href="{{ '/feed-es.xml' | absolute_url }}">
+  <link rel="alternate" type="application/atom+xml" hreflang="en" title="{{ site.title | escape }} — Blog (EN)" href="{{ '/feed-en.xml' | absolute_url }}">
   <link rel="icon" type="image/x-icon" href="{{ '/favicon.png' | relative_url }}" />
 </head>

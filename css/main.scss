@@ -1134,6 +1134,40 @@ html[data-lang='en'] .lang-switch-thumb {
   color: var(--text-secondary);
 }
 
+.blog-feed-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin-top: 1.1rem;
+}
+
+.blog-feed-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.blog-feed-link:hover {
+  color: var(--accent-hover);
+}
+
+.blog-feed-icon {
+  display: inline-flex;
+  width: 14px;
+  height: 14px;
+}
+
+.blog-feed-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
 /* Búsqueda y filtros del archivo */
 
 .blog-filter {
