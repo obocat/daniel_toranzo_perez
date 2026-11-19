@@ -4,3 +4,15 @@ _site
 .jekyll-metadata
 vendor
 tmp
+
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+*.pfx
+*.mobileprovision
+
+# macOS
+.DS_Store
