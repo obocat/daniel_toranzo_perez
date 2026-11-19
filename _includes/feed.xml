@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+{% comment %}
+  Generates one Atom feed per language. Each rendered post is split on the
+  English language wrapper so the Spanish and English entries stay separate.
+  Both the div wrappers used by current posts and the legacy p wrappers are
+  supported.
+{% endcomment %}
+{% assign feed_lang = include.lang | default: 'es' %}
+{% if feed_lang == 'en' %}
+  {% assign feed_title = site.title | append: ' — Blog (EN)' %}
+  {% assign feed_subtitle = site.description_en | default: site.description %}
+  {% assign feed_self_path = '/feed-en.xml' %}
+  {% assign feed_other_path = '/feed-es.xml' %}
+  {% assign feed_other_lang = 'es' %}
+{% else %}
+  {% assign feed_title = site.title | append: ' — Blog (ES)' %}
+  {% assign feed_subtitle = site.description_es | default: site.description %}
+  {% assign feed_self_path = '/feed-es.xml' %}
+  {% assign feed_other_path = '/feed-en.xml' %}
+  {% assign feed_other_lang = 'en' %}
+{% endif %}
+{% assign latest_post = site.posts | first %}
+{% if latest_post %}
+  {% assign feed_updated = latest_post.date %}
+{% else %}
+  {% assign feed_updated = site.time %}
+{% endif %}
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="{{ feed_lang }}" xml:base="{{ site.url }}/">
+  <title type="text">{{ feed_title | xml_escape }}</title>
+  <subtitle type="text">{{ feed_subtitle | xml_escape }}</subtitle>
+  <link href="{{ site.url }}{{ feed_self_path }}" rel="self" type="application/atom+xml"/>
+  <link href="{{ site.url }}/blog/" rel="alternate" type="text/html" hreflang="{{ feed_lang }}"/>
+  <link href="{{ site.url }}{{ feed_other_path }}" rel="alternate" type="application/atom+xml" hreflang="{{ feed_other_lang }}"/>
+  <id>{{ site.url }}{{ feed_self_path }}</id>
+  <updated>{{ feed_updated | date_to_xmlschema }}</updated>
+  <author>
+    <name>{{ site.author | xml_escape }}</name>
+    <uri>{{ site.url }}/</uri>
+  </author>
+  <rights>© {{ site.time | date: "%Y" }} {{ site.author | xml_escape }}</rights>
+  <logo>{{ site.url }}/images/og-card.png?v=2</logo>
+  <icon>{{ site.url }}/favicon.png</icon>
+  <generator uri="https://jekyllrb.com/">Jekyll</generator>
+  {% for post in site.posts %}
+    {% if post.content contains '<div class="lang-en"' %}
+      {% assign lang_marker = '<div class="lang-en"' %}
+    {% elsif post.content contains '<p class="lang-en"' %}
+      {% assign lang_marker = '<p class="lang-en"' %}
+    {% else %}
+      {% assign lang_marker = '' %}
+    {% endif %}
+    {% if lang_marker != '' %}
+      {% assign content_es = post.content | split: lang_marker | first %}
+      {% assign content_en = post.content | split: lang_marker | last | prepend: lang_marker %}
+    {% else %}
+      {% assign content_es = post.content %}
+      {% assign content_en = post.content %}
+    {% endif %}
+    {% if feed_lang == 'en' %}
+      {% assign entry_title = post.title_en | default: post.title %}
+      {% assign entry_summary = post.description_en | default: post.description | default: post.excerpt %}
+      {% assign entry_content = content_en %}
+    {% else %}
+      {% assign entry_title = post.title %}
+      {% assign entry_summary = post.description | default: post.excerpt %}
+      {% assign entry_content = content_es %}
+    {% endif %}
+  <entry xml:lang="{{ feed_lang }}">
+    <title type="text">{{ entry_title | xml_escape }}</title>
+    <link href="{{ site.url }}{{ post.url }}" rel="alternate" type="text/html" hreflang="{{ feed_lang }}"/>
+    <id>{{ site.url }}{{ post.url }}</id>
+    <published>{{ post.date | date_to_xmlschema }}</published>
+    <updated>{{ post.last_modified_at | default: post.date | date_to_xmlschema }}</updated>
+    <summary type="text">{{ entry_summary | strip_html | strip_newlines | strip | xml_escape }}</summary>
+    {% for tag in post.tags %}
+    <category term="{{ tag | xml_escape }}"/>
+    {% endfor %}
+    <content type="html" xml:base="{{ site.url }}{{ post.url }}">{{ entry_content | xml_escape }}</content>
+  </entry>
+  {% endfor %}
+</feed>

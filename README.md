@@ -19,6 +19,7 @@ vanilla JavaScript provides the language switch and UI interactions.
   certifications, contact, and social links.
 - Blog with a yearly archive, tags, reading time, previous/next navigation, and
   per-post SEO metadata.
+- Separate Spanish and English RSS/Atom feeds at `/feed-es.xml` and `/feed-en.xml`.
 - Browser-only iOS developer tools: APNs payload validator, JSON-to-Codable
   converter, SwiftUI spring visualizer, SwiftUI gradient animator,
   DateFormatter tester, and color converter, each on its own page.
@@ -41,7 +42,7 @@ vanilla JavaScript provides the language switch and UI interactions.
 .
 ├── _config.yml              # Site metadata, sections, and social links
 ├── _data/                   # CV content (experience, projects, skills, ...)
-├── _includes/               # Header, blog card, icons, shared fragments
+├── _includes/               # Header, blog card, feed template, icons, shared fragments
 ├── _layouts/
 │   ├── resume.html          # Main CV page
 │   ├── blog-index.html      # /blog/ listing
@@ -52,6 +53,8 @@ vanilla JavaScript provides the language switch and UI interactions.
 ├── .github/workflows/       # Pull request checks
 ├── AGENTS.md                # Content and maintenance workflow for agents
 ├── blog/index.html          # Blog entry point
+├── feed-es.xml              # Spanish Atom feed
+├── feed-en.xml              # English Atom feed
 ├── tools/
 │   ├── index.html           # Developer tools listing
 │   ├── apns/                # APNs payload builder and validator
@@ -220,6 +223,8 @@ Notes:
 - The latest three posts are shown on the CV home page. Set
   `resume_section_blog: false` in `_config.yml` to hide that section.
 - The blog archive is available at `/blog/` and is grouped by year.
+- The Spanish and English RSS/Atom feeds are available at `/feed-es.xml` and
+  `/feed-en.xml`.
 
 ### Article images
 
