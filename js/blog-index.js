@@ -11,7 +11,10 @@
   var countEs = document.querySelector('[data-blog-count-es]');
   var countEn = document.querySelector('[data-blog-count-en]');
   var tagDetails = document.querySelector('[data-blog-tag-details]');
-  var tagButtons = Array.prototype.slice.call(document.querySelectorAll('[data-blog-tag]'));
+  var tagCount = document.querySelector('[data-blog-tag-count]');
+  var tagInputs = Array.prototype.slice.call(document.querySelectorAll('[data-blog-tag]'));
+  var topicToggles = Array.prototype.slice.call(document.querySelectorAll('[data-blog-topic-toggle]'));
+  var matchButtons = Array.prototype.slice.call(document.querySelectorAll('[data-blog-match]'));
   var cards = Array.prototype.slice.call(document.querySelectorAll('[data-blog-card]'));
   var yearSections = Array.prototype.slice.call(document.querySelectorAll('[data-blog-year]'));
 
@@ -19,7 +22,8 @@
 
   var state = {
     query: '',
-    tag: ''
+    tags: [],
+    match: 'any'
   };
 
   function normalize(value) {
@@ -57,6 +61,20 @@
     };
   });
 
+  function canonicalTag(value) {
+    var normalized = normalize(value);
+
+    if (!normalized) return '';
+
+    for (var index = 0; index < tagInputs.length; index += 1) {
+      if (normalize(tagInputs[index].value) === normalized) {
+        return tagInputs[index].value;
+      }
+    }
+
+    return '';
+  }
+
   function setCount(visible, total) {
     if (countEs) {
       countEs.textContent = visible === total
@@ -71,15 +89,30 @@
     }
   }
 
-  function setTagButtons() {
-    var active = normalize(state.tag);
+  function setTopicSelections() {
+    tagInputs.forEach(function (tagInput) {
+      var selected = state.tags.indexOf(tagInput.value) !== -1;
+      var label = tagInput.closest('.blog-topic-label');
 
-    tagButtons.forEach(function (button) {
-      var value = normalize(button.getAttribute('data-blog-tag') || '');
-      var isActive = value === active || (!active && !value);
+      tagInput.checked = selected;
 
-      button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-      button.classList.toggle('is-active', isActive);
+      if (label) {
+        label.classList.toggle('is-selected', selected);
+      }
+    });
+
+    if (tagCount) {
+      tagCount.textContent = state.tags.length
+        ? state.tags.length + '/' + tagInputs.length
+        : String(tagInputs.length);
+    }
+  }
+
+  function setMatchButtons() {
+    matchButtons.forEach(function (button) {
+      var value = button.getAttribute('data-blog-match') === 'all' ? 'all' : 'any';
+
+      button.setAttribute('aria-pressed', value === state.match ? 'true' : 'false');
     });
   }
 
@@ -94,10 +127,16 @@
       params.delete('q');
     }
 
-    if (state.tag) {
-      params.set('tag', state.tag);
+    params.delete('tag');
+
+    state.tags.forEach(function (tag) {
+      params.append('tag', tag);
+    });
+
+    if (state.match === 'all' && state.tags.length) {
+      params.set('match', 'all');
     } else {
-      params.delete('tag');
+      params.delete('match');
     }
 
     var query = params.toString();
@@ -110,15 +149,28 @@
 
   function applyFilters() {
     var terms = normalize(state.query).split(' ').filter(Boolean);
-    var activeTag = normalize(state.tag);
+    var selectedTags = state.tags.map(normalize);
     var visible = 0;
 
     items.forEach(function (item) {
       var matchesQuery = terms.every(function (term) {
         return item.search.indexOf(term) !== -1;
       });
-      var matchesTag = !activeTag || item.tags.indexOf(activeTag) !== -1;
-      var show = matchesQuery && matchesTag;
+      var matchesTags;
+
+      if (!selectedTags.length) {
+        matchesTags = true;
+      } else if (state.match === 'all') {
+        matchesTags = selectedTags.every(function (tag) {
+          return item.tags.indexOf(tag) !== -1;
+        });
+      } else {
+        matchesTags = selectedTags.some(function (tag) {
+          return item.tags.indexOf(tag) !== -1;
+        });
+      }
+
+      var show = matchesQuery && matchesTags;
 
       item.element.hidden = !show;
 
@@ -136,10 +188,11 @@
 
     if (emptyState) emptyState.hidden = visible !== 0;
     if (clearButton) clearButton.hidden = !state.query;
-    if (resetButton) resetButton.hidden = !(state.query || state.tag);
+    if (resetButton) resetButton.hidden = !(state.query || state.tags.length);
 
     setCount(visible, items.length);
-    setTagButtons();
+    setTopicSelections();
+    setMatchButtons();
     updateUrl();
   }
 
@@ -149,37 +202,45 @@
     applyFilters();
   }
 
-  function setTag(value) {
-    state.tag = value || '';
-    applyFilters();
+  function setExpanded(toggle, expanded) {
+    var target = document.getElementById(toggle.getAttribute('aria-controls'));
+
+    toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+
+    if (target) {
+      target.hidden = !expanded;
+    }
+  }
+
+  function openTopicAncestors(tagInput) {
+    var container = tagInput.closest('.blog-topic-children');
+
+    while (container) {
+      var toggle = document.querySelector(
+        '[data-blog-topic-toggle][aria-controls="' + container.id + '"]'
+      );
+
+      if (toggle) setExpanded(toggle, true);
+
+      container = container.parentElement.closest('.blog-topic-children');
+    }
   }
 
   function readUrl() {
     var params = new URLSearchParams(window.location.search);
-    var tagFromUrl = params.get('tag') || '';
 
     state.query = params.get('q') || '';
+    state.match = params.get('match') === 'all' ? 'all' : 'any';
+    state.tags = [];
     input.value = state.query;
 
-    if (tagFromUrl) {
-      var matched = false;
+    params.getAll('tag').forEach(function (value) {
+      var tag = canonicalTag(value);
 
-      tagButtons.some(function (button) {
-        var value = button.getAttribute('data-blog-tag') || '';
-
-        if (normalize(value) === normalize(tagFromUrl)) {
-          tagFromUrl = value;
-          matched = true;
-          return true;
-        }
-
-        return false;
-      });
-
-      if (!matched) tagFromUrl = '';
-    }
-
-    state.tag = tagFromUrl;
+      if (tag && state.tags.indexOf(tag) === -1) {
+        state.tags.push(tag);
+      }
+    });
   }
 
   function updatePlaceholder() {
@@ -214,16 +275,41 @@
 
   if (resetButton) {
     resetButton.addEventListener('click', function () {
-      state.tag = '';
+      state.tags = [];
+      state.match = 'any';
       setQuery('');
       input.focus();
     });
   }
 
-  tagButtons.forEach(function (button) {
+  tagInputs.forEach(function (tagInput) {
+    tagInput.addEventListener('change', function () {
+      var value = tagInput.value;
+
+      if (tagInput.checked) {
+        if (state.tags.indexOf(value) === -1) {
+          state.tags.push(value);
+        }
+      } else {
+        state.tags = state.tags.filter(function (tag) {
+          return tag !== value;
+        });
+      }
+
+      applyFilters();
+    });
+  });
+
+  topicToggles.forEach(function (toggle) {
+    toggle.addEventListener('click', function () {
+      setExpanded(toggle, toggle.getAttribute('aria-expanded') !== 'true');
+    });
+  });
+
+  matchButtons.forEach(function (button) {
     button.addEventListener('click', function () {
-      var value = button.getAttribute('data-blog-tag') || '';
-      setTag(normalize(state.tag) === normalize(value) ? '' : value);
+      state.match = button.getAttribute('data-blog-match') === 'all' ? 'all' : 'any';
+      applyFilters();
     });
   });
 
@@ -235,7 +321,15 @@
 
   readUrl();
 
-  if (tagDetails && state.tag) {
+  state.tags.forEach(function (tag) {
+    tagInputs.forEach(function (tagInput) {
+      if (tagInput.value === tag) {
+        openTopicAncestors(tagInput);
+      }
+    });
+  });
+
+  if (tagDetails && state.tags.length) {
     tagDetails.open = true;
   }
 

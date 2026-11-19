@@ -1,0 +1,53 @@
+{% assign tree_level = include.level | default: 0 %}
+<ul class="blog-topic-list{% if tree_level == 0 %} blog-topic-list-root{% endif %}"{% if tree_level == 0 %} aria-label="Temas del blog / Blog topics"{% endif %}>
+  {% for node in include.nodes %}
+  {% assign node_level = include.level | default: 0 %}
+  {% assign node_next_level = node_level | plus: 1 %}
+  {% assign node_tag = node.tag %}
+  {% assign node_children = node.children %}
+  {% assign node_slug = node_tag | default: node.title | slugify %}
+  {% assign node_label = node_tag | default: node.title %}
+  {% assign children_id = 'blog-topic-' | append: node_slug %}
+  <li class="blog-topic-node">
+    {% if node_tag %}
+    {% assign topic_count = 0 %}
+    {% for post in site.posts %}
+      {% if post.tags contains node_tag %}
+        {% assign topic_count = topic_count | plus: 1 %}
+      {% endif %}
+    {% endfor %}
+    <div class="blog-topic-row">
+      <label class="blog-topic-label">
+        <input type="checkbox" class="blog-topic-input" value="{{ node_tag | downcase | escape }}" data-blog-tag="{{ node_tag | downcase | escape }}">
+        <span class="blog-topic-name">{{ node_tag }}</span>
+        <span class="blog-topic-count">{{ topic_count }}</span>
+      </label>
+      {% if node_children %}
+      <button type="button" class="blog-topic-toggle" data-blog-topic-toggle data-blog-topic-level="{{ node_level }}" aria-expanded="false" aria-controls="{{ children_id }}">
+        <span class="visually-hidden">
+          <span class="lang-es">Alternar subtemas de {{ node_label }}</span>
+          <span class="lang-en">Toggle {{ node_label }} subtopics</span>
+        </span>
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m4.5 2.5 3.5 3.5-3.5 3.5"></path>
+        </svg>
+      </button>
+      {% endif %}
+    </div>
+    {% else %}
+    <button type="button" class="blog-topic-group-button" data-blog-topic-toggle data-blog-topic-level="{{ node_level }}" aria-expanded="false" aria-controls="{{ children_id }}">
+      <span class="lang-es">{{ node.title }}</span>
+      <span class="lang-en">{{ node.title_en | default: node.title }}</span>
+      <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="m4.5 2.5 3.5 3.5-3.5 3.5"></path>
+      </svg>
+    </button>
+    {% endif %}
+    {% if node_children %}
+    <div class="blog-topic-children" id="{{ children_id }}" hidden>
+      {% include blog-topic-tree.html nodes=node_children level=node_next_level %}
+    </div>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>
